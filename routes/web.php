@@ -47,6 +47,7 @@ Route::prefix('/transaksi')->group(function(){
         Route::get('/{id}', [DisposisiController::class, 'index'])->name('index.disposisi.masuk');
         Route::get('/create/{id}', [DisposisiController::class, 'create'])->name('create.disposisi.masuk');
         Route::post('/store/{id}', [DisposisiController::class, 'store'])->name('store.disposisi.masuk');
+        Route::post('/store/{id}', [DisposisiController::class, 'store'])->name('store.disposisi.masuk');
     });
 });
 Route::prefix('/agenda')->group(function(){
