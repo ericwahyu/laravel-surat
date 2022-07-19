@@ -11,13 +11,13 @@
 <div class="section-body">
     <div class="row">
         <div class="col-12">
-            <form action="{{ route('update.jenis', $jenis->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('update.jenis', $jenis) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group">
                             <label style="font-size: 16px">Kategori Jenis Surat</label>
-                            <select class="form-control  @error('verifikasi') is-invalid @enderror" name="kategori_id">
+                            <select class="form-control selectric @error('verifikasi') is-invalid @enderror" name="kategori_id">
                                 <option selected value="{{ $jenis->kategori_id }}">{{ $jenis->kategori->nama_kategori }}</option>
                                 @foreach ($kategori as $kategori)
                                     <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
@@ -39,8 +39,7 @@
                             @enderror
                         </div>
                         <div class="modal-footer">
-                            {{-- <a href="{{ route('index.jenis') }}" type="button" class="btn btn-secondary">Close</a> --}}
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
                     </div>
                 </div>

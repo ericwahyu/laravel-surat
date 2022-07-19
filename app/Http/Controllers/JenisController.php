@@ -23,12 +23,11 @@ class JenisController extends Controller
         $search = $request->search;
 
         $kategori = Kategori::all();
-        $data = Jenis::join('kategori', 'kategori.id', '=', 'kategori_id')
+        $jenis = Jenis::join('kategori', 'kategori.id', '=', 'kategori_id')
                 ->select('jenis.*')
                 ->get();
-        $request = $request->all();
 
-        return view('jenis.index', compact('nav', 'menu', 'data', 'request', 'kategori'));
+        return view('jenis.index', compact('nav', 'menu', 'jenis', 'kategori'));
     }
 
     /**
@@ -83,13 +82,12 @@ class JenisController extends Controller
      * @param  \App\Models\Jenis  $jenis
      * @return \Illuminate\Http\Response
      */
-    public function edit($jenis)
+    public function edit(Jenis $jenis)
     {
         //
         $nav = 'umum';
         $menu = 'jenis';
         $kategori = Kategori::all();
-        $jenis = Jenis::find($jenis);
 
         return view('jenis.update', compact('nav', 'menu', 'jenis', 'kategori'));
     }
@@ -101,10 +99,9 @@ class JenisController extends Controller
      * @param  \App\Models\Jenis  $jenis
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $jenis)
+    public function update(Request $request,Jenis $jenis)
     {
         //
-        $jenis = Jenis::find($jenis);
         $request->validate([
             'kategori_id' => 'required',
             'nama' => 'required|max:100'
@@ -114,7 +111,11 @@ class JenisController extends Controller
         $jenis->nama_jenis = $request->nama;
         $jenis->save();
 
-        return redirect()->route('index.jenis')->with('success', 'Data berhasil di Update !!');
+        if($jenis){
+            return redirect()->route('index.jenis')->with('success', 'Data berhasil di Update !!');
+        }else{
+            return redirect()->route('index.jenis')->with('error', 'Data gagal di Update !!');
+        }
     }
 
     /**
@@ -123,16 +124,14 @@ class JenisController extends Controller
      * @param  \App\Models\Jenis  $jenis
      * @return \Illuminate\Http\Response
      */
-    public function destroy($jenis)
+    public function destroy(Jenis $jenis)
     {
         //
-        $jenis = Jenis::find($jenis);
-
-        if(!$jenis){
-            return redirect()->route('index.jenis')->with('error', 'Data gagal di Hapus !!');
-        }else{
+        if($jenis){
             $jenis->delete();
             return redirect()->route('index.jenis')->with('success', 'Data berhasil di Hapus !!');
+        }else{
+            return redirect()->route('index.jenis')->with('error', 'Data gagal di Hapus !!');
         }
     }
 }

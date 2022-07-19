@@ -1,16 +1,16 @@
 @extends('layout')
-@section('title','Tambah Surat Masuk')
+@section('title','Update Surat Masuk')
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
         <a href="{{ route('index.surat.masuk') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <h1>Tambah Surat Masuk</h1>
+    <h1>Update Surat Masuk</h1>
 </div>
 
 <div class="section-body">
     <div class="row">
-        <form action="{{ route('store.surat.masuk') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('update.surat.masuk', $surat) }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card">
                 <div class="card-body">
@@ -18,9 +18,11 @@
                         <div class="form-group col-md-6">
                             <label style="font-size: 16px">Jenis Surat</label>
                             <select class="form-control selectric @error('kategori') is-invalid @enderror" name="jenis_id">
-                                <option disabled selected>-- Jenis Surat--</option>
+                                <option selected value="{{ $surat->jenis->id }}">{{ $surat->jenis->nama_jenis }}</option>
                                 @foreach ($jenis as $jenis)
-                                    <option value="{{ $jenis->id }}">{{ $jenis->nama_jenis }}</option>
+                                    @if ($surat->jenis->id != $jenis->id)
+                                        <option value="{{ $jenis->id }}">{{ $jenis->nama_jenis }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                             @error('jenis_id')
@@ -31,7 +33,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label style="font-size: 16px">Keterangan Surat</label>
-                            <input type="text" class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" value="{{ old('keterangan') }}">
+                            <input type="text" class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" value="{{ $surat->keterangan }}">
                             @error('keterangan')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -42,7 +44,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label style="font-size: 16px">Nomor Surat</label>
-                            <input type="text" class="form-control @error('nomor') is-invalid @enderror" name="nomor" placeholder="0123/PSI/ITATS/2021" value="{{ old('nomor') }}">
+                            <input type="text" class="form-control @error('nomor') is-invalid @enderror" name="nomor" readonly="" value="{{ $surat->nosurat }}" >
                             @error('nomor')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -51,7 +53,7 @@
                             </div>
                         <div class="form-group col-md-6">
                             <label style="font-size: 16px">Catatan</label>
-                            <input type="text" class="form-control @error('catatan') is-invalid @enderror" name="catatan" value="{{ old('catatan') }}">
+                            <input type="text" class="form-control @error('catatan') is-invalid @enderror" name="catatan" value="">
                             <small id="passwordHelpBlock" class="form-text text-muted">
                                 Masukkan catatan jika ada perlu !!
                             </small>
@@ -65,7 +67,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label style="font-size: 16px">Judul Surat</label>
-                            <input type="text" class="form-control @error('judul') is-invalid @enderror" name="judul" placeholder="" value="{{ old('judul') }}">
+                            <input type="text" class="form-control @error('judul') is-invalid @enderror" name="judul" placeholder="" value="{{ $surat->judul }}">
                             @error('judul')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -74,9 +76,9 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label style="font-size: 16px">File Surat Masuk</label>
-                            <input class="form-control @error('file') is-invalid @enderror" type="file" name="file" value="{{ old('file') }}">
+                            <input class="form-control @error('file') is-invalid @enderror" type="file" name="file">
                             <small id="passwordHelpBlock" class="form-text text-muted">
-                                Pastikan file yang di upload dengan format .docx/.doc/.pdf
+                                Akan menghapus file lama jika mengupload file baru !!
                             </small>
                             @error('file')
                                 <div class="invalid-feedback">
@@ -88,7 +90,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label style="font-size: 16px">Tanggal Surat</label>
-                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ old('tanggal') }}">
+                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ $surat->tanggal }}">
                             @error('tanggal')
                             <div class="invalid-feedback">
                                 {{ $message }}

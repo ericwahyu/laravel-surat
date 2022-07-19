@@ -20,7 +20,7 @@ class CreateSuratTable extends Migration
             $table->string('judul');
             $table->string('file_surat');
             $table->date('tanggal')->nullable();
-            $table->boolean('verifikasi')->nullable();
+            $table->boolean('status')->nullable();
             $table->string('keterangan')->nullable();
             $table->timestamps();
 

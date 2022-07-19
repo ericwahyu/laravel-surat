@@ -24,6 +24,7 @@ class SuratController extends Controller
         $menu = 'masuk';
         $data = Surat::join('jenis', 'surat.jenis_id', '=', 'jenis.id')
                 ->select('surat.*')
+                ->where('status', '!=', 0)
                 ->get();
         return view('surat masuk.index', compact('nav', 'menu', 'data'));
     }
@@ -38,7 +39,7 @@ class SuratController extends Controller
         //
         $nav = 'transaksi';
         $menu = 'masuk';
-        $jenis = Jenis::all();
+        $jenis = Jenis::where('kategori_id', 1)->get();
         return view('surat masuk.insert', compact('nav', 'menu', 'jenis'));
     }
 
@@ -53,7 +54,7 @@ class SuratController extends Controller
         //
         $request->validate([
             'jenis_id' => 'required',
-            'nosurat' => 'nullable',
+            'nomor' => 'required',
             'judul' => 'required',
             'tanggal' => 'required|date',
             'file' => 'required|file',
@@ -65,6 +66,7 @@ class SuratController extends Controller
         $suratSM->nosurat = $request->nomor;
         $suratSM->judul = $request->judul;
         $suratSM->tanggal = $request->tanggal;
+        $suratSM->status = 1;
         $suratSM->keterangan = $request->keterangan;
         if($request->hasFile('file')){
             $file = $request->file('file');
@@ -77,19 +79,19 @@ class SuratController extends Controller
 
             $catatan = new Catatan();
             $catatan->surat_id = $suratSM->id;
-            if($request->catatan === null){
-                $catatan->catatan = 'Menambah data Surat Masuk '. $request->judul;
+            if($request->catatan == null){
+                $catatan->catatan = 'Menambah data surat masuk dengan nomor '. $request->nomor;
             }else{
-                $catatan->catatan = 'Menambah data Surat Masuk '. $request->judul. ', ('. $request->catatan. ').';
+                $catatan->catatan = 'Menambah data surat masuk dengan nomor '. $request->nomor. ', ('. $request->catatan. ').';
             }
             $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         }
 
         if($catatan){
             $catatan->save();
-            return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di Tambah !!');
+            return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di tambah !!');
         }else{
-            return back()->with('success', 'Data berhasil di Update !!');
+            return back()->with('error', 'Data gagal di tambah !!');
         }
 
     }
@@ -114,6 +116,10 @@ class SuratController extends Controller
     public function edit(Surat $surat)
     {
         //
+        $nav = 'transaksi';
+        $menu = 'masuk';
+        $jenis = Jenis::where('kategori_id', 1)->get();
+        return view('surat masuk.update', compact('nav', 'menu', 'jenis', 'surat'));
     }
 
     /**
@@ -123,9 +129,50 @@ class SuratController extends Controller
      * @param  \App\Models\Surat  $surat
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Surat $surat)
+    public function update(Request $request,Surat $surat)
     {
         //
+        $request->validate([
+            'jenis_id' => 'required',
+            'nomor' => 'required',
+            'judul' => 'required',
+            'tanggal' => 'required|date',
+            'keterangan' => 'required',
+            'catatan' => 'nullable',
+        ]);
+        $surat->jenis_id = $request->jenis_id;
+        $surat->nosurat = $request->nomor;
+        $surat->judul = $request->judul;
+        $surat->tanggal = $request->tanggal;
+        $surat->status = 1;
+        $surat->keterangan = $request->keterangan;
+        if($request->hasFile('file')){
+            $filelama = public_path('surat/masuk/'.$surat->file_surat);
+            File::delete($filelama);
+            $file = $request->file('file');
+            $file_name = now()->timestamp . '_' . $request->judul.'.'.$file->getClientOriginalExtension();
+            $file->move('surat/masuk',$file_name);
+            $surat->file_surat = $file_name;
+        }
+        if($surat){
+            $surat->save();
+
+            $catatan = new Catatan();
+            $catatan->surat_id = $surat->id;
+            if($request->catatan == null){
+                $catatan->catatan = 'Mengubah data surat masuk nomor '. $request->nomor;
+            }else{
+                $catatan->catatan = 'Mengubah data surat masuk nomor '. $request->nomor. ', ('. $request->catatan. ').';
+            }
+            $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
+        }
+
+        if($catatan){
+            $catatan->save();
+            return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di update !!');
+        }else{
+            return back()->with('error', 'Data gagal di update !!');
+        }
     }
 
     /**
@@ -137,5 +184,13 @@ class SuratController extends Controller
     public function destroy(Surat $surat)
     {
         //
+        $surat->status = 0;
+        $surat->save();
+        if($surat){
+            return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di hapus !!');
+        }else{
+            return back()->with('error', 'Data gagal di hapus !!');
+        }
+
     }
 }

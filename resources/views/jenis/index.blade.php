@@ -28,20 +28,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $datas)
+                                @foreach ($jenis as $data)
                                     <tr>
                                         <td>
                                             <div class="sort-handler ui-sortable-handle text-center">
                                             <i class="fas fa-th"></i>
                                             </div>
                                         </td>
-                                        <td>{{ $datas->kategori->nama_kategori }}</td>
-                                        <td>{{ $datas->nama_jenis }}</td>
+                                        <td>{{ $data->kategori->nama_kategori }}</td>
+                                        <td>{{ $data->nama_jenis }}</td>
                                         <td>
-                                            <form id="delete" action="{{ route('destroy.jenis', $datas->id) }}" method="post">
+                                            <form id="delete" action="{{ route('destroy.jenis', $data) }}" method="post">
                                                 @csrf
                                                 @method('DELETE')
-                                                <a href="{{ route('edit.jenis', $datas->id) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
+                                                <a href="{{ route('edit.jenis', $data) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
                                                 <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i></button>
                                             </form>
                                         </td>

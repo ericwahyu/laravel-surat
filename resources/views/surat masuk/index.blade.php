@@ -26,25 +26,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $datas)
+                                @foreach ($data as $surat)
                                     <tr>
                                         <td>
                                             <div class="sort-handler ui-sortable-handle text-center">
                                             <i class="fas fa-th"></i>
                                             </div>
                                         </td>
-                                        <td>{{ $datas->jenis->nama_jenis }}</td>
-                                        <td>{{ $datas->nosurat }}</td>
-                                        <td>{{ $datas->judul }}</td>
-                                        <td>{{ $datas->tanggal }}</td>
-                                        <td>{{ $datas->keterangan }}</td>
+                                        <td>{{ $surat->jenis->nama_jenis }}</td>
+                                        <td>{{ $surat->nosurat }}</td>
+                                        <td>{{ $surat->judul }}</td>
+                                        <td>{{ $surat->tanggal }}</td>
+                                        <td>{{ $surat->keterangan }}</td>
                                         <td>
-                                            <form action="" method="post">
+                                            <form action="{{ route('destroy.surat.masuk', $surat) }}" method="post">
                                                 @csrf
                                                 @method('DELETE')
-                                                <a href="" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
-                                                <a href="{{ route('index.disposisi.masuk', $datas->id) }}" class="btn btn-info" title="Disposisi Surat"><i class="fas fa-file"></i></a>
-                                                <button type="submit" class="btn btn-danger mr-2" onclick="return confirm('Apakah Anda yakin ingin menghapus {{ $datas->judul }} ?')" title="Hapus"><i class="far fa-trash-alt"></i></button>
+                                                <a href="{{ route('edit.surat.masuk', $surat) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
+                                                <a href="{{ route('index.disposisi.masuk', $surat) }}" class="btn btn-info" title="Disposisi Surat"><i class="fas fa-file"></i></a>
+                                                <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i></button>
                                             </form>
                                         </td>
                                     </tr>

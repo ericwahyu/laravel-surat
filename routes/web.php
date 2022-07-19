@@ -23,9 +23,9 @@ Route::prefix('/umum')->group(function(){
         Route::get('/', [JenisController::class, 'index'])->name('index.jenis');
         Route::get('/create', [JenisController::class, 'create'])->name('create.jenis');
         Route::post('/store', [JenisController::class, 'store'])->name('store.jenis');
-        Route::get('/edit/{id}', [JenisController::class, 'edit'])->name('edit.jenis');
-        Route::post('/update/{id}', [JenisController::class, 'update'])->name('update.jenis');
-        Route::delete('/destroy/{id}', [JenisController::class, 'destroy'])->name('destroy.jenis');
+        Route::get('/edit/{jenis}', [JenisController::class, 'edit'])->name('edit.jenis');
+        Route::post('/update/{jenis}', [JenisController::class, 'update'])->name('update.jenis');
+        Route::delete('/destroy/{jenis}', [JenisController::class, 'destroy'])->name('destroy.jenis');
     });
     Route::prefix('/template')->group(function(){
         Route::get('/', [TemplateController::class, 'index'])->name('index.template');
@@ -39,6 +39,9 @@ Route::prefix('/transaksi')->group(function(){
         Route::get('/', [SuratController::class, 'index'])->name('index.surat.masuk');
         Route::get('/create', [SuratController::class, 'create'])->name('create.surat.masuk');
         Route::post('/store', [SuratController::class, 'store'])->name('store.surat.masuk');
+        Route::get('/edit/{surat}', [SuratController::class, 'edit'])->name('edit.surat.masuk');
+        Route::post('/update/{surat}', [SuratController::class, 'update'])->name('update.surat.masuk');
+        Route::delete('/destroy/{surat}', [SuratController::class, 'destroy'])->name('destroy.surat.masuk');
     });
     Route::prefix('/surat/masuk/disposisi')->group(function(){
         Route::get('/{id}', [DisposisiController::class, 'index'])->name('index.disposisi.masuk');

@@ -17,7 +17,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label style="font-size: 16px">Kategori Jenis Surat</label>
-                            <select class="form-control  @error('kategori') is-invalid @enderror" name="kategori">
+                            <select class="form-control selectric @error('kategori') is-invalid @enderror" name="kategori">
                                 <option disabled selected>-- Kategori Jenis Surat--</option>
                                 @foreach ($kategori as $kategori)
                                     <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
