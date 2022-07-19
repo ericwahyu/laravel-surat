@@ -7,7 +7,7 @@
     </div>
     <h1>Disposisi Surat Dari <b>{{ $surat->judul }}</b></h1>
     <div class="section-header-button">
-        <a href="{{ route('create.disposisi.masuk', $surat->id) }}" class="btn btn-primary" title="Tambah Disposisi Surat">Tambah Baru</a>
+        <a href="{{ route('create.disposisi.masuk', $surat) }}" class="btn btn-primary" title="Tambah Disposisi Surat">Tambah Baru</a>
     </div>
 </div>
 <div class="section-body">
@@ -23,27 +23,35 @@
                                 <th>Perihal Disposisi</th>
                                 <th>Tanggal</th>
                                 <th>Isi Disposisi</th>
+                                <th>Tujukan Disposisi</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $datas)
+                            @foreach ($data as $disposisi)
                                 <tr>
                                     <td>
                                         <div class="sort-handler ui-sortable-handle text-center">
                                         <i class="fas fa-th"></i>
                                         </div>
                                     </td>
-                                    <td>{{ $datas->surat->nosurat }}</td>
-                                    <td>{{ $datas->perihal }}</td>
-                                    <td>{{ $datas->tanggal }}</td>
-                                    <td>{{ $datas->isi }}</td>
+                                    <td>{{ $disposisi->surat->nosurat }}</td>
+                                    <td>{{ $disposisi->perihal }}</td>
+                                    <td>{{ $disposisi->tanggal }}</td>
+                                    <td>{{ $disposisi->isi }}</td>
+                                    <td>
+                                        <ul>
+                                            @foreach($disposisi->user as $user)
+                                                <li> {{ $user->username }} </li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
                                     <td>
                                         <form action="" method="post">
                                             @csrf
                                             @method('DELETE')
-                                            <a href="" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
-                                            <button type="submit" class="btn btn-danger mr-2" onclick="return confirm('Apakah Anda yakin ingin menghapus {{ $datas->judul }} ?')" title="Hapus"><i class="far fa-trash-alt"></i></button>
+                                            <a href="{{ route('edit.disposisi.masuk', $disposisi) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
+                                            <button type="submit" class="btn btn-danger mr-2" onclick="" title="Hapus"><i class="far fa-trash-alt"></i></button>
                                         </form>
                                     </td>
                                 </tr>

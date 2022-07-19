@@ -16,10 +16,6 @@ class Disposisi extends Model
         return $this->belongsTo(Surat::class);
     }
 
-    public function catatan(){
-        return $this->hasMany(Catatan::class);
-    }
-
     public function user(){
         return $this->belongsToMany(User::class);
     }

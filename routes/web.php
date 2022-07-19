@@ -5,6 +5,7 @@ use App\Http\Controllers\JenisController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\DisposisiController;
+use App\Http\Controllers\DisposisiuserController;
 use App\Http\Controllers\CatatanController;
 
 /*
@@ -34,20 +35,19 @@ Route::prefix('/umum')->group(function(){
         Route::get('/download/{id}', [TemplateController::class, 'download'])->name('download.template');
     });
 });
-Route::prefix('/transaksi')->group(function(){
-    Route::prefix('/surat/masuk')->group(function(){
+Route::prefix('/transaksi/surat/masuk')->group(function(){
         Route::get('/', [SuratController::class, 'index'])->name('index.surat.masuk');
         Route::get('/create', [SuratController::class, 'create'])->name('create.surat.masuk');
         Route::post('/store', [SuratController::class, 'store'])->name('store.surat.masuk');
         Route::get('/edit/{surat}', [SuratController::class, 'edit'])->name('edit.surat.masuk');
         Route::post('/update/{surat}', [SuratController::class, 'update'])->name('update.surat.masuk');
         Route::delete('/destroy/{surat}', [SuratController::class, 'destroy'])->name('destroy.surat.masuk');
-    });
-    Route::prefix('/surat/masuk/disposisi')->group(function(){
-        Route::get('/{id}', [DisposisiController::class, 'index'])->name('index.disposisi.masuk');
-        Route::get('/create/{id}', [DisposisiController::class, 'create'])->name('create.disposisi.masuk');
-        Route::post('/store/{id}', [DisposisiController::class, 'store'])->name('store.disposisi.masuk');
-        Route::post('/store/{id}', [DisposisiController::class, 'store'])->name('store.disposisi.masuk');
+
+    Route::prefix('/disposisi')->group(function(){
+        Route::get('/{surat}', [DisposisiController::class, 'index'])->name('index.disposisi.masuk');
+        Route::get('/create/{surat}', [DisposisiController::class, 'create'])->name('create.disposisi.masuk');
+        Route::post('/store/{surat}', [DisposisiController::class, 'store'])->name('store.disposisi.masuk');
+        Route::get('/edit/{disposisi}', [DisposisiController::class, 'edit'])->name('edit.disposisi.masuk');
     });
 });
 Route::prefix('/agenda')->group(function(){

@@ -17,21 +17,14 @@ class DisposisiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($surat)
+    public function index(Surat $surat)
     {
         //
         $nav = 'transaksi';
         $menu = 'masuk';
-        $surat = Surat::find($surat);
-        try{
-            $data = Disposisi::join('surat', 'surat.id', '=', 'surat_id')
-                    ->where('surat.id', $surat->id)
-                    ->select('disposisi.*')
-                    ->get();
-        }catch(ModelNotFoundException $exception){
-            return back()->withError($exception->getMessage())->withInput();
-        }
-            return view('disposisi.index', compact('nav','menu','data', 'surat'));
+        $data = Disposisi::where('surat_id', $surat->id)->get();
+        return view('disposisi.index', compact('nav','menu','data','surat'));
+
     }
 
     /**
@@ -39,12 +32,11 @@ class DisposisiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($surat)
+    public function create(Surat $surat)
     {
         //
         $nav = 'transaksi';
         $menu = 'masuk';
-        $surat = Surat::find($surat);
         $user = User::all();
         return view('disposisi.insert', compact('nav', 'menu', 'surat', 'user'));
     }
@@ -55,10 +47,9 @@ class DisposisiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $surat)
+    public function store(Request $request,Surat $surat)
     {
         //
-        $surat = Surat::find($surat);
         $request->validate([
             'perihal' => 'required',
             'tanggal' => 'required|date',
@@ -80,19 +71,16 @@ class DisposisiController extends Controller
         }
 
         if($disposisiSM){
-            $surat = Surat::find($surat->id);
-
             $catatan = new Catatan();
             $catatan->surat_id = $surat->id;
             if($request->perihal == null){
-                $catatan->catatan = 'Menambah disposisi surat masuk '.$surat->judul;
+                $catatan->catatan = 'Menambah disposisi surat masuk dengan nomor '.$surat->nosurat;
             }else{
-                $catatan->catatan = 'Menambah disposisi surat masuk ' . $surat->judul . ', ('.$request->perihal.').';
+                $catatan->catatan = 'Menambah disposisi surat masuk dengan nomor ' . $surat->nosurat . ', ('.$request->perihal.').';
             }
             $catatan->waktu = Carbon::now();
             $catatan->save();
         }
-
 
         if($disposisi){
             return redirect()->route('index.disposisi.masuk', $surat->id)->with('success', 'Data berhasil di Tambah !!');
@@ -121,6 +109,10 @@ class DisposisiController extends Controller
     public function edit(Disposisi $disposisi)
     {
         //
+        $nav = 'transaksi';
+        $menu = 'masuk';
+        $user = User::all();
+        return view('disposisi.update', compact('nav', 'menu', 'disposisi', 'user'));
     }
 
     /**

@@ -11,4 +11,5 @@ class Disposisiuser extends Model
     protected $table = 'disposisi_user';
     protected $primarykey = 'id';
     protected $fillable = [];
+
 }

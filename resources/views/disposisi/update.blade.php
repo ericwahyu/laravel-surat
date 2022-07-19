@@ -1,22 +1,22 @@
 @extends('layout')
-@section('title','Tambah Disposisi Surat Masuk')
+@section('title','Update Disposisi Surat Masuk')
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
-        <a href="{{ route('index.disposisi.masuk', $disposisi) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+        <a href="{{ route('index.disposisi.masuk', $disposisi->surat) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <h1>Tambah Disposisi</h1>
+    <h1>Update Disposisi</h1>
 </div>
 
 <div class="section-body">
     <div class="row">
-        <form action="{{ route('store.disposisi.masuk', $surat) }}" method="POST" enctype="multipart/form-data">
+        <form action="" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card">
                 <div class="card-body">
                     <div class="form-group">
                         <label style="font-size: 16px">Perihal Disposisi</label>
-                        <input type="text" class="form-control @error('perihal') is-invalid @enderror" name="perihal" placeholder="" value="{{ old('perihal') }}">
+                        <input type="text" class="form-control @error('perihal') is-invalid @enderror" name="perihal" placeholder="" value="{{ $disposisi->perihal }}">
                         @error('perihal')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -25,7 +25,7 @@
                     </div>
                     <div class="form-group">
                         <label style="font-size: 16px">Tanggal Disposisi</label>
-                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ old('tanggal') }}">
+                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ $disposisi->tanggal }}">
                         @error('tanggal')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -34,15 +34,15 @@
                     </div>
                     <div class="form-group">
                         <label style="font-size: 16px">Isi Disposisi</label>
-                        <textarea name="isi" class="form-control @error('isi') is-invalid @enderror" cols="30" rows="10">{{ old('isi') }}</textarea>
+                        <textarea name="isi" class="form-control @error('isi') is-invalid @enderror" cols="30" rows="10">{{ $disposisi->isi }}</textarea>
                         @error('isi')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
-                    <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        Tambah penerima surat
+                    {{-- <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Lihat penerima surat
                     </a>
                     <div class="collapse" id="collapseExample">
                         <div class="form-group">
@@ -84,10 +84,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Simpan Data</button>
-                            </div>
                         </div>
+                    </div> --}}
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan Data</button>
                     </div>
                 </div>
             </div>
