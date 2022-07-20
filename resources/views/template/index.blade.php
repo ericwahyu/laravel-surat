@@ -27,21 +27,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $datas)
+                                @foreach ($template as $data)
                                     <tr>
                                         <td>
                                             <div class="sort-handler ui-sortable-handle text-center">
                                             <i class="fas fa-th"></i>
                                             </div>
-                                        <td>{{ $datas->nama }}</td>
-                                        <td>{{ $datas->file }}</td>
-                                        <td>{{ $datas->keterangan }}</td>
+                                        <td>{{ $data->nama }}</td>
+                                        <td>{{ $data->file }}</td>
+                                        <td>{{ $data->keterangan }}</td>
                                         <td>
-                                            <form action="{{ route('delete.template', $datas->id) }}" method="post">
+                                            <form action="{{ route('destroy.template', $data) }}" method="post">
                                                 @csrf
                                                 @method('DELETE')
-                                                <a href="{{ route('edit.template', $datas->id) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
-                                                <a href="{{ route('download.template', $datas->id) }}" class="btn btn-info" title="Download Template"><i class="fas fa-download"></i></a>
+                                                <a href="{{ route('edit.template', $data) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
+                                                <a href="{{ route('download.template', $data->id) }}" class="btn btn-info" title="Download Template"><i class="fas fa-download"></i></a>
                                                 <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i></button>
                                             </form>
                                         </td>

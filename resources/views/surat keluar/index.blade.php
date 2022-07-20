@@ -1,66 +1,30 @@
-@extends('templateadmin')
+@extends('layout')
 @section('title','Surat Keluar')
-@section('header','Surat Keluar')
-@section('body')
-<div class="row">
-    <div class="col-6 mb-3">
-        <a href="{{ route('create.surat.keluar') }}" class="btn btn-primary mb-3" style="width: auto" title="Generate Surat"><i class="far fa-plus-square mr-2"></i>Generate Surat</a>
-        {{-- <a href="#" class="btn btn-info mb-3 ml-3" style="width: auto"><i class="fas fa-download mr-2"></i>Download Contoh Kategori</a> --}}
+@section('section')
+<div class="section-header">
+    <h1>Surat Keluar</h1>
+    <div class="section-header-button">
+        <a href="{{ route('create.surat.keluar') }}" class="btn btn-primary" title="Tambah Surat Masuk">Tambah Baru</a>
     </div>
-    <div class="col-6">
-        @if ($message = Session::get('success'))
-            <div class="alert alert-success alert-dismissible show fade">
-                <div class="alert-body">
-                    <button class="close" data-dismiss="alert">
-                        <span>&times;</span>
-                    </button>
-                    {{ $message }}
-                </div>
-            </div>
-        @endif
-        @if ($message = Session::get('error'))
-            <div class="alert alert-danger alert-dismissible show fade">
-                <div class="alert-body">
-                    <button class="close" data-dismiss="alert">
-                        <span>&times;</span>
-                    </button>
-                    {{ $message }}
-                </div>
-            </div>
-        @endif
-    </div>
-    <div class="col-12">
+</div>
+<div class="section-body">
+    <div class="row">
         <div class="card">
-            <div class="card-header">
-                <h4>Tabel Surat Keluar</h4>
-                <div class="card-header-action">
-                    <form>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search">
-                            <div class="input-group-btn">
-                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="card-body p-0">
+            <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-striped" id="sortable-table">
+                    <table class="table table-striped" id="table-1">
                         <thead>
                             <tr>
-                            <th class="sort-handler ui-sortable-handle text-center">
-                                <i class="fas fa-th"></i>
-                            </th>
-                            <th>No Surat</th>
-                            <th>Judul Surat</th>
-                            <th>File Surat</th>
-                            <th>Tanggal Surat Keluar</th>
-                            <th>Action</th>
+                                <th class="text-center">#</th>
+                                <th>No Surat</th>
+                                <th>Judul Surat</th>
+                                <th>File Surat</th>
+                                <th>Tanggal Surat Keluar</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody class="ui-sortable">
-                            @foreach ($data as $data)
+                            {{-- @foreach ($data as $data)
                                 <tr>
                                     <td>
                                         <div class="sort-handler ui-sortable-handle text-center">
@@ -80,7 +44,7 @@
                                         </form>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @endforeach --}}
                         </tbody>
                     </table>
                 </div>

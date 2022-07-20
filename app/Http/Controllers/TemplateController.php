@@ -17,20 +17,14 @@ class TemplateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         //
         $nav = 'umum';
         $menu = 'template';
+        $template = Template::all();
 
-        $search = $request->search;
-        $data = Template::when($search, function($query) use ($search){
-            return Template::where('nama','like','%'.$search.'%');
-        })->paginate(5);
-
-        $request = $request->all();
-
-        return view('template.index', compact('nav', 'menu', 'data', 'request'));
+        return view('template.index', compact('nav', 'menu', 'template'));
     }
 
     /**
@@ -41,7 +35,7 @@ class TemplateController extends Controller
     public function create()
     {
         //
-        $nav = 'surat';
+        $nav = 'umum';
         $menu = 'template';
 
         return view('template.insert', compact('nav', 'menu'));
@@ -59,24 +53,24 @@ class TemplateController extends Controller
         $request->validate([
             'nama' => 'required',
             'file' => 'required|mimes:doc,docx',
-            'keterangan' => 'required'
+            'keterangan' => 'nullable'
         ]);
 
-        $insert = new Template();
-        $insert->nama = $request->nama;
+        $template = new Template();
+        $template->nama = $request->nama;
         if($request->hasFile('file')){
             $file = $request->file('file');
-            $file_name = now()->timestamp . '_' . $file->getClientOriginalName();
+            $file_name = now()->timestamp . '_' . $request->nama.'.'.$file->getClientOriginalExtension();
             $file->move('surat/template',$file_name);
-            $insert->file = $file_name;
+            $template->file = $file_name;
         }
-        $insert->keterangan = $request->keterangan;
+        $template->keterangan = $request->keterangan;
 
-        if(!$insert){
-            return back()->with('error', 'Data gagal di Tambah !!');
+        if($template){
+            $template->save();
+            return redirect()->route('index.template')->with('success', 'Data berhasil di tambah !!');
         }else{
-            $insert->save();
-            return redirect()->route('index.template')->with('success', 'Data berhasil di Tambah !!');
+            return back()->with('error', 'Data gagal di Tambah !!');
         }
     }
 
@@ -86,7 +80,7 @@ class TemplateController extends Controller
      * @param  \App\Models\Template  $template
      * @return \Illuminate\Http\Response
      */
-    public function show($template)
+    public function show(Template $template)
     {
         //
         // $nav = 'surat';
@@ -111,12 +105,11 @@ class TemplateController extends Controller
      * @param  \App\Models\Template  $template
      * @return \Illuminate\Http\Response
      */
-    public function edit($template)
+    public function edit(Template $template)
     {
         //
-        $nav = 'surat';
+        $nav = 'umum';
         $menu = 'template';
-        $template = Template::find($template);
 
         return view('template.update', compact('nav', 'menu', 'template'));
     }
@@ -128,34 +121,33 @@ class TemplateController extends Controller
      * @param  \App\Models\Template  $template
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$template)
+    public function update(Request $request, Template $template)
     {
         //
         $request->validate([
             'nama' => 'required',
             'file' => 'mimes:doc,docx',
-            'keterangan' => 'required'
+            'keterangan' => 'nullable'
         ]);
 
-        $template = Template::find($template);
         $template->nama = $request->nama;
+        $template->keterangan = $request->keterangan;
         if($request->hasFile('file')){
             $filelama = public_path('surat/template/'.$template->file);
             if(File::exists($filelama)){
                 File::delete($filelama);
                 $file = $request->file('file');
-                $file_name = now()->timestamp . '_' . $file->getClientOriginalName();
+                $file_name = now()->timestamp . '_' . $request->nama.'.'.$file->getClientOriginalExtension();
                 $file->move('surat/template',$file_name);
                 $template->file = $file_name;
             }
         }
-        $template->keterangan = $request->keterangan;
 
-        if(!$template){
-            return back()->with('error', 'Data gagal di Update !!');
-        }else{
+        if($template){
             $template->save();
             return redirect()->route('index.template')->with('success', 'Data berhasil di Update !!');
+        }else{
+            return back()->with('error', 'Data gagal di Update !!');
         }
     }
 
@@ -165,33 +157,32 @@ class TemplateController extends Controller
      * @param  \App\Models\Template  $template
      * @return \Illuminate\Http\Response
      */
-    public function destroy($template)
+    public function destroy(Template $template)
     {
         //
-        $template = Template::find($template);
         $filelama = public_path('surat/template/'.$template->file);
 
-        if(!$template){
-            return back()->with('error', 'Data gagal di Hapus !!');
-        }else{
+        if($template){
             File::delete($filelama);
             $template->delete();
             return redirect()->route('index.template')->with('success', 'Data berhasil di Hapus !!');
+        }else{
+            return back()->with('error', 'Data gagal di Hapus !!');
         }
 
     }
 
     public function download($template){
-        $template = Template::find($template);
-        if(!$template){
-            // dd($template);
-            $pathToFile = 'surat/template/template_contoh.docx';
-            return response()->download($pathToFile);
-        }else{
-            // dd($template);
+        $template = Template::findOrFail($template);
+        if($template != null){
             $file = $template->file;
             $pathToFile = 'surat/template/'.$file;
             return response()->download($pathToFile);
+        }elseif($template == 'template_contoh.docx'){
+            $pathToFile = 'surat/template/template_contoh.docx';
+            return response()->download($pathToFile);
+        }else{
+            return back()->with('error', 'Data Kosong !!');
         }
 
     }

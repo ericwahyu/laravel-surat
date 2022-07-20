@@ -10,36 +10,52 @@
 
 <div class="section-body">
     <div class="row">
-        <form action="" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('update.disposisi.masuk', $disposisi) }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card">
                 <div class="card-body">
-                    <div class="form-group">
-                        <label style="font-size: 16px">Perihal Disposisi</label>
-                        <input type="text" class="form-control @error('perihal') is-invalid @enderror" name="perihal" placeholder="" value="{{ $disposisi->perihal }}">
-                        @error('perihal')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size: 16px">Tanggal Disposisi</label>
-                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ $disposisi->tanggal }}">
-                        @error('tanggal')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label style="font-size: 16px">Perihal Disposisi</label>
+                            <input type="text" class="form-control @error('perihal') is-invalid @enderror" name="perihal" placeholder="" value="{{ $disposisi->perihal }}">
+                            @error('perihal')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size: 16px">Isi Disposisi</label>
-                        <textarea name="isi" class="form-control @error('isi') is-invalid @enderror" cols="30" rows="10">{{ $disposisi->isi }}</textarea>
-                        @error('isi')
+                        <div class="form-group col-md-6">
+                            <label style="font-size: 16px">Tanggal Disposisi</label>
+                            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ $disposisi->tanggal }}">
+                            @error('tanggal')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
-                        @enderror
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label style="font-size: 16px">Isi Disposisi</label>
+                            <textarea name="isi" class="form-control @error('isi') is-invalid @enderror" cols="30" rows="10">{{ $disposisi->isi }}</textarea>
+                            @error('isi')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label style="font-size: 16px">Catatan</label>
+                            <textarea name="catatan" class="form-control @error('catatan') is-invalid @enderror" cols="30" rows="10"></textarea>
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                Masukkan catatan jika ada perlu !!
+                            </small>
+                            @error('catatan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                     </div>
                     {{-- <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                         Lihat penerima surat

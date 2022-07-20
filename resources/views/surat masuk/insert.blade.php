@@ -47,8 +47,8 @@
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
-                                @enderror
-                            </div>
+                            @enderror
+                        </div>
                         <div class="form-group col-md-6">
                             <label style="font-size: 16px">Catatan</label>
                             <input type="text" class="form-control @error('catatan') is-invalid @enderror" name="catatan" value="{{ old('catatan') }}">

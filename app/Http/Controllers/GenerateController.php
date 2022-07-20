@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Generate;
 use App\Models\Surat;
 use App\Models\Template;
-use App\Models\Kategori;
+use App\Models\Jenis;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
@@ -25,15 +25,13 @@ class GenerateController extends Controller
     public function index()
     {
         //
-        $nav = 'datasurat';
+        $nav = 'transaksi';
         $menu = 'keluar';
-        $data = DB::table('generate')
-                ->join('surat', 'generate.surat_id', '=', 'surat.id')
-                ->selectRaw('surat.*')
-                ->join('kategori', 'surat.kategori_id', '=', 'kategori.id')
-                ->where('kategori.id','=','2')
-                ->get();
-        return view('surat keluar.index', compact('nav', 'menu', 'data'));
+        $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                    ->where('status', '!=', 0)
+                    ->where('kategori_id', 2)->get(['surat.*']);
+        return view('surat keluar.index', compact('nav', 'menu', 'generate'));
     }
 
     /**
@@ -44,15 +42,11 @@ class GenerateController extends Controller
     public function create()
     {
         //
-        $nav = 'datasurat';
+        $nav = 'transaksi';
         $menu = 'keluar';
-        $huruf = range('A', 'Z');
+        $jenis = Jenis::where('kategori_id', 2)->get();
         $template = Template::all();
-        $dosen1 = Dosen::all();
-        $dosen2 = Dosen::all();
-        $user = Auth::user()->id;
-        $unit =  Unitkerja::where('user_id', $user)->get();
-        return view('surat keluar.insert', compact('nav', 'menu', 'template', 'huruf', 'dosen1', 'dosen2', 'unit'));
+        return view('surat keluar.insert', compact('nav', 'menu', 'jenis', 'template'));
     }
 
     /**
@@ -64,58 +58,55 @@ class GenerateController extends Controller
     public function store(Request $request)
     {
         //
-        $request->validate([
-            // 'template_id' => 'required',
-            // 'judul' => 'required',
-            // 'huruf' => 'required',
-            // 'unit' => 'required',
-            // 'isi' => 'required',
-            // 'dosen1' => 'required',
-            // 'dosen2' => 'required',
-            // 'tanggal' => 'required|date',
-            // 'keterangan' => 'nullable'
-        ]);
+        dd($request);
+        // $request->validate([
+        //     'template_id' => 'required',
+        //     'judul' => 'required',
+        //     'isi' => 'required',
+        //     'tanggal' => 'required|date',
+        //     'keterangan' => 'nullable'
+        // ]);
 
-        $template_id = $request->template_id;
-        $judul = $request->judul;
-        $huruf = $request->huruf;
-        $unit = $request->unit;
-        $isi = $request->isi;
-        $dosen1 = $request->dosen1;
-        $dosen2 = $request->dosen2;
-        $tanggal = $request->tanggal;
-        $keterangan = $request->keterangan;
+        // $template_id = $request->template_id;
+        // $judul = $request->judul;
+        // $huruf = $request->huruf;
+        // $unit = $request->unit;
+        // $isi = $request->isi;
+        // $dosen1 = $request->dosen1;
+        // $dosen2 = $request->dosen2;
+        // $tanggal = $request->tanggal;
+        // $keterangan = $request->keterangan;
 
-        $datadosen1 = Dosen::find($dosen1);
-        $datadosen2 = Dosen::find($dosen2);
+        // $datadosen1 = Dosen::find($dosen1);
+        // $datadosen2 = Dosen::find($dosen2);
 
-        $surat = Generate::orderByDesc('id')->limit(1)->first();
-        if (is_null($surat)) {
-            $nosurat = $huruf. '.' .str_pad(1, 4, "0", STR_PAD_LEFT) . '/' . $unit . '/' . "ITATS" . '/' . date('Y');
-        } else {
-            $nosurat = $huruf. '.' .str_pad($surat->id++, 4, "0", STR_PAD_LEFT) . '/' . $unit . '/' . "ITATS" . '/' . date('Y');
-        }
+        // $surat = Generate::orderByDesc('id')->limit(1)->first();
+        // if (is_null($surat)) {
+        //     $nosurat = $huruf. '.' .str_pad(1, 4, "0", STR_PAD_LEFT) . '/' . $unit . '/' . "ITATS" . '/' . date('Y');
+        // } else {
+        //     $nosurat = $huruf. '.' .str_pad($surat->id++, 4, "0", STR_PAD_LEFT) . '/' . $unit . '/' . "ITATS" . '/' . date('Y');
+        // }
 
-        //cari file template
-        $template = Template::find($template_id);
-        $docs = public_path('surat/template/') . $template->file;
-        if (file_exists($docs)) {
-            $tanggal_surat = Carbon::parse($tanggal)->isoFormat("D MMMM YYYY");
+        // //cari file template
+        // $template = Template::find($template_id);
+        // $docs = public_path('surat/template/') . $template->file;
+        // if (file_exists($docs)) {
+        //     $tanggal_surat = Carbon::parse($tanggal)->isoFormat("D MMMM YYYY");
 
-            //proses generate surat
-            $templateProcessor = new TemplateProcessor($docs);
-            $templateProcessor->setValue('judul_surat', $judul);
-            $templateProcessor->setValue('no_surat', $nosurat);
-            $templateProcessor->setValue('isi_surat', $isi);
-            $templateProcessor->setValue('tanggal_surat', $tanggal_surat);
-            $templateProcessor->setValue('nama_dosen_1', $datadosen1->nama);
-            $templateProcessor->setValue('nip_dosen_1', $datadosen1->nip);
-            $templateProcessor->setValue('nama_dosen_2', $datadosen2->nama);
-            $templateProcessor->setValue('nip_dosen_2', $datadosen2->nip);
+        //     //proses generate surat
+        //     $templateProcessor = new TemplateProcessor($docs);
+        //     $templateProcessor->setValue('judul_surat', $judul);
+        //     $templateProcessor->setValue('no_surat', $nosurat);
+        //     $templateProcessor->setValue('isi_surat', $isi);
+        //     $templateProcessor->setValue('tanggal_surat', $tanggal_surat);
+        //     $templateProcessor->setValue('nama_dosen_1', $datadosen1->nama);
+        //     $templateProcessor->setValue('nip_dosen_1', $datadosen1->nip);
+        //     $templateProcessor->setValue('nama_dosen_2', $datadosen2->nama);
+        //     $templateProcessor->setValue('nip_dosen_2', $datadosen2->nip);
 
-            //merubah nama file generate
-            $file_name = now()->timestamp . '_' . $judul . '.docx';
-            $templateProcessor->saveAs($file_name);
+        //     //merubah nama file generate
+        //     $file_name = now()->timestamp . '_' . $judul . '.docx';
+        //     $templateProcessor->saveAs($file_name);
 
         //     //insert ke table surat
         //     $generate_surat = new Surat();
@@ -138,13 +129,13 @@ class GenerateController extends Controller
         //     $insert->template_id = $template_id;
         //     $insert->save();
 
-            // Pindah file
-            File::move(public_path() . '/' . $file_name, public_path('surat/generate/') . $file_name);
+        //     // Pindah file
+        //     File::move(public_path() . '/' . $file_name, public_path('surat/generate/') . $file_name);
 
-            //Download generate surat
-            $pathToFile = 'surat/generate/'.$file_name;
-            return response()->download($pathToFile);
-        }
+        //     //Download generate surat
+        //     $pathToFile = 'surat/generate/'.$file_name;
+        //     return response()->download($pathToFile);
+        // }
     }
 
     /**

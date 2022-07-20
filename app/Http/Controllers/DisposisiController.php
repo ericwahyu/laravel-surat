@@ -73,17 +73,17 @@ class DisposisiController extends Controller
         if($disposisiSM){
             $catatan = new Catatan();
             $catatan->surat_id = $surat->id;
-            if($request->perihal == null){
+            if($request->catatan == null){
                 $catatan->catatan = 'Menambah disposisi surat masuk dengan nomor '.$surat->nosurat;
             }else{
-                $catatan->catatan = 'Menambah disposisi surat masuk dengan nomor ' . $surat->nosurat . ', ('.$request->perihal.').';
+                $catatan->catatan = 'Menambah disposisi surat masuk dengan nomor ' . $surat->nosurat . ', ('.$request->catatan.').';
             }
             $catatan->waktu = Carbon::now();
             $catatan->save();
         }
 
-        if($disposisi){
-            return redirect()->route('index.disposisi.masuk', $surat->id)->with('success', 'Data berhasil di Tambah !!');
+        if($disposisiSM){
+            return redirect()->route('index.disposisi.masuk', $surat)->with('success', 'Data berhasil di tambah !!');
         }else{
             return back()->with('error', 'Data gagal di Tambah !!');
         }
@@ -125,6 +125,34 @@ class DisposisiController extends Controller
     public function update(Request $request, Disposisi $disposisi)
     {
         //
+        $request->validate([
+            'perihal' => 'required',
+            'tanggal' => 'required|date',
+            'isi' => 'required'
+        ]);
+
+        $disposisi->perihal = $request->perihal;
+        $disposisi->tanggal = $request->tanggal;
+        $disposisi->isi = $request->isi;
+        $disposisi->save();
+
+        if($disposisi){
+            $catatan = new Catatan();
+            $catatan->surat_id = $disposisi->surat->id;
+            if($request->catatan == null){
+                $catatan->catatan = 'Mengubah disposisi surat masuk dengan nomor '.$disposisi->surat->nosurat;
+            }else{
+                $catatan->catatan = 'Mengubah disposisi surat masuk dengan nomor ' . $disposisi->surat->nosurat . ', ('.$request->catatan.').';
+            }
+            $catatan->waktu = Carbon::now();
+            $catatan->save();
+        }
+
+        if($disposisi){
+            return redirect()->route('index.disposisi.masuk', $disposisi->surat)->with('success', 'Data berhasil di ubah !!');
+        }else{
+            return back()->with('error', 'Data gagal di Tambah !!');
+        }
     }
 
     /**

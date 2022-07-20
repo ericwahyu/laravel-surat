@@ -22,9 +22,12 @@ class SuratController extends Controller
         //
         $nav = 'transaksi';
         $menu = 'masuk';
-        $data = Surat::where('status', '!=', 0)->get();
+        $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                ->where('status', '!=', 0)
+                ->where('kategori_id', 1)->get(['surat.*']);
 
-        return view('surat masuk.index', compact('nav', 'menu', 'data'));
+        return view('surat masuk.index', compact('nav', 'menu', 'surat'));
     }
 
     /**

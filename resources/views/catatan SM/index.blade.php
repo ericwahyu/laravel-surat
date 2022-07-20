@@ -27,24 +27,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $datas)
+                                @foreach ($catatan as $data)
                                     <tr>
                                         <td>
                                             <div class="sort-handler ui-sortable-handle text-center">
                                             <i class="fas fa-th"></i>
                                             </div>
                                         </td>
-                                        <td>{{ $datas->waktu }}</td>
-                                        <td>{{ $datas->surat->nosurat }}</td>
-                                        <td>{{ $datas->surat->judul }}</td>
-                                        <td>{{ $datas->surat->tanggal }}</td>
-                                        <td>{{ $datas->catatan }}</td>
+                                        <td>{{ $data->waktu }}</td>
+                                        <td>{{ $data->surat->nosurat }}</td>
+                                        <td>{{ $data->surat->judul }}</td>
+                                        <td>{{ $data->surat->tanggal }}</td>
+                                        <td>{{ $data->catatan }}</td>
                                         <td>
                                             <form action="" method="post">
                                                 @csrf
                                                 @method('DELETE')
                                                 <a href="" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
-                                                <button type="submit" class="btn btn-danger mr-2" onclick="return confirm('Apakah Anda yakin ingin menghapus  ?')" title="Hapus"><i class="far fa-trash-alt"></i></button>
+                                                <button type="submit" class="btn btn-danger mr-2" onclick="" title="Hapus"><i class="far fa-trash-alt"></i></button>
                                             </form>
                                         </td>
                                     </tr>

@@ -22,6 +22,12 @@
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css') }}">
 
+            {{-- summernote --}}
+            <link rel="stylesheet" href="{{ asset('assets/modules/summernote/summernote-bs4.css') }}">
+            <link rel="stylesheet" href="{{ asset('assets/modules/codemirror/lib/codemirror.css') }}">
+            <link rel="stylesheet" href="{{ asset('assets/modules/codemirror/theme/duotone-dark.css') }}">
+            <link rel="stylesheet" href="{{ asset('assets/modules/jquery-selectric/selectric.css') }}">
+
         <!-- Template CSS -->
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
@@ -284,7 +290,7 @@
                                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-mail-bulk"></i> <span>Transaksi Surat</span></a>
                                 <ul class="dropdown-menu">
                                     <li class="{{ ($menu == 'masuk') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.masuk') }}"><i class="far fa-envelope"></i>Surat Masuk</a></li>
-                                    {{-- <li class="{{ ($menu == 'keluar') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.keluar') }}"><i class="far fa-envelope-open"></i>Surat Keluar</a></li> --}}
+                                    <li class="{{ ($menu == 'keluar') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.keluar') }}"><i class="far fa-envelope-open"></i>Surat Keluar</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown {{ ($nav == 'agenda') ? 'active' : '' }}">
@@ -349,6 +355,13 @@
         <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
         <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
 
+            {{-- summernote --}}
+            <script src="{{ asset('assets/modules/summernote/summernote-bs4.js') }}"></script>
+            <script src="{{ asset('assets/modules/codemirror/lib/codemirror.js') }}"></script>
+            <script src="{{ asset('assets/modules/codemirror/mode/javascript/javascript.js') }}"></script>
+            <script src="{{ asset('assets/modules/jquery-selectric/jquery.selectric.min.js') }}"></script>
+
+
         <!-- Page Specific JS File -->
         <script src="{{ asset('assets/js/page/bootstrap-modal.js') }}"></script>
         <script src="{{ asset('assets/js/page/forms-advanced-forms.js') }}"></script>
@@ -362,39 +375,6 @@
         {{-- Toastr --}}
         @include('sweetalert::alert')
 
-        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-        <script type="text/javascript">
-            $('#summernote').summernote({
-                height: 400,
-                toolbar: [
-                    ['cleaner',['cleaner']], // The Button
-                    ['style',['style']],
-                    ['font',['bold','italic','underline','clear']],
-                    ['fontname',['fontname']],
-                    ['color',['color']],
-                    ['para',['ul','ol','paragraph']],
-                    ['height',['height']],
-                    ['table',['table']],
-                    ['insert',['media','link','hr']],
-                    ['view',['fullscreen','codeview']],
-                    ['help',['help']]
-                ],
-                cleaner: {
-                    action: 'both',
-                    newline: '<br>',
-                    icon: '<i class="note-icon">[Your Button]</i>',
-                    keepHtml: true,
-                    keepClasses: false,
-                    badTags: ['applet', 'body', 'col', 'colgroup', 'embed', 'html', 'noframes', 'noscript', 'script', 'style', 'title'],
-                    badAttributes: ['bgcolor', 'border', 'height', 'cellpadding', 'cellspacing', 'lang', 'start', 'style', 'valign', 'width'],
-                    limitChars: false,
-                    limitDisplay: 'both',
-                    limitStop: false,
-                    imagePlaceholder: 'https://via.placeholder.com/200' // URL, or relative path to file.
-                }
-            });
-        </script>
         {{-- Checkbox tabel --}}
         <script>
             $(function(){
@@ -403,6 +383,7 @@
                 });
             });
         </script>
+
         {{-- Confirm delete --}}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
         <script type="text/javascript">
@@ -422,6 +403,13 @@
                     }
                 });
             });
+        </script>
+
+        {{-- textarea --}}
+        <script>
+            document.getElementById('submit').onclick = function() {
+                document.getElementById('isi').innerHTML = 'It was a dark and stormy night…';
+            };
         </script>
     </body>
 </html>

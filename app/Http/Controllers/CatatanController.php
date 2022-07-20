@@ -18,13 +18,12 @@ class CatatanController extends Controller
         //
         $nav = 'agenda';
         $menu = 'masuk';
-        $data = Catatan::join('surat', 'surat.id', '=', 'surat_id')
+        $catatan = Catatan::join('surat', 'surat.id', '=', 'surat_id')
                 ->join('jenis', 'jenis.id', '=', 'jenis_id')
                 ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                 ->where('kategori.id', 1)
-                ->select('catatan.*')
-                ->get();
-        return view('catatan SM.index', compact('nav', 'menu', 'data'));
+                ->get(['catatan.*']);
+        return view('catatan SM.index', compact('nav', 'menu', 'catatan'));
     }
 
     /**

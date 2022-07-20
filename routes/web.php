@@ -7,6 +7,7 @@ use App\Http\Controllers\SuratController;
 use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\DisposisiuserController;
 use App\Http\Controllers\CatatanController;
+use App\Http\Controllers\GenerateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,9 @@ Route::prefix('/umum')->group(function(){
         Route::get('/', [TemplateController::class, 'index'])->name('index.template');
         Route::get('/create', [TemplateController::class, 'create'])->name('create.template');
         Route::post('/store', [TemplateController::class, 'store'])->name('store.template');
+        Route::get('/edit/{template}', [TemplateController::class, 'edit'])->name('edit.template');
+        Route::post('/update/{template}', [TemplateController::class, 'update'])->name('update.template');
+        Route::delete('/destroy/{template}', [TemplateController::class, 'destroy'])->name('destroy.template');
         Route::get('/download/{id}', [TemplateController::class, 'download'])->name('download.template');
     });
 });
@@ -48,7 +52,13 @@ Route::prefix('/transaksi/surat/masuk')->group(function(){
         Route::get('/create/{surat}', [DisposisiController::class, 'create'])->name('create.disposisi.masuk');
         Route::post('/store/{surat}', [DisposisiController::class, 'store'])->name('store.disposisi.masuk');
         Route::get('/edit/{disposisi}', [DisposisiController::class, 'edit'])->name('edit.disposisi.masuk');
+        Route::post('/update/{disposisi}', [DisposisiController::class, 'update'])->name('update.disposisi.masuk');
     });
+});
+Route::prefix('/transaksi/surat/keluar')->group(function(){
+    Route::get('/', [GenerateController::class, 'index'])->name('index.surat.keluar');
+    Route::get('/create', [GenerateController::class, 'create'])->name('create.surat.keluar');
+    Route::post('/store', [GenerateController::class, 'store'])->name('store.surat.keluar');
 });
 Route::prefix('/agenda')->group(function(){
     Route::prefix('/surat/masuk')->group(function(){
