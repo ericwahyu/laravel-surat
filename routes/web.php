@@ -47,18 +47,19 @@ Route::prefix('/transaksi/surat/masuk')->group(function(){
         Route::post('/update/{surat}', [SuratController::class, 'update'])->name('update.surat.masuk');
         Route::delete('/destroy/{surat}', [SuratController::class, 'destroy'])->name('destroy.surat.masuk');
 
-    Route::prefix('/disposisi')->group(function(){
-        Route::get('/{surat}', [DisposisiController::class, 'index'])->name('index.disposisi.masuk');
-        Route::get('/create/{surat}', [DisposisiController::class, 'create'])->name('create.disposisi.masuk');
-        Route::post('/store/{surat}', [DisposisiController::class, 'store'])->name('store.disposisi.masuk');
-        Route::get('/edit/{disposisi}', [DisposisiController::class, 'edit'])->name('edit.disposisi.masuk');
-        Route::post('/update/{disposisi}', [DisposisiController::class, 'update'])->name('update.disposisi.masuk');
+        Route::prefix('/disposisi')->group(function(){
+            Route::get('/{surat}', [DisposisiController::class, 'index'])->name('index.disposisi.masuk');
+            Route::get('/create/{surat}', [DisposisiController::class, 'create'])->name('create.disposisi.masuk');
+            Route::post('/store/{surat}', [DisposisiController::class, 'store'])->name('store.disposisi.masuk');
+            Route::get('/edit/{disposisi}', [DisposisiController::class, 'edit'])->name('edit.disposisi.masuk');
+            Route::post('/update/{disposisi}', [DisposisiController::class, 'update'])->name('update.disposisi.masuk');
     });
 });
 Route::prefix('/transaksi/surat/keluar')->group(function(){
     Route::get('/', [GenerateController::class, 'index'])->name('index.surat.keluar');
-    Route::get('/create', [GenerateController::class, 'create'])->name('create.surat.keluar');
+    Route::get('/create/{template}', [GenerateController::class, 'create'])->name('create.surat.keluar');
     Route::post('/store', [GenerateController::class, 'store'])->name('store.surat.keluar');
+    Route::get('/index/template', [GenerateController::class, 'index_template'])->name('index.keluar.template');
 });
 Route::prefix('/agenda')->group(function(){
     Route::prefix('/surat/masuk')->group(function(){

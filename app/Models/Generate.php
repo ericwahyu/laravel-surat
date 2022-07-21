@@ -12,8 +12,5 @@ class Generate extends Model
     protected $primarykey = 'id';
     protected $fillable = [];
 
-    public function surat(){
-        return $this->hasOne(Surat::class);
-    }
 }
 

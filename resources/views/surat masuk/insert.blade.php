@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label style="font-size: 16px">Jenis Surat</label>
-                            <select class="form-control selectric @error('kategori') is-invalid @enderror" name="jenis_id">
+                            <select class="form-control @error('kategori') is-invalid @enderror" name="jenis_id">
                                 <option disabled selected>-- Jenis Surat--</option>
                                 @foreach ($jenis as $jenis)
                                     <option value="{{ $jenis->id }}">{{ $jenis->nama_jenis }}</option>

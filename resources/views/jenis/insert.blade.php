@@ -16,14 +16,14 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group">
-                            <label style="font-size: 16px">Kategori Jenis Surat</label>
-                            <select class="form-control selectric @error('kategori') is-invalid @enderror" name="kategori">
+                            <label style="font-size: 16px" class="form-label">Kategori Jenis Surat</label>
+                            <select class="form-control @error('kategori_id') is-invalid @enderror" name="kategori_id">
                                 <option disabled selected>-- Kategori Jenis Surat--</option>
                                 @foreach ($kategori as $kategori)
                                     <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
                                 @endforeach
                             </select>
-                            @error('kategori')
+                            @error('kategori_id')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

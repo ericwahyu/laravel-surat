@@ -16,8 +16,8 @@ class Surat extends Model
         return $this->belongsTo(Jenis::class);
     }
 
-    public function generate(){
-        return $this->belongsTo(Generate::class);
+    public function template(){
+        return $this->belongsToMany(Template::class);
     }
 
     public function disposisi(){

@@ -6,14 +6,16 @@ use App\Models\Generate;
 use App\Models\Surat;
 use App\Models\Template;
 use App\Models\Jenis;
+use App\Models\User;
+use App\Models\Catatan;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
-use PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\File;
 use \Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Shared\Html;
+use \PhpOffice\PhpWord\TemplateProcessor;
 
 class GenerateController extends Controller
 {
@@ -39,14 +41,28 @@ class GenerateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+
+    public function create(Template $template)
     {
         //
         $nav = 'transaksi';
         $menu = 'keluar';
         $jenis = Jenis::where('kategori_id', 2)->get();
-        $template = Template::all();
-        return view('surat keluar.insert', compact('nav', 'menu', 'jenis', 'template'));
+        $user = User::all();
+
+        if(file_exists(public_path('surat/template/'.$template->file))){
+            switch($template->file){
+                case('1658407481_Surat Permohonan Beasiswa.docx'):
+                    return view('surat keluar.layout template.surat permohonan beasiswa', compact('nav', 'menu', 'template', 'jenis', 'user'));
+                    break;
+
+                case('1658386692_Surat Keterangan Aktif Kuliah.docx'):
+                    return view('surat keluar.layout template.surat keterangan aktif kuliah', compact('nav', 'menu', 'template', 'jenis', 'user'));
+                break;
+            }
+        }else{
+            return back()->with('error', 'Berkas tidak ditemukan !!');
+        }
     }
 
     /**
@@ -58,83 +74,43 @@ class GenerateController extends Controller
     public function store(Request $request)
     {
         //
-        dd($request);
-        // $request->validate([
-        //     'template_id' => 'required',
-        //     'judul' => 'required',
-        //     'isi' => 'required',
-        //     'tanggal' => 'required|date',
-        //     'keterangan' => 'nullable'
-        // ]);
+        $request->validate([
+            'jenis_id' => 'required',
+            'keterangan' => 'required',
+            'catatan' => 'nullable',
+        ]);
 
-        // $template_id = $request->template_id;
-        // $judul = $request->judul;
-        // $huruf = $request->huruf;
-        // $unit = $request->unit;
-        // $isi = $request->isi;
-        // $dosen1 = $request->dosen1;
-        // $dosen2 = $request->dosen2;
-        // $tanggal = $request->tanggal;
-        // $keterangan = $request->keterangan;
+        $surat = new Surat();
+        $surat->jenis_id = $request->jenis_id;
+        $surat->judul = $request->judul;
+        $surat->nosurat = $request->nomor_surat;
+        $surat->tanggal = $request->tanggal_surat;
+        $surat->status = 1;
+        $surat->keterangan = $request->keterangan;
+        $surat->save();
 
-        // $datadosen1 = Dosen::find($dosen1);
-        // $datadosen2 = Dosen::find($dosen2);
+        $catatan = new Catatan();
+        $catatan->surat_id = $surat->id;
+        if($request->catatan == null){
+            $catatan->catatan = 'Menambah data surat keluar dengan nomor '. $request->nomor_surat;
+        }else{
+            $catatan->catatan = 'Menambah data surat keluar dengan nomor '. $request->nomor_surat. ', ('. $request->catatan. ').';
+        }
+        $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
+        $catatan->save();
+
+        $generate = new Generate();
+        $generate->template_id = $request->template_id;
+        $generate->surat_id = $surat->id;
+        $generate->save();
+
+        return $this->surat_permohonan_beasiswa($request, $surat->id);
 
         // $surat = Generate::orderByDesc('id')->limit(1)->first();
         // if (is_null($surat)) {
         //     $nosurat = $huruf. '.' .str_pad(1, 4, "0", STR_PAD_LEFT) . '/' . $unit . '/' . "ITATS" . '/' . date('Y');
         // } else {
         //     $nosurat = $huruf. '.' .str_pad($surat->id++, 4, "0", STR_PAD_LEFT) . '/' . $unit . '/' . "ITATS" . '/' . date('Y');
-        // }
-
-        // //cari file template
-        // $template = Template::find($template_id);
-        // $docs = public_path('surat/template/') . $template->file;
-        // if (file_exists($docs)) {
-        //     $tanggal_surat = Carbon::parse($tanggal)->isoFormat("D MMMM YYYY");
-
-        //     //proses generate surat
-        //     $templateProcessor = new TemplateProcessor($docs);
-        //     $templateProcessor->setValue('judul_surat', $judul);
-        //     $templateProcessor->setValue('no_surat', $nosurat);
-        //     $templateProcessor->setValue('isi_surat', $isi);
-        //     $templateProcessor->setValue('tanggal_surat', $tanggal_surat);
-        //     $templateProcessor->setValue('nama_dosen_1', $datadosen1->nama);
-        //     $templateProcessor->setValue('nip_dosen_1', $datadosen1->nip);
-        //     $templateProcessor->setValue('nama_dosen_2', $datadosen2->nama);
-        //     $templateProcessor->setValue('nip_dosen_2', $datadosen2->nip);
-
-        //     //merubah nama file generate
-        //     $file_name = now()->timestamp . '_' . $judul . '.docx';
-        //     $templateProcessor->saveAs($file_name);
-
-        //     //insert ke table surat
-        //     $generate_surat = new Surat();
-        //     $generate_surat->kategori_id = 2;
-        //     $generate_surat->users_id = Auth::user()->id;
-        //     $generate_surat->nosurat = $nosurat;
-        //     $generate_surat->judul = $judul;
-        //     $generate_surat->file = $file_name;
-        //     $generate_surat->verifikasi = 0;
-        //     $generate_surat->tglmasuk = null;
-        //     $generate_surat->tglkeluar = $tanggal;
-        //     $generate_surat->dosen1_id = $datadosen1->id;
-        //     $generate_surat->dosen2_id = $datadosen2->id;
-        //     $generate_surat->keterangan = $keterangan;
-        //     $generate_surat->save();
-
-        //     //insert ke table generate dengan surat_id di ambil dari atas
-        //     $insert = new Generate();
-        //     $insert->surat_id = $generate_surat->id;
-        //     $insert->template_id = $template_id;
-        //     $insert->save();
-
-        //     // Pindah file
-        //     File::move(public_path() . '/' . $file_name, public_path('surat/generate/') . $file_name);
-
-        //     //Download generate surat
-        //     $pathToFile = 'surat/generate/'.$file_name;
-        //     return response()->download($pathToFile);
         // }
     }
 
@@ -216,6 +192,54 @@ class GenerateController extends Controller
             File::delete($filelama);
             $generate->delete();
             return redirect()->route('index.surat.keluar')->with('success', 'Data berhasil di Update !!');
+        }
+    }
+
+    public function index_template(){
+        $nav = 'transaksi';
+        $menu = 'keluar';
+        // $jenis = Jenis::where('kategori_id', 2)->get();
+        $template = Template::all();
+        return view('surat keluar.index_template', compact('nav', 'menu', 'template'));
+    }
+
+    // generate docx
+
+    public function surat_permohonan_beasiswa($request, $surat_id){
+        $surat = Surat::find($surat_id);
+        $template = Template::find($request->template_id);
+        $pihak = User::find($request->pihak_1);
+        $docs = public_path('surat/template/').$template->file;
+
+        // cek template
+        if (file_exists($docs)) {
+            //generate surat
+            $date = Carbon::parse($request->tanggal_surat)->isoFormat("D MMMM YYYY");
+
+            $templateProcessor = new TemplateProcessor($docs);
+            $templateProcessor->setValue('tempat_surat', $request->tempat_surat);
+            $templateProcessor->setValue('tanggal_surat', $date);
+            $templateProcessor->setValue('lampiran_surat', $request->lampiran_surat);
+            $templateProcessor->setValue('perihal_surat', $request->perihal_surat);
+            $templateProcessor->setValue('tujuan_surat', $request->tujuan_surat);
+            $templateProcessor->setValue('pembuka_surat', $request->pembuka_surat);
+            $templateProcessor->setValue('paragraf_1', $request->paragraf_1);
+            $templateProcessor->setValue('data_1', $request->data_1);
+            $templateProcessor->setValue('paragraf_2', $request->paragraf_2);
+            $templateProcessor->setValue('data_2', $request->data_2);
+            $templateProcessor->setValue('penutup_surat', $request->penutup_surat);
+            $templateProcessor->setValue('pihak_1', $pihak->username);
+
+            $file_name = now()->timestamp . '_' . $request->judul . '.docx';
+            $templateProcessor->saveAs($file_name);
+
+            $surat->file_surat = $file_name;
+            $surat->save();
+
+            // Pindah file
+            File::move(public_path() . '/' . $file_name, public_path('surat/generate/') .$file_name);
+
+            return redirect()->route('index.surat.keluar')->with('success', 'Surat berhasil di generate !!');
         }
     }
 }

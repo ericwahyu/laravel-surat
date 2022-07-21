@@ -53,12 +53,12 @@ class JenisController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kategori' => 'required',
+            'kategori_id' => 'required',
             'nama' => 'required|max:100'
         ]);
 
         $insert = new Jenis();
-        $insert->kategori_id = $request->kategori;
+        $insert->kategori_id = $request->kategori_id;
         $insert->nama_jenis = $request->nama;
         $insert->save();
 
@@ -99,7 +99,7 @@ class JenisController extends Controller
      * @param  \App\Models\Jenis  $jenis
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Jenis $jenis)
+    public function update(Request $request, Jenis $jenis)
     {
         //
         $request->validate([

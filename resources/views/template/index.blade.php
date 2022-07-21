@@ -5,7 +5,6 @@
     <h1>Template Surat</h1>
     <div class="section-header-button">
         <a href="{{ route('create.template') }}" class="btn btn-primary" title="Tambah Template Surat">Tambah Baru</a>
-        <a href="{{ route('download.template', $id = 'template_contoh.docx') }}" class="btn btn-info" style="width: auto" title="Download Contoh Template"><i class="fas fa-download mr-2"></i>Download Contoh Template</a>
     </div>
 </div>
 <div class="section-body">
@@ -41,7 +40,6 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <a href="{{ route('edit.template', $data) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
-                                                <a href="{{ route('download.template', $data->id) }}" class="btn btn-info" title="Download Template"><i class="fas fa-download"></i></a>
                                                 <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i></button>
                                             </form>
                                         </td>

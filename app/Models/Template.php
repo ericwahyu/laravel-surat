@@ -11,5 +11,9 @@ class Template extends Model
     protected $table = 'template';
     protected $primarykey = 'id';
     protected $fillable = [];
-    
+
+    public function surat(){
+        return $this->belongsToMany(Surat::class);
+    }
+
 }

@@ -17,10 +17,12 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label style="font-size: 16px">Kategori Jenis Surat</label>
-                            <select class="form-control selectric @error('verifikasi') is-invalid @enderror" name="kategori_id">
+                            <select class="form-control @error('kategori_id') is-invalid @enderror" name="kategori_id">
                                 <option selected value="{{ $jenis->kategori_id }}">{{ $jenis->kategori->nama_kategori }}</option>
                                 @foreach ($kategori as $kategori)
-                                    <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
+                                    @if ($kategori->id != $jenis->kategori_id)
+                                        <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                             @error('kategori_id')

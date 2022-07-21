@@ -86,10 +86,10 @@ class SuratController extends Controller
                 $catatan->catatan = 'Menambah data surat masuk dengan nomor '. $request->nomor. ', ('. $request->catatan. ').';
             }
             $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
+            $catatan->save();
         }
 
         if($catatan){
-            $catatan->save();
             return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di tambah !!');
         }else{
             return back()->with('error', 'Data gagal di tambah !!');

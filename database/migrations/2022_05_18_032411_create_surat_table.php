@@ -18,7 +18,7 @@ class CreateSuratTable extends Migration
             $table->unsignedBigInteger('jenis_id');
             $table->string('nosurat')->nullable();
             $table->string('judul');
-            $table->string('file_surat');
+            $table->string('file_surat')->nullable();
             $table->date('tanggal')->nullable();
             $table->boolean('status')->nullable();
             $table->string('keterangan')->nullable();
