@@ -52,7 +52,7 @@ class GenerateController extends Controller
 
         if(file_exists(public_path('surat/template/'.$template->file))){
             switch($template->file){
-                case('1658561155_Surat Permohonan Beasiswa.docx'):
+                case('1658589798_Surat Permohonan Beasiswa.docx'):
                     return view('surat keluar.layout template.surat permohonan beasiswa', compact('nav', 'menu', 'template', 'jenis', 'user'));
                     break;
 
@@ -91,6 +91,7 @@ class GenerateController extends Controller
 
         $catatan = new Catatan();
         $catatan->surat_id = $surat->id;
+        $catatan->user_id = 1;
         if($request->catatan == null){
             $catatan->catatan = 'Menambah data surat keluar dengan nomor '. $request->nomor_surat;
         }else{
@@ -112,7 +113,7 @@ class GenerateController extends Controller
 
         if(file_exists(public_path('surat/template/'.$template->file))){
             switch($template->file){
-                case('1658561155_Surat Permohonan Beasiswa.docx'):
+                case('1658589798_Surat Permohonan Beasiswa.docx'):
                     $file_surat = $this->TP_surat_permohonan_beasiswa($request, $tujukan);
                     break;
 

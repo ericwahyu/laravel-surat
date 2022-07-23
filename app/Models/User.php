@@ -43,4 +43,17 @@ class User extends Authenticatable
     public function disposisi(){
         return $this->belongsToMany(Disposisi::class);
     }
+
+    public function dosen(){
+        return $this->hasMany(Dosen::class);
+
+    }
+
+    public function mahasiswa(){
+        return $this->hasMany(Mahasiswa::class);
+    }
+
+    public function riwayat(){
+        return $this->hasMany(Riwayat::class);
+    }
 }

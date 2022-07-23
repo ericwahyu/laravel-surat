@@ -16,11 +16,13 @@ class CreateCatatanTable extends Migration
         Schema::create('catatan', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('surat_id')->nullable;
-            $table->string('catatan');
+            $table->unsignedBigInteger('user_id');
             $table->dateTime('waktu');
+            $table->string('catatan');
             $table->timestamps();
 
             $table->foreign('surat_id')->references('id')->on('surat')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

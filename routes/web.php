@@ -8,6 +8,7 @@ use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\DisposisiuserController;
 use App\Http\Controllers\CatatanController;
 use App\Http\Controllers\GenerateController;
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,9 @@ use App\Http\Controllers\GenerateController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', [LoginController::class, 'index'])->name('index.login');
+Route::post('/login', [LoginController::class, 'store'])->name('store.login');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout.login');
 
 Route::prefix('/umum')->group(function(){
     Route::prefix('/jenis')->group(function(){
@@ -45,6 +49,7 @@ Route::prefix('/transaksi/surat/masuk')->group(function(){
         Route::post('/store', [SuratController::class, 'store'])->name('store.surat.masuk');
         Route::get('/edit/{surat}', [SuratController::class, 'edit'])->name('edit.surat.masuk');
         Route::post('/update/{surat}', [SuratController::class, 'update'])->name('update.surat.masuk');
+        Route::get('/show/{surat}', [SuratController::class, 'show'])->name('show.surat.masuk');
         Route::delete('/destroy/{surat}', [SuratController::class, 'destroy'])->name('destroy.surat.masuk');
 
     });
@@ -54,17 +59,20 @@ Route::prefix('/transaksi/surat/keluar')->group(function(){
     Route::post('/store', [GenerateController::class, 'store'])->name('store.surat.keluar');
     Route::get('/index/template', [GenerateController::class, 'index_template'])->name('index.keluar.template');
 });
+
 Route::prefix('/surat/disposisi')->group(function(){
     Route::get('/{surat}', [DisposisiController::class, 'index'])->name('index.disposisi');
     Route::get('/create/{surat}', [DisposisiController::class, 'create'])->name('create.disposisi');
     Route::post('/store/{surat}', [DisposisiController::class, 'store'])->name('store.disposisi');
     Route::get('/edit/{disposisi}', [DisposisiController::class, 'edit'])->name('edit.disposisi');
     Route::post('/update/{disposisi}', [DisposisiController::class, 'update'])->name('update.disposisi');
-});
+    });
+
 Route::prefix('/agenda')->group(function(){
     Route::prefix('/surat/masuk')->group(function(){
         Route::get('/', [CatatanController::class, 'indexsm'])->name('index.agenda.masuk');
     });
+
     Route::prefix('/surat/keluar')->group(function(){
         Route::get('/', [CatatanController::class, 'indexsk'])->name('index.agenda.keluar');
     });

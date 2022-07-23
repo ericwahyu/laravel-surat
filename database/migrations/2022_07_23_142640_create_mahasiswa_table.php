@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDisposisiUserTable extends Migration
+class CreateMahasiswaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreateDisposisiUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('disposisi_user', function (Blueprint $table) {
+        Schema::create('mahasiswa', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('disposisi_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('unit_kerja_id');
+            $table->string('nama');
             $table->timestamps();
 
-            $table->foreign('disposisi_id')->references('id')->on('disposisi')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('unit_kerja_id')->references('id')->on('unit_kerja')->onDelete('cascade');
         });
     }
 
@@ -31,6 +32,6 @@ class CreateDisposisiUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('disposisi_user');
+        Schema::dropIfExists('mahasiswa');
     }
 }

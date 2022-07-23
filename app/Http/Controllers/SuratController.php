@@ -79,6 +79,7 @@ class SuratController extends Controller
             $suratSM->save();
 
             $catatan = new Catatan();
+            $catatan->user_id = 1;
             $catatan->surat_id = $suratSM->id;
             if($request->catatan == null){
                 $catatan->catatan = 'Menambah data surat masuk dengan nomor '. $request->nomor;
@@ -106,6 +107,10 @@ class SuratController extends Controller
     public function show(Surat $surat)
     {
         //
+        $nav = 'transaksi';
+        $menu = 'masuk';
+        return view('surat masuk.show', compact('nav', 'menu', 'surat'));
+
     }
 
     /**
@@ -159,6 +164,7 @@ class SuratController extends Controller
             $surat->save();
 
             $catatan = new Catatan();
+            $catatan->user_id = 1;
             $catatan->surat_id = $surat->id;
             if($request->catatan == null){
                 $catatan->catatan = 'Mengubah data surat masuk nomor '. $request->nomor;

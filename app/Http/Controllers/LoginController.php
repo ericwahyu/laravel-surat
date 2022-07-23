@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
@@ -12,7 +13,7 @@ class LoginController extends Controller
         return view('login');
     }
 
-    public function proses(Request $request){
+    public function store(Request $request){
         $request->validate([
             'email' => 'required|email',
             'password' => 'required'
@@ -20,19 +21,17 @@ class LoginController extends Controller
 
         $kredensil = $request->only('email','password');
 
-        if (Auth::attempt($kredensil)) {
-
-            return redirect()->route('index.template');
+        if(Auth::attempt($kredensil)) {
+            return redirect()->route('index.jenis')->with('success', 'login berhasil !!');
         }
 
-        return redirect()->route('login')
-                            ->withInput()
-                            ->withErrors(['login_gagal' => 'These credentials do not match our records.']);
+        return redirect()->route('index.login')->with('error','These credentials do not match our records.');
+
     }
 
     public function logout(Request $request){
         $request->session()->flush();
         Auth::logout();
-        return Redirect()->route('login');
+        return Redirect()->route('index.login');
     }
 }
