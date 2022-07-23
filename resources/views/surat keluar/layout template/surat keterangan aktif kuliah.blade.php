@@ -49,7 +49,7 @@
                                 <label style="font-size: 14px">Nama</label>
                             </div>
                             <div class="form-group col-md-7">
-                                <input type="text" class="form-control @error('data_1') is-invalid @enderror" name="data_1" placeholder="Tuliskan Sesuatu" value="{{ old('data_ul') }}">
+                                <input type="text" class="form-control @error('paragraf_1') is-invalid @enderror" name="paragraf_1" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_1') }}">
                             </div>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                         <label style="font-size: 14px">Paragraf 2</label>
                     </div>
                     <div class="form-group col-md-10">
-                        <textarea name="paragraf_1" class="form-control @error('paragraf_1') is-invalid @enderror" cols="30" rows="10">Bahwa Mahasiswa yang bersangkutan adalah benar-benar Mahasiswa Universitas  . . . . . . . . dan masih aktif mengikuti kegiatan pembelajaran di Kampus.</textarea>
+                        <textarea name="paragraf_2" class="form-control @error('paragraf_2') is-invalid @enderror" cols="30" rows="10">Bahwa Mahasiswa yang bersangkutan adalah benar-benar Mahasiswa Universitas  . . . . . . . . dan masih aktif mengikuti kegiatan pembelajaran di Kampus.</textarea>
                     </div>
                 </div>
             </div>
@@ -85,7 +85,7 @@
                             </div>
                             <div class="card-body">
                                 <label style="font-size: 14px">Wakil Dekan III</label>
-                                <select class="form-control @error('pihak_1') is-invalid @enderror" name="pihak_1">
+                                <select class="form-control @error('tertanda_1') is-invalid @enderror" name="tertanda_1">
                                     <option disabled selected>--Tertanda--</option>
                                     @foreach ($user as $users)
                                         <option value="{{ $users->id }}">{{ $users->username }}</option>

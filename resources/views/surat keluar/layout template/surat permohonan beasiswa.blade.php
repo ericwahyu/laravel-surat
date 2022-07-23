@@ -75,7 +75,7 @@
                                 <label style="font-size: 14px">Nama</label>
                             </div>
                             <div class="form-group col-md-7">
-                                <input type="text" class="form-control @error('data_1') is-invalid @enderror" name="data_1" placeholder="Tuliskan Sesuatu" value="{{ old('data_1') }}" required>
+                                <input type="text" class="form-control @error('paragraf_2') is-invalid @enderror" name="paragraf_2" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_2') }}" required>
                             </div>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                         <label style="font-size: 14px">Paragraf 3</label>
                     </div>
                     <div class="form-group col-md-10">
-                        <textarea name="paragraf_2" class="form-control @error('paragraf_2') is-invalid @enderror" cols="30" rows="10">Dengan ini mengajukan permohonan beasiswa kepada Bapak/Ibu. Sebagai bahan pertimbangan saya melampirkan beberapa berkas persyaratan sebagai berikut :</textarea>
+                        <textarea name="paragraf_3" class="form-control @error('paragraf_3') is-invalid @enderror" cols="30" rows="10">Dengan ini mengajukan permohonan beasiswa kepada Bapak/Ibu. Sebagai bahan pertimbangan saya melampirkan beberapa berkas persyaratan sebagai berikut :</textarea>
                     </div>
                 </div>
                 <div class="row">
@@ -93,7 +93,7 @@
                         <label style="font-size: 14px">Paragraf 4</label>
                     </div>
                     <div class="form-group col-md-10">
-                        <input type="text" class="form-control @error('data_2') is-invalid @enderror" name="data_2" placeholder="Tuliskan Sesuatu" value="{{ old('data_2') }}" required>
+                        <input type="text" class="form-control @error('paragraf_4') is-invalid @enderror" name="paragraf_4" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_4') }}" required>
                     </div>
                 </div>
             </div>
@@ -119,7 +119,7 @@
                             </div>
                             <div class="card-body">
                                 <label style="font-size: 14px">hormat saya, </label>
-                                <select class="form-control @error('pihak_1') is-invalid @enderror" name="pihak_1" required>
+                                <select class="form-control @error('tertanda_1') is-invalid @enderror" name="tertanda_1" required>
                                     <option disabled selected>--Tertanda--</option>
                                     @foreach ($user as $users)
                                         <option value="{{ $users->id }}">{{ $users->username }}</option>

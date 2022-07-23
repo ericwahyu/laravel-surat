@@ -1,16 +1,16 @@
 @extends('layout')
-@section('title','Update Disposisi Surat Masuk')
+@section('title','Update Disposisi Surat')
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
-        <a href="{{ route('index.disposisi.masuk', $disposisi->surat) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+        <a href="{{ route('index.disposisi', $disposisi->surat) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <h1>Update Disposisi</h1>
+    <h1>Update Disposisi <b>{{ $disposisi->surat->judul }}</b></h1>
 </div>
 
 <div class="section-body">
     <div class="row">
-        <form action="{{ route('update.disposisi.masuk', $disposisi) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('update.disposisi', $disposisi) }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card">
                 <div class="card-body">

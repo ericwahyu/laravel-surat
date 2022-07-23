@@ -20,9 +20,17 @@ class DisposisiController extends Controller
     public function index(Surat $surat)
     {
         //
+        switch($surat->jenis->kategori_id){
+            case(1):
+                $menu = 'masuk';
+            break;
+            case(2):
+                $menu = 'keluar';
+            break;
+        }
         $nav = 'transaksi';
-        $menu = 'masuk';
         $data = Disposisi::where('surat_id', $surat->id)->get();
+        // dd($surat);
         return view('disposisi.index', compact('nav','menu','data','surat'));
 
     }
@@ -35,8 +43,15 @@ class DisposisiController extends Controller
     public function create(Surat $surat)
     {
         //
+        switch($surat->jenis->kategori_id){
+            case(1):
+                $menu = 'masuk';
+            break;
+            case(2):
+                $menu = 'keluar';
+            break;
+        }
         $nav = 'transaksi';
-        $menu = 'masuk';
         $user = User::all();
         return view('disposisi.insert', compact('nav', 'menu', 'surat', 'user'));
     }
@@ -56,34 +71,45 @@ class DisposisiController extends Controller
             'isi' => 'required'
         ]);
 
-        $disposisiSM = new Disposisi();
-        $disposisiSM->surat_id = $surat->id;
-        $disposisiSM->perihal = $request->perihal;
-        $disposisiSM->tanggal = $request->tanggal;
-        $disposisiSM->isi = $request->isi;
-        $disposisiSM->save();
+        $disposisi = new Disposisi();
+        $disposisi->surat_id = $surat->id;
+        $disposisi->perihal = $request->perihal;
+        $disposisi->tanggal = $request->tanggal;
+        $disposisi->isi = $request->isi;
+        $disposisi->save();
 
-        foreach($request->disposisi as $disposisi){
+        foreach($request->disposisi as $dis_user){
             $disposisi_user = new Disposisiuser();
-            $disposisi_user->disposisi_id = $disposisiSM->id;
-            $disposisi_user->user_id = $disposisi;
+            $disposisi_user->disposisi_id = $disposisi->id;
+            $disposisi_user->user_id = $dis_user;
             $disposisi_user->save();
         }
 
-        if($disposisiSM){
+        if($disposisi){
             $catatan = new Catatan();
             $catatan->surat_id = $surat->id;
-            if($request->catatan == null){
-                $catatan->catatan = 'Menambah disposisi surat masuk dengan nomor '.$surat->nosurat;
-            }else{
-                $catatan->catatan = 'Menambah disposisi surat masuk dengan nomor ' . $surat->nosurat . ', ('.$request->catatan.').';
+            switch($surat->jenis->kategori_id){
+                case(1):
+                    if($request->catatan == null){
+                        $catatan->catatan = 'Menambah disposisi surat masuk dengan nomor '.$surat->nosurat;
+                    }else{
+                        $catatan->catatan = 'Menambah disposisi surat masuk dengan nomor ' . $surat->nosurat . ', ('.$request->catatan.').';
+                    }
+                    break;
+                case(2):
+                    if($request->catatan == null){
+                        $catatan->catatan = 'Menambah disposisi surat keluar dengan nomor '.$surat->nosurat;
+                    }else{
+                        $catatan->catatan = 'Menambah disposisi surat keluar dengan nomor ' . $surat->nosurat . ', ('.$request->catatan.').';
+                    }
+                break;
             }
             $catatan->waktu = Carbon::now();
             $catatan->save();
         }
 
-        if($disposisiSM){
-            return redirect()->route('index.disposisi.masuk', $surat)->with('success', 'Data berhasil di tambah !!');
+        if($disposisi){
+            return redirect()->route('index.disposisi', $surat)->with('success', 'Data berhasil di tambah !!');
         }else{
             return back()->with('error', 'Data gagal di Tambah !!');
         }
@@ -109,8 +135,15 @@ class DisposisiController extends Controller
     public function edit(Disposisi $disposisi)
     {
         //
+        switch($disposisi->surat->jenis->kategori_id){
+            case(1):
+                $menu = 'masuk';
+            break;
+            case(2):
+                $menu = 'keluar';
+            break;
+        }
         $nav = 'transaksi';
-        $menu = 'masuk';
         $user = User::all();
         return view('disposisi.update', compact('nav', 'menu', 'disposisi', 'user'));
     }
@@ -139,17 +172,28 @@ class DisposisiController extends Controller
         if($disposisi){
             $catatan = new Catatan();
             $catatan->surat_id = $disposisi->surat->id;
-            if($request->catatan == null){
-                $catatan->catatan = 'Mengubah disposisi surat masuk dengan nomor '.$disposisi->surat->nosurat;
-            }else{
-                $catatan->catatan = 'Mengubah disposisi surat masuk dengan nomor ' . $disposisi->surat->nosurat . ', ('.$request->catatan.').';
+            switch($disposisi->surat->jenis->kategori_id){
+                case(1):
+                    if($request->catatan == null){
+                        $catatan->catatan = 'Mengubah disposisi surat masuk dengan nomor '.$disposisi->surat->nosurat;
+                    }else{
+                        $catatan->catatan = 'Mengubah disposisi surat masuk dengan nomor ' .$disposisi->surat->nosurat. ', ('.$request->catatan.').';
+                    }
+                    break;
+                case(2):
+                    if($request->catatan == null){
+                        $catatan->catatan = 'Mengubah disposisi surat keluar dengan nomor '.$disposisi->surat->nosurat;
+                    }else{
+                        $catatan->catatan = 'Mengubah disposisi surat keluar dengan nomor ' .$disposisi->surat->nosurat. ', ('.$request->catatan.').';
+                    }
+                break;
             }
             $catatan->waktu = Carbon::now();
             $catatan->save();
         }
 
         if($disposisi){
-            return redirect()->route('index.disposisi.masuk', $disposisi->surat)->with('success', 'Data berhasil di ubah !!');
+            return redirect()->route('index.disposisi', $disposisi->surat)->with('success', 'Data berhasil di ubah !!');
         }else{
             return back()->with('error', 'Data gagal di Tambah !!');
         }

@@ -52,11 +52,11 @@ class GenerateController extends Controller
 
         if(file_exists(public_path('surat/template/'.$template->file))){
             switch($template->file){
-                case('1658407481_Surat Permohonan Beasiswa.docx'):
+                case('1658561155_Surat Permohonan Beasiswa.docx'):
                     return view('surat keluar.layout template.surat permohonan beasiswa', compact('nav', 'menu', 'template', 'jenis', 'user'));
                     break;
 
-                case('1658386692_Surat Keterangan Aktif Kuliah.docx'):
+                case('1658561211_Surat Keterangan Aktif Kuliah.docx'):
                     return view('surat keluar.layout template.surat keterangan aktif kuliah', compact('nav', 'menu', 'template', 'jenis', 'user'));
                 break;
             }
@@ -104,14 +104,33 @@ class GenerateController extends Controller
         $generate->surat_id = $surat->id;
         $generate->save();
 
-        return $this->surat_permohonan_beasiswa($request, $surat->id);
+        $surat = Surat::find($surat->id);
+        $tujukan = User::find($request->tertanda_1);
 
-        // $surat = Generate::orderByDesc('id')->limit(1)->first();
-        // if (is_null($surat)) {
-        //     $nosurat = $huruf. '.' .str_pad(1, 4, "0", STR_PAD_LEFT) . '/' . $unit . '/' . "ITATS" . '/' . date('Y');
-        // } else {
-        //     $nosurat = $huruf. '.' .str_pad($surat->id++, 4, "0", STR_PAD_LEFT) . '/' . $unit . '/' . "ITATS" . '/' . date('Y');
-        // }
+        $template = Template::find($request->template_id);
+        $docs = public_path('surat/template/').$template->file;
+
+        if(file_exists(public_path('surat/template/'.$template->file))){
+            switch($template->file){
+                case('1658561155_Surat Permohonan Beasiswa.docx'):
+                    $file_surat = $this->TP_surat_permohonan_beasiswa($request, $tujukan);
+                    break;
+
+                case('1658561211_Surat Keterangan Aktif Kuliah.docx'):
+                    $file_surat = $this->TP_surat_keterangan_aktif($request, $tujukan);
+                break;
+            }
+        }
+
+        $surat->file_surat = $file_surat;
+        $surat->save();
+
+        if($surat){
+            return redirect()->route('index.surat.keluar')->with('success', 'Surat berhasil di generate !!');
+        }else{
+            return back()->with('error', 'Generate surat gagal !!');
+        }
+
     }
 
     /**
@@ -203,12 +222,8 @@ class GenerateController extends Controller
         return view('surat keluar.index_template', compact('nav', 'menu', 'template'));
     }
 
-    // generate docx
-
-    public function surat_permohonan_beasiswa($request, $surat_id){
-        $surat = Surat::find($surat_id);
+    public function TP_surat_permohonan_beasiswa($request, $tujukan){
         $template = Template::find($request->template_id);
-        $pihak = User::find($request->pihak_1);
         $docs = public_path('surat/template/').$template->file;
 
         // cek template
@@ -224,22 +239,57 @@ class GenerateController extends Controller
             $templateProcessor->setValue('tujuan_surat', $request->tujuan_surat);
             $templateProcessor->setValue('pembuka_surat', $request->pembuka_surat);
             $templateProcessor->setValue('paragraf_1', $request->paragraf_1);
-            $templateProcessor->setValue('data_1', $request->data_1);
             $templateProcessor->setValue('paragraf_2', $request->paragraf_2);
-            $templateProcessor->setValue('data_2', $request->data_2);
+            $templateProcessor->setValue('paragraf_3', $request->paragraf_3);
+            $templateProcessor->setValue('paragraf_4', $request->paragraf_4);
             $templateProcessor->setValue('penutup_surat', $request->penutup_surat);
-            $templateProcessor->setValue('pihak_1', $pihak->username);
+            $templateProcessor->setValue('tertanda_1', $tujukan->username);
 
             $file_name = now()->timestamp . '_' . $request->judul . '.docx';
             $templateProcessor->saveAs($file_name);
 
-            $surat->file_surat = $file_name;
-            $surat->save();
+            // Pindah file
+            File::move(public_path() . '/' . $file_name, public_path('surat/generate/') .$file_name);
+
+            return $file_name;
+
+        }else{
+            return back()->with('error', 'Berkas tidak ditemukan !!');
+        }
+
+    }
+
+    public function TP_surat_keterangan_aktif($request, $tujukan){
+
+        $template = Template::find($request->template_id);
+        $docs = public_path('surat/template/').$template->file;
+
+        // cek template
+        if (file_exists($docs)) {
+            //generate surat
+            $date = Carbon::parse($request->tanggal_surat)->isoFormat("D MMMM YYYY");
+
+            $templateProcessor = new TemplateProcessor($docs);
+            $templateProcessor->setValue('tempat_surat', $request->tempat_surat);
+            $templateProcessor->setValue('tanggal_surat', $date);
+            $templateProcessor->setValue('nomor_surat', $request->nomor_surat);
+            $templateProcessor->setValue('pembuka_surat', $request->pembuka_surat);
+            $templateProcessor->setValue('paragraf_1', $request->paragraf_1);
+            $templateProcessor->setValue('paragraf_2', $request->paragraf_2);
+            $templateProcessor->setValue('penutup_surat', $request->penutup_surat);
+            $templateProcessor->setValue('tertanda_1', $tujukan->username);
+
+            $file_name = now()->timestamp . '_' . $request->judul . '.docx';
+            $templateProcessor->saveAs($file_name);
 
             // Pindah file
             File::move(public_path() . '/' . $file_name, public_path('surat/generate/') .$file_name);
 
-            return redirect()->route('index.surat.keluar')->with('success', 'Surat berhasil di generate !!');
+            return $file_name;
+
+        }else{
+            return back()->with('error', 'Berkas tidak ditemukan !!');
         }
+
     }
 }

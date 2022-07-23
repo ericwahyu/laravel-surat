@@ -23,6 +23,7 @@
                                     <th>Judul Surat</th>
                                     <th>Tanggal Surat</th>
                                     <th>Catatan Surat</th>
+                                    {{-- <th>Action</th> --}}
                                 </tr>
                             </thead>
                             <tbody>

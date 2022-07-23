@@ -42,7 +42,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <a href="{{ route('edit.surat.masuk', $data) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
-                                            <a href="{{ route('index.disposisi.masuk', $data) }}" class="btn btn-info" title="Disposisi Surat"><i class="fas fa-file"></i></a>
+                                            <a href="{{ route('index.disposisi', $data) }}" class="btn btn-info" title="Disposisi Surat"><i class="fas fa-file"></i></a>
                                             <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i></button>
                                         </form>
                                     </td>

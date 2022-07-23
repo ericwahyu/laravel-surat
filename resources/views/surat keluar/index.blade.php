@@ -16,11 +16,12 @@
                         <thead>
                             <tr>
                                 <th class="text-center">#</th>
+                                <th>Jenis</th>
                                 <th>No Surat</th>
                                 <th>Judul Surat</th>
-                                <th>File Surat</th>
-                                <th>Tanggal Surat Keluar</th>
-                                <th>Keterangan</th>
+                                <th>Tanggal Surat</th>
+                                <th>Keterangan Surat</th>
+                                <th>Download Surat</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -37,12 +38,13 @@
                                     <td>{{ $data->judul }}</td>
                                     <td>{{ $data->tanggal }}</td>
                                     <td>{{ $data->keterangan }}</td>
+                                    <td class="text-center"><a href="" class="btn btn-primary" title="Ubah"><i class="fas fa-save"></i></a></td>
                                     <td>
                                         <form action="" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <a href="" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
-                                            <a href="" class="btn btn-info" title="Disposisi Surat"><i class="fas fa-file"></i></a>
+                                            <a href="{{ route('index.disposisi', $data) }}" class="btn btn-info" title="Disposisi Surat"><i class="fas fa-file"></i></a>
                                             <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i></button>
                                         </form>
                                     </td>

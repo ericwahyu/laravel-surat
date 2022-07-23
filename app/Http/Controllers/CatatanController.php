@@ -13,7 +13,7 @@ class CatatanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function indexsm()
     {
         //
         $nav = 'agenda';
@@ -24,6 +24,19 @@ class CatatanController extends Controller
                 ->where('kategori.id', 1)
                 ->get(['catatan.*']);
         return view('catatan SM.index', compact('nav', 'menu', 'catatan'));
+    }
+
+    public function indexsk()
+    {
+        //
+        $nav = 'agenda';
+        $menu = 'keluar';
+        $catatan = Catatan::join('surat', 'surat.id', '=', 'surat_id')
+                ->join('jenis', 'jenis.id', '=', 'jenis_id')
+                ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                ->where('kategori.id', 2)
+                ->get(['catatan.*']);
+        return view('catatan SK.index', compact('nav', 'menu', 'catatan'));
     }
 
     /**
