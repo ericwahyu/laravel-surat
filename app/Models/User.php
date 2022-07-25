@@ -56,4 +56,34 @@ class User extends Authenticatable
     public function riwayat(){
         return $this->hasMany(Riwayat::class);
     }
+
+    public function isMahasiswa(){
+        $mahasiswa = Mahasiswa::all();
+        $unit_kerja = UnitKerja::all();
+
+        foreach($mahasiswa as $cek_mahasiswa){
+            if($cek_mahasiswa->user_id == $this->id){
+                $mahasiswa_unitkerja = $cek_mahasiswa->unit_kerja_id;
+                return $mahasiswa_unitkerja;
+            }
+        }
+    }
+
+    public function isAdmin(){
+        $admin = $this->isMahasiswa();
+        if($admin == 4){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function isPengelola(){
+        $pengelola = $this->isMahasiswa();
+        if($pengelola == 2){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

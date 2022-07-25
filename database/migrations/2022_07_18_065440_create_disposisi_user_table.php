@@ -17,6 +17,7 @@ class CreateDisposisiUserTable extends Migration
             $table->id();
             $table->unsignedBigInteger('disposisi_id');
             $table->unsignedBigInteger('user_id');
+            $table->boolean('status')->nullable();
             $table->timestamps();
 
             $table->foreign('disposisi_id')->references('id')->on('disposisi')->onDelete('cascade');

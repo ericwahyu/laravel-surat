@@ -89,6 +89,7 @@ class DisposisiController extends Controller
             $catatan = new Catatan();
             $catatan->surat_id = $surat->id;
             $catatan->user_id = 1;
+            $catatan->status = 1;
             switch($surat->jenis->kategori_id){
                 case(1):
                     if($request->catatan == null){
@@ -174,6 +175,7 @@ class DisposisiController extends Controller
             $catatan = new Catatan();
             $catatan->surat_id = $disposisi->surat->id;
             $catatan->user_id = 1;
+            $catatan->status = 1;
             switch($disposisi->surat->jenis->kategori_id){
                 case(1):
                     if($request->catatan == null){

@@ -16,7 +16,7 @@ class Dosen extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function unit_kerja(){
+    public function unitkerja(){
         return $this->belongsToMany(UnitKerja::class);
     }
 

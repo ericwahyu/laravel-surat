@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Jenis;
 use App\Models\Kategori;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,18 +15,15 @@ class JenisController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         //
         $nav = 'umum';
         $menu = 'jenis';
 
-        $search = $request->search;
-
         $kategori = Kategori::all();
-        $jenis = Jenis::join('kategori', 'kategori.id', '=', 'kategori_id')
-                ->select('jenis.*')
-                ->get();
+        $jenis = Jenis::all();
+
 
         return view('jenis.index', compact('nav', 'menu', 'jenis', 'kategori'));
     }

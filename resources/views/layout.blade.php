@@ -6,7 +6,7 @@
         <title>@yield('title')</title>
 
         <!-- General CSS Files -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/fontawesome/css/all.min.css') }}">
 
@@ -15,24 +15,15 @@
         <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-daterangepicker/daterangepicker.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/modules/jquery-selectric/selectric.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css') }}">
 
-            {{-- summernote --}}
-            <link rel="stylesheet" href="{{ asset('assets/modules/summernote/summernote-bs4.css') }}">
-            <link rel="stylesheet" href="{{ asset('assets/modules/codemirror/lib/codemirror.css') }}">
-            <link rel="stylesheet" href="{{ asset('assets/modules/codemirror/theme/duotone-dark.css') }}">
-            <link rel="stylesheet" href="{{ asset('assets/modules/jquery-selectric/selectric.css') }}">
-
         <!-- Template CSS -->
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
-
-        <script src="{{ asset('assets/summernote-cleaner.js') }}"></script>
 
         <!-- Start GA -->
         <script async src="{{ asset('https://www.googletagmanager.com/gtag/js?id=UA-94034622-3') }}"></script>
@@ -239,10 +230,10 @@
                                 </div>
                             </div>
                         </li>
-                        {{-- <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                        <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                             <div class="d-sm-none d-lg-inline-block">{{ Auth::user()->username }}</div></a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                {{-- <div class="dropdown-title">Logged in 5 min ago</div>
+                                <div class="dropdown-title">Logged in 5 min ago</div>
                                 <a href="features-profile.html" class="dropdown-item has-icon">
                                     <i class="far fa-user"></i> Profile
                                 </a>
@@ -258,7 +249,7 @@
                                     <button type="submit" class="dropdown-item has-icon text-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
                                 </form>
                             </div>
-                        </li> --}}
+                        </li>
                     </ul>
                 </nav>
                 <div class="main-sidebar sidebar-style-2">
@@ -329,8 +320,7 @@
         </div>
 
         <!-- General JS Scripts -->
-        {{-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous"></script> --}}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="{{ asset('assets/modules/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/modules/popper.js') }}"></script>
         <script src="{{ asset('assets/modules/tooltip.js') }}"></script>
@@ -355,15 +345,7 @@
         <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
         <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
 
-            {{-- summernote --}}
-            <script src="{{ asset('assets/modules/summernote/summernote-bs4.js') }}"></script>
-            <script src="{{ asset('assets/modules/codemirror/lib/codemirror.js') }}"></script>
-            <script src="{{ asset('assets/modules/codemirror/mode/javascript/javascript.js') }}"></script>
-            <script src="{{ asset('assets/modules/jquery-selectric/jquery.selectric.min.js') }}"></script>
-
-
         <!-- Page Specific JS File -->
-        <script src="{{ asset('assets/js/page/bootstrap-modal.js') }}"></script>
         <script src="{{ asset('assets/js/page/forms-advanced-forms.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-ion-icons.js') }}"></script>
@@ -384,9 +366,10 @@
             });
         </script>
 
-        {{-- Confirm delete --}}
+        {{-- Confirm modal--}}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
         <script type="text/javascript">
+            // Confirm delete
             $('.show_confirm').click(function(event) {
                 var form =  $(this).closest("form");
                 var name = $(this).data("name");
@@ -403,13 +386,42 @@
                     }
                 });
             });
-        </script>
 
-        {{-- textarea --}}
-        <script>
-            document.getElementById('submit').onclick = function() {
-                document.getElementById('isi').innerHTML = 'It was a dark and stormy night…';
-            };
+            // confirm read surat masuk
+            $('.show_read').click(function(event) {
+                var form =  $(this).closest("form");
+                var name = $(this).data("name");
+                event.preventDefault();
+                swal({
+                    title: 'Apakah anda yakin sudah melihat surat, dan memberi tanggapan hanya membaca !! ',
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                    form.submit();
+                    }
+                });
+            });
+
+            // confirm continue surat masuk
+            $('.show_continue').click(function(event) {
+                var form =  $(this).closest("form");
+                var name = $(this).data("name");
+                event.preventDefault();
+                swal({
+                    title: 'Apakah anda yakin sudah melihat surat, dan memberi tanggapan lanjutkan proses lanjutnya !! ',
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                    form.submit();
+                    }
+                });
+            });
         </script>
     </body>
 </html>

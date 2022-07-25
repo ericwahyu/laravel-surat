@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title','Surat Masuk {{ $surat->judul }}')
+@section('title','Detail Surat Masuk')
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
@@ -53,20 +53,24 @@
                             <form action="{{ route('destroy.surat.masuk', $surat) }}" method="post">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"> Delete</i></button>
+                                <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"> Delete</i></button>
                             </form>
                         </div>
                         <div class="col-md-2">
-                            <a href="" class="btn btn-primary" title="Read"><i class="far fa-eye"> Read</i></a>
+                            <form action="" method="post">
+                                <button type="submit" class="btn btn-primary mr-2 show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"> Read</i></button>
+                            </form>
                         </div>
                         <div class="col-md-2">
-                            <a href="" class="btn btn-primary" title="Ubah"><i class="fas fa-reply"> Reply</i></a>
+                            <a href="{{ route('create.reply.surat.masuk', $surat) }}" class="btn btn-primary" title="Reply"><i class="fas fa-reply"> Reply</i></a>
                         </div>
                         <div class="col-md-2">
-                            <a href="" class="btn btn-primary" title="Ubah"><i class="fa fa-play"> Continue</i></a>
+                            <form action="" method="post">
+                                <button type="submit" class="btn btn-primary mr-2 show_continue" data-toggle="tooltip" title="Continue"><i class="fa fa-play"> Continue</i></button>
+                            </form>
                         </div>
                         <div class="col-md-2">
-                            <a href="" class="btn btn-success" title="Ubah"><i class="fa fa-download"> View File</i></a>
+                            <a href="" class="btn btn-success" title="Download"><i class="fa fa-download"> View File</i></a>
                         </div>
                     </div>
                 </div>

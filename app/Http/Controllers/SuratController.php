@@ -200,4 +200,35 @@ class SuratController extends Controller
         }
 
     }
+
+    public function create_reply(Surat $surat){
+        $nav = 'transaksi';
+        $menu = 'masuk';
+        return view('surat masuk.reply', compact('nav', 'menu', 'surat'));
+    }
+
+    public function store_reply(Request $request, Surat $surat){
+        $catatan = new Catatan();
+        $catatan->user_id = 1;
+        $catatan->surat_id = $surat->id;
+        $catatan->catatan = 'Balas data surat masuk nomor '. $surat->nosurat. ', ('. $request->catatan. ').';
+        $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
+        $catatan->save();
+
+        if($catatan){
+            return redirect()->route('index.surat.masuk')->with('success', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
+        }else{
+            return back()->with('error', 'Tanggapan surat gagal dikirim !!');
+        }
+
+    }
+
+    public function store_read(Surat $surat){
+
+    }
+
+    public function store_continue(Surat $surat){
+
+    }
+
 }
