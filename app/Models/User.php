@@ -63,30 +63,45 @@ class User extends Authenticatable
         $mahasiswa = Mahasiswa::where('user_id', $this->id)->get();
         $dosen = Dosen::where('user_id', $this->id)->get();
 
-        // dd($mahasiswa);
+        // switch(){
+        //     case() :
+        // }
+
         if($mahasiswa->isNotEmpty()){
             foreach($mahasiswa as $id_maha){
-                $unit_kerja_mahasiswa[] = $id_maha->unit_kerja_id;
+                $unit_kerja[] = $id_maha->unit_kerja_id;
             }
-            return $unit_kerja_mahasiswa;
-
         }elseif($dosen->isNotEmpty()){
             foreach($dosen as $id_dos){
                 $unit_dosen = Dosenunit::where('dosen_id', $id_dos->id)->get();
                 foreach($unit_dosen as $unit){
-                    $unit_kerja_dosen[] = $unit->unit_kerja_id;
+                    $unit_kerja[] = $unit->unit_kerja_id;
                 }
-                return $unit_kerja_dosen;
             }
         }
+        return $unit_kerja;
     }
 
     public function isAdmin(){
         $admin = $this->isMahasiswa_or_Dosen();
         $data = count($admin);
+
         for($i = 0; $i < $data; $i++){
             if($admin[$i] == 1){
-                return true;
+                return 1;
+                break;
+            }
+        }
+
+
+    }
+    public function isPimpinan(){
+        $pimpinan = $this->isMahasiswa_or_Dosen();
+        $data = count($pimpinan);
+
+        for($i = 0; $i < $data; $i++){
+            if($pimpinan[$i] == 2){
+                return 2;
                 break;
             }
         }
@@ -96,9 +111,10 @@ class User extends Authenticatable
     public function isPengelola(){
         $pengelola = $this->isMahasiswa_or_Dosen();
         $data = count($pengelola);
+
         for($i = 0; $i < $data; $i++){
-            if($pengelola[$i] == 4){
-                return true;
+            if($pengelola[$i] == 3){
+                return 3;
                 break;
             }
         }

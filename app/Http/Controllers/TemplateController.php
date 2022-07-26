@@ -23,8 +23,9 @@ class TemplateController extends Controller
         $nav = 'umum';
         $menu = 'template';
         $template = Template::all();
+        $user = \Illuminate\Support\Facades\Auth::user();
 
-        return view('template.index', compact('nav', 'menu', 'template'));
+        return view('template.index', compact('nav', 'menu', 'template', 'user'));
     }
 
     /**

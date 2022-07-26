@@ -22,7 +22,7 @@ class LoginController extends Controller
         $kredensil = $request->only('email','password');
 
         if(Auth::attempt($kredensil)) {
-            return redirect()->route('index.jenis')->with('success', 'login berhasil !!');
+            return redirect()->route('dashboard')->with('success', 'login berhasil !!');
         }
 
         return redirect()->route('index.login')->with('error','These credentials do not match our records.');

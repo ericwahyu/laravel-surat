@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\Auth;
 
-class isAdmin
+class checkRole
 {
     /**
      * Handle an incoming request.
@@ -17,9 +17,18 @@ class isAdmin
      */
     public function handle(Request $request, Closure $next)
     {
+        $allowedRoles = array_slice(func_get_args(), 2);
         $user = Auth::user();
-        if($user->isAdmin()){
-            return $next($request);
+        if(Auth::check()){
+            if(in_array($user->isAdmin(), $allowedRoles)){
+                return $next($request);
+
+            }elseif(in_array($user->isPimpinan(), $allowedRoles)){
+                return $next($request);
+
+            }elseif(in_array($user->isPengelola(), $allowedRoles)){
+                return $next($request);
+            }
         }
         return \abort(403);
     }

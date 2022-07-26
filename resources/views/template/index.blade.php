@@ -4,7 +4,9 @@
 <div class="section-header">
     <h1>Template Surat</h1>
     <div class="section-header-button">
-        <a href="{{ route('create.template') }}" class="btn btn-primary" title="Tambah Template Surat">Tambah Baru</a>
+        @if ($user->isAdmin() == 1)
+            <a href="{{ route('create.template') }}" class="btn btn-primary" title="Tambah Template Surat">Tambah Baru</a>
+        @endif
     </div>
 </div>
 <div class="section-body">
