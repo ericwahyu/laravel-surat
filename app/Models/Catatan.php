@@ -19,4 +19,8 @@ class Catatan extends Model
     public function disposisi(){
         return $this->belongsTo(Disposisi::class);
     }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

@@ -43,7 +43,11 @@ class User extends Authenticatable
     // ];
 
     public function disposisi(){
-        return $this->belongsToMany(Disposisi::class);
+        return $this->belongsToMany(Disposisi::class, 'disposisi_user', 'disposisi_id', 'user_id');
+    }
+
+    public function catatan(){
+        return $this->hasMany(Catatan::class);
     }
 
     public function dosen(){

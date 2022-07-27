@@ -17,6 +17,6 @@ class Disposisi extends Model
     }
 
     public function user(){
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'disposisi_user', 'disposisi_id', 'user_id');
     }
 }

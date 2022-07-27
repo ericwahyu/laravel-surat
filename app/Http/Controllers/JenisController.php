@@ -7,6 +7,7 @@ use App\Models\Kategori;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use \Illuminate\Support\Facades\Auth;
 
 class JenisController extends Controller
 {
@@ -23,9 +24,9 @@ class JenisController extends Controller
 
         $kategori = Kategori::all();
         $jenis = Jenis::all();
+        $user = Auth::user();
 
-
-        return view('jenis.index', compact('nav', 'menu', 'jenis', 'kategori'));
+        return view('jenis.index', compact('nav', 'menu', 'jenis', 'kategori', 'user'));
     }
 
     /**

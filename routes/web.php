@@ -32,12 +32,6 @@ Route::group(['middleware' => ['auth']], function(){
             'menu' => 'dashboard'));
         })->name('dashboard');
 
-    // PIMPINAN
-    Route::group(['middleware' => ['checkRole:1,2,3']], function(){
-        Route::group(['middleware' => ['checkRole:1,3']], function(){
-
-        });
-    });
     Route::prefix('/umum')->group(function(){
         Route::prefix('/jenis')->group(function(){
             Route::get('/', [JenisController::class, 'index'])->name('index.jenis');
@@ -57,20 +51,19 @@ Route::group(['middleware' => ['auth']], function(){
         Route::delete('/destroy/{template}', [TemplateController::class, 'destroy'])->name('destroy.template');
         Route::get('/download/{id}', [TemplateController::class, 'download'])->name('download.template');
     });
-    Route::group(['middleware' => ['isPengelola']], function(){
-        Route::prefix('/transaksi/surat/masuk')->group(function(){
-            Route::get('/', [SuratController::class, 'index'])->name('index.surat.masuk');
-            Route::get('/create', [SuratController::class, 'create'])->name('create.surat.masuk');
-            Route::post('/store', [SuratController::class, 'store'])->name('store.surat.masuk');
-            Route::get('/edit/{surat}', [SuratController::class, 'edit'])->name('edit.surat.masuk');
-            Route::post('/update/{surat}', [SuratController::class, 'update'])->name('update.surat.masuk');
-            Route::get('/show/{surat}', [SuratController::class, 'show'])->name('show.surat.masuk');
-            Route::delete('/destroy/{surat}', [SuratController::class, 'destroy'])->name('destroy.surat.masuk');
-            Route::get('create/reply/{surat}', [SuratController::class, 'create_reply'])->name('create.reply.surat.masuk');
-            Route::post('store/reply/{surat}', [SuratController::class, 'store_reply'])->name('store.reply.surat.masuk');
-            Route::post('read/reply/{surat}', [SuratController::class, 'read_reply'])->name('read.reply.surat.masuk');
-            Route::post('continue/reply/{surat}', [SuratController::class, 'continue_reply'])->name('continue.reply.surat.masuk');
-        });
+    Route::prefix('/transaksi/surat/masuk')->group(function(){
+        Route::get('/', [SuratController::class, 'index'])->name('index.surat.masuk');
+        Route::get('/create', [SuratController::class, 'create'])->name('create.surat.masuk');
+        Route::post('/store', [SuratController::class, 'store'])->name('store.surat.masuk');
+        Route::get('/edit/{surat}', [SuratController::class, 'edit'])->name('edit.surat.masuk');
+        Route::post('/update/{surat}', [SuratController::class, 'update'])->name('update.surat.masuk');
+        Route::get('/show/{surat}', [SuratController::class, 'show'])->name('show.surat.masuk');
+        Route::delete('/destroy/{surat}', [SuratController::class, 'destroy'])->name('destroy.surat.masuk');
+        Route::get('/create/reply/{surat}', [SuratController::class, 'create_reply'])->name('create.reply.surat.masuk');
+        Route::post('/store/reply/{surat}', [SuratController::class, 'store_reply'])->name('store.reply.surat.masuk');
+        Route::post('/read/reply/{surat}', [SuratController::class, 'read_reply'])->name('read.reply.surat.masuk');
+        Route::post('/continue/reply/{surat}', [SuratController::class, 'continue_reply'])->name('continue.reply.surat.masuk');
+        Route::get('/download/{surat}', [SuratController::class, 'download_file'])->name('download.surat.masuk');
     });
     Route::prefix('/transaksi/surat/keluar')->group(function(){
         Route::get('/', [GenerateController::class, 'index'])->name('index.surat.keluar');
@@ -85,6 +78,8 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/store/{surat}', [DisposisiController::class, 'store'])->name('store.disposisi');
         Route::get('/edit/{disposisi}', [DisposisiController::class, 'edit'])->name('edit.disposisi');
         Route::post('/update/{disposisi}', [DisposisiController::class, 'update'])->name('update.disposisi');
+        Route::get('/show/{disposisi}', [DisposisiController::class, 'show'])->name('show.disposisi');
+        Route::delete('/destroy/{disposisi}', [DisposisiController::class, 'destroy'])->name('destroy.disposisi');
     });
     Route::prefix('/agenda')->group(function(){
         Route::prefix('/surat/masuk')->group(function(){

@@ -12,6 +12,7 @@
     <div class="row">
         <form action="{{ route('store.disposisi', $surat) }}" method="POST" enctype="multipart/form-data">
             @csrf
+            <input type="hidden" name="pembuat" value="{{ Auth::user()->id }}">
             <div class="card">
                 <div class="card-body">
                     <div class="row">

@@ -8,6 +8,7 @@ use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use \Illuminate\Support\Facades\Auth;
 
 
 class TemplateController extends Controller
@@ -23,7 +24,7 @@ class TemplateController extends Controller
         $nav = 'umum';
         $menu = 'template';
         $template = Template::all();
-        $user = \Illuminate\Support\Facades\Auth::user();
+        $user = Auth::user();
 
         return view('template.index', compact('nav', 'menu', 'template', 'user'));
     }

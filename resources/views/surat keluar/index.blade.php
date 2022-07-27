@@ -4,7 +4,9 @@
 <div class="section-header">
     <h1>Surat Keluar</h1>
     <div class="section-header-button">
-        <a href="{{ route('index.keluar.template') }}" class="btn btn-primary" title="Tambah Surat Masuk">Tambah Baru</a>
+        @if ($user->isAdmin() == 1 || $user->isPengelola() == 3)
+            <a href="{{ route('index.keluar.template') }}" class="btn btn-primary" title="Tambah Surat Masuk">Tambah Baru</a>
+        @endif
     </div>
 </div>
 <div class="section-body">

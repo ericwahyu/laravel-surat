@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Surat;
+use App\Models\Kategori;
+use App\Models\Disposisi;
 use App\Models\Jenis;
 use App\Models\Catatan;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Carbon;
+use \Illuminate\Support\Facades\Auth;
 
 class SuratController extends Controller
 {
@@ -22,12 +25,30 @@ class SuratController extends Controller
         //
         $nav = 'transaksi';
         $menu = 'masuk';
-        $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                ->where('status', '!=', 0)
-                ->where('kategori_id', 1)->get(['surat.*']);
-
-        return view('surat masuk.index', compact('nav', 'menu', 'surat'));
+        $user = Auth::user();
+        if($user->isAdmin() == 1){
+            $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                    // ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    // ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    // ->join('users', 'disposisi_user.disposisi_id', '=', 'users.id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('kategori_id', 1)
+                    // ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->get(['surat.*']);
+        }elseif($user->isPimpinan() == 2 || $user->isPengelola() == 3){
+            $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.disposisi_id', '=', 'users.id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('kategori_id', 1)
+                    ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->get(['surat.*']);
+        }
+        // dd($surat);
+        return view('surat masuk.index', compact('nav', 'menu', 'surat', 'user'));
     }
 
     /**
@@ -79,7 +100,7 @@ class SuratController extends Controller
             $suratSM->save();
 
             $catatan = new Catatan();
-            $catatan->user_id = 1;
+            $catatan->user_id = Auth::user()->id;
             $catatan->surat_id = $suratSM->id;
             if($request->catatan == null){
                 $catatan->catatan = 'Menambah data surat masuk dengan nomor '. $request->nomor;
@@ -91,7 +112,7 @@ class SuratController extends Controller
         }
 
         if($catatan){
-            return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di tambah !!');
+            return redirect()->route('index.disposisi', $suratSM->id)->with('success', 'Data berhasil di tambah !!');
         }else{
             return back()->with('error', 'Data gagal di tambah !!');
         }
@@ -107,9 +128,11 @@ class SuratController extends Controller
     public function show(Surat $surat)
     {
         //
+        // dd($surat);
         $nav = 'transaksi';
         $menu = 'masuk';
-        return view('surat masuk.show', compact('nav', 'menu', 'surat'));
+        $user = Auth::user();
+        return view('surat masuk.show', compact('nav', 'menu', 'surat', 'user'));
 
     }
 
@@ -164,7 +187,7 @@ class SuratController extends Controller
             $surat->save();
 
             $catatan = new Catatan();
-            $catatan->user_id = 1;
+            $catatan->user_id = Auth::user()->id;
             $catatan->surat_id = $surat->id;
             if($request->catatan == null){
                 $catatan->catatan = 'Mengubah data surat masuk nomor '. $request->nomor;
@@ -209,7 +232,7 @@ class SuratController extends Controller
 
     public function store_reply(Request $request, Surat $surat){
         $catatan = new Catatan();
-        $catatan->user_id = 1;
+        $catatan->user_id = Auth::user()->id;
         $catatan->surat_id = $surat->id;
         $catatan->catatan = 'Balas data surat masuk nomor '. $surat->nosurat. ', ('. $request->catatan. ').';
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
@@ -229,6 +252,14 @@ class SuratController extends Controller
 
     public function store_continue(Surat $surat){
 
+    }
+
+    public function download_file(Surat $surat){
+        if(file_exists(public_path('surat/masuk/'.$surat->file_surat))){
+            return response()->download('surat/masuk/'.$surat->file_surat);
+        }else{
+            return back()->with('error', 'Download gagal');
+        }
     }
 
 }

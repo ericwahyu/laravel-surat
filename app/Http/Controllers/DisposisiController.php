@@ -9,6 +9,9 @@ use App\Models\Catatan;
 use App\Models\Disposisiuser;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use \Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Collection;
+use \Illuminate\Support\Facades\DB;
 
 class DisposisiController extends Controller
 {
@@ -29,9 +32,13 @@ class DisposisiController extends Controller
             break;
         }
         $nav = 'transaksi';
-        $data = Disposisi::where('surat_id', $surat->id)->get();
-        // dd($surat);
-        return view('disposisi.index', compact('nav','menu','data','surat'));
+        $data = Disposisi::join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.disposisi_id', '=', 'users.id')
+                    ->where('surat_id', $surat->id)
+                    ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->get(['disposisi.*']);
+        $user = Auth::user();
+        return view('disposisi.index', compact('nav','menu','data','surat', 'user'));
 
     }
 
@@ -78,18 +85,26 @@ class DisposisiController extends Controller
         $disposisi->isi = $request->isi;
         $disposisi->save();
 
+        //input data pembuat
+        $disposisi_pembuat = new Disposisiuser();
+        $disposisi_pembuat->disposisi_id = $disposisi->id;
+        $disposisi_pembuat->user_id = $request->pembuat;
+        $disposisi_pembuat->status = 2;
+        $disposisi_pembuat->save();
+
+        //input data tang di tujukan
         foreach($request->disposisi as $dis_user){
             $disposisi_user = new Disposisiuser();
             $disposisi_user->disposisi_id = $disposisi->id;
             $disposisi_user->user_id = $dis_user;
+            $disposisi_user->status = 1;
             $disposisi_user->save();
         }
 
         if($disposisi){
             $catatan = new Catatan();
             $catatan->surat_id = $surat->id;
-            $catatan->user_id = 1;
-            $catatan->status = 1;
+            $catatan->user_id = Auth::user()->id;
             switch($surat->jenis->kategori_id){
                 case(1):
                     if($request->catatan == null){
@@ -111,7 +126,7 @@ class DisposisiController extends Controller
         }
 
         if($disposisi){
-            return redirect()->route('index.disposisi', $surat)->with('success', 'Data berhasil di tambah !!');
+            return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di tambah !!');
         }else{
             return back()->with('error', 'Data gagal di Tambah !!');
         }
@@ -123,9 +138,38 @@ class DisposisiController extends Controller
      * @param  \App\Models\Disposisi  $disposisi
      * @return \Illuminate\Http\Response
      */
-    public function show($disposisi)
+    public function show(Disposisi $disposisi)
     {
         //
+        // $dis = $disposisi->getRawOriginal();
+        // $dis =$disposisi->user()->get();
+        // $status = $dis->getOriginal('status');
+        // dd($dis);
+        // dd($disposisi->id);
+        $status_dosen = DB::table('disposisi_user')
+                ->join('users', 'users.id', '=', 'disposisi_user.user_id')
+                ->join('dosen', 'dosen.user_id', '=', 'users.id')
+                ->where('disposisi_user.disposisi_id', $disposisi->id)
+                ->get();
+        $status_mahasiswa = DB::table('disposisi_user')
+                ->join('users', 'users.id', '=', 'disposisi_user.user_id')
+                ->join('mahasiswa', 'mahasiswa.user_id', '=', 'users.id')
+                ->where('disposisi_user.disposisi_id', $disposisi->id)
+                ->get();
+        // dd($status_mahasiswa);
+        $surat = Surat::findOrFail($disposisi->surat_id);
+        switch($surat->jenis->kategori_id){
+            case(1):
+                $menu = 'masuk';
+            break;
+            case(2):
+                $menu = 'keluar';
+            break;
+        }
+        $nav = 'transaksi';
+        $user = User::all();
+        return view('disposisi.show', compact('nav', 'menu', 'surat', 'disposisi', 'user', 'status_dosen', 'status_mahasiswa'));
+
     }
 
     /**
@@ -211,6 +255,6 @@ class DisposisiController extends Controller
      */
     public function destroy(Disposisi $disposisi)
     {
-        //
+        dd($disposisi);
     }
 }

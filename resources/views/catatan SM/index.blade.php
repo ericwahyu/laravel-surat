@@ -19,6 +19,7 @@
                                 <tr>
                                     <th class="text-center">#</th>
                                     <th>Waktu Masuk</th>
+                                    <th>Nama Penyatat</th>
                                     <th>No Surat</th>
                                     <th>Judul Surat</th>
                                     <th>Tanggal Surat</th>
@@ -33,7 +34,11 @@
                                             <i class="fas fa-th"></i>
                                             </div>
                                         </td>
+                                        {{-- @php
+                                            dd($data->user->mahasiswa)
+                                        @endphp --}}
                                         <td>{{ $data->waktu }}</td>
+                                        <td>{{ $data->user->username }}</td>
                                         <td>{{ $data->surat->nosurat }}</td>
                                         <td>{{ $data->surat->judul }}</td>
                                         <td>{{ $data->surat->tanggal }}</td>

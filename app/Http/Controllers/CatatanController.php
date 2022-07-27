@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Catatan;
 use App\Models\Surat;
 use Illuminate\Http\Request;
+use \Illuminate\Support\Facades\Auth;
 
 class CatatanController extends Controller
 {
@@ -23,7 +24,8 @@ class CatatanController extends Controller
                 ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                 ->where('kategori.id', 1)
                 ->get(['catatan.*']);
-        return view('catatan SM.index', compact('nav', 'menu', 'catatan'));
+        $user = Auth::user();
+        return view('catatan SM.index', compact('nav', 'menu', 'catatan', 'user'));
     }
 
     public function indexsk()

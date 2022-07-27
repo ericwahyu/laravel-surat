@@ -4,7 +4,9 @@
 <div class="section-header">
     <h1>Jenis Surat</h1>
     <div class="section-header-button">
-        <a href="{{ route('create.jenis') }}" class="btn btn-primary" title="Tambah Jenis Surat">Tambah Baru</a>
+        @if ($user->isAdmin() == 1 || $user->isPengelola() == 3)
+            <a href="{{ route('create.jenis') }}" class="btn btn-primary" title="Tambah Jenis Surat">Tambah Baru</a>
+        @endif
     </div>
 </div>
 <div class="section-body">
@@ -42,7 +44,9 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <a href="{{ route('edit.jenis', $data) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
-                                                <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i></button>
+                                                @if ($user->isAdmin() == 1 || $user->isPengelola() == 3)
+                                                    <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i></button>
+                                                @endif
                                             </form>
                                         </td>
                                     </tr>

@@ -16,6 +16,7 @@ use \Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Shared\Html;
 use \PhpOffice\PhpWord\TemplateProcessor;
+// use \Illuminate\Support\Facades\Auth;
 
 class GenerateController extends Controller
 {
@@ -33,7 +34,8 @@ class GenerateController extends Controller
                     ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                     ->where('status', '!=', 0)
                     ->where('kategori_id', 2)->get(['surat.*']);
-        return view('surat keluar.index', compact('nav', 'menu', 'generate'));
+        $user = Auth::user();
+        return view('surat keluar.index', compact('nav', 'menu', 'generate', 'user'));
     }
 
     /**
@@ -52,7 +54,7 @@ class GenerateController extends Controller
 
         if(file_exists(public_path('surat/template/'.$template->file))){
             switch($template->file){
-                case('1658589798_Surat Permohonan Beasiswa.docx'):
+                case('11658842537_Surat Permohonan Beasiswa.docx'):
                     return view('surat keluar.layout template.surat permohonan beasiswa', compact('nav', 'menu', 'template', 'jenis', 'user'));
                     break;
 
@@ -109,11 +111,10 @@ class GenerateController extends Controller
         $tujukan = User::find($request->tertanda_1);
 
         $template = Template::find($request->template_id);
-        $docs = public_path('surat/template/').$template->file;
 
         if(file_exists(public_path('surat/template/'.$template->file))){
             switch($template->file){
-                case('1658589798_Surat Permohonan Beasiswa.docx'):
+                case('1658842537_Surat Permohonan Beasiswa.docx'):
                     $file_surat = $this->TP_surat_permohonan_beasiswa($request, $tujukan);
                     break;
 

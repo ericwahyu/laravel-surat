@@ -11,7 +11,9 @@
     </div>
     <h1>Disposisi Surat Dari <b>{{ $surat->judul }}</b></h1>
     <div class="section-header-button">
-        <a href="{{ route('create.disposisi', $surat) }}" class="btn btn-primary" title="Tambah Disposisi Surat">Tambah Baru</a>
+        @if ($user->isAdmin() == 1 || $user->isPengelola() == 3)
+            <a href="{{ route('create.disposisi', $surat) }}" class="btn btn-primary" title="Tambah Disposisi Surat">Tambah Baru</a>
+        @endif
     </div>
 </div>
 <div class="section-body">
@@ -27,7 +29,7 @@
                                 <th>Perihal Disposisi</th>
                                 <th>Tanggal</th>
                                 <th>Isi Disposisi</th>
-                                <th>Tujukan Disposisi</th>
+                                {{-- <th>Tujukan Disposisi</th> --}}
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -43,19 +45,20 @@
                                     <td>{{ $disposisi->perihal }}</td>
                                     <td>{{ $disposisi->tanggal }}</td>
                                     <td>{{ $disposisi->isi }}</td>
-                                    <td>
+                                    {{-- <td>
                                         <ul>
                                             @foreach($disposisi->user as $user)
                                                 <li> {{ $user->username }} </li>
                                             @endforeach
                                         </ul>
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         <form action="" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <a href="{{ route('edit.disposisi', $disposisi) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a>
-                                            <button type="submit" class="btn btn-danger mr-2" onclick="" title="Hapus"><i class="far fa-trash-alt"></i></button>
+                                            <a href="{{ route('show.disposisi', $disposisi) }}" class="btn btn-info" title="Lihat detail"><i class="fa fa-eye"></i></a>
+                                            <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i></button>
                                         </form>
                                     </td>
                                 </tr>
