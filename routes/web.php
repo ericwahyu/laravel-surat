@@ -59,10 +59,6 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/update/{surat}', [SuratController::class, 'update'])->name('update.surat.masuk');
         Route::get('/show/{surat}', [SuratController::class, 'show'])->name('show.surat.masuk');
         Route::delete('/destroy/{surat}', [SuratController::class, 'destroy'])->name('destroy.surat.masuk');
-        Route::get('/create/reply/{surat}', [SuratController::class, 'create_reply'])->name('create.reply.surat.masuk');
-        Route::post('/store/reply/{surat}', [SuratController::class, 'store_reply'])->name('store.reply.surat.masuk');
-        Route::post('/read/reply/{surat}', [SuratController::class, 'read_reply'])->name('read.reply.surat.masuk');
-        Route::post('/continue/reply/{surat}', [SuratController::class, 'continue_reply'])->name('continue.reply.surat.masuk');
         Route::get('/download/{surat}', [SuratController::class, 'download_file'])->name('download.surat.masuk');
     });
     Route::prefix('/transaksi/surat/keluar')->group(function(){
@@ -80,6 +76,11 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/update/{disposisi}', [DisposisiController::class, 'update'])->name('update.disposisi');
         Route::get('/show/{disposisi}', [DisposisiController::class, 'show'])->name('show.disposisi');
         Route::delete('/destroy/{disposisi}', [DisposisiController::class, 'destroy'])->name('destroy.disposisi');
+
+        Route::get('/create/reply/{disposisi}', [DisposisiController::class, 'create_reply'])->name('create.reply.surat.masuk');
+        Route::post('/store/reply/{disposisi}', [DisposisiController::class, 'store_reply'])->name('store.reply.surat.masuk');
+        Route::get('/read/{disposisi}', [DisposisiController::class, 'store_read'])->name('read.surat.masuk');
+        Route::get('/continue/{disposisi}', [DisposisiController::class, 'store_continue'])->name('continue.surat.masuk');
     });
     Route::prefix('/agenda')->group(function(){
         Route::prefix('/surat/masuk')->group(function(){

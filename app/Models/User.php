@@ -83,13 +83,13 @@ class User extends Authenticatable
                 }
             }
         }
+        // dd($unit_kerja);
         return $unit_kerja;
     }
 
     public function isAdmin(){
         $admin = $this->isMahasiswa_or_Dosen();
         $data = count($admin);
-
         for($i = 0; $i < $data; $i++){
             if($admin[$i] == 1){
                 return 1;

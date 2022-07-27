@@ -39,7 +39,6 @@ class DisposisiController extends Controller
                     ->get(['disposisi.*']);
         $user = Auth::user();
         return view('disposisi.index', compact('nav','menu','data','surat', 'user'));
-
     }
 
     /**
@@ -89,7 +88,7 @@ class DisposisiController extends Controller
         $disposisi_pembuat = new Disposisiuser();
         $disposisi_pembuat->disposisi_id = $disposisi->id;
         $disposisi_pembuat->user_id = $request->pembuat;
-        $disposisi_pembuat->status = 2;
+        $disposisi_pembuat->status = 1;
         $disposisi_pembuat->save();
 
         //input data tang di tujukan
@@ -97,7 +96,7 @@ class DisposisiController extends Controller
             $disposisi_user = new Disposisiuser();
             $disposisi_user->disposisi_id = $disposisi->id;
             $disposisi_user->user_id = $dis_user;
-            $disposisi_user->status = 1;
+            $disposisi_user->status = 2;
             $disposisi_user->save();
         }
 
@@ -141,11 +140,6 @@ class DisposisiController extends Controller
     public function show(Disposisi $disposisi)
     {
         //
-        // $dis = $disposisi->getRawOriginal();
-        // $dis =$disposisi->user()->get();
-        // $status = $dis->getOriginal('status');
-        // dd($dis);
-        // dd($disposisi->id);
         $status_dosen = DB::table('disposisi_user')
                 ->join('users', 'users.id', '=', 'disposisi_user.user_id')
                 ->join('dosen', 'dosen.user_id', '=', 'users.id')
@@ -156,7 +150,6 @@ class DisposisiController extends Controller
                 ->join('mahasiswa', 'mahasiswa.user_id', '=', 'users.id')
                 ->where('disposisi_user.disposisi_id', $disposisi->id)
                 ->get();
-        // dd($status_mahasiswa);
         $surat = Surat::findOrFail($disposisi->surat_id);
         switch($surat->jenis->kategori_id){
             case(1):
@@ -167,7 +160,7 @@ class DisposisiController extends Controller
             break;
         }
         $nav = 'transaksi';
-        $user = User::all();
+        $user = Auth::user();
         return view('disposisi.show', compact('nav', 'menu', 'surat', 'disposisi', 'user', 'status_dosen', 'status_mahasiswa'));
 
     }
@@ -218,8 +211,7 @@ class DisposisiController extends Controller
         if($disposisi){
             $catatan = new Catatan();
             $catatan->surat_id = $disposisi->surat->id;
-            $catatan->user_id = 1;
-            $catatan->status = 1;
+            $catatan->user_id = Auth::user()->id;
             switch($disposisi->surat->jenis->kategori_id){
                 case(1):
                     if($request->catatan == null){
@@ -256,5 +248,84 @@ class DisposisiController extends Controller
     public function destroy(Disposisi $disposisi)
     {
         dd($disposisi);
+    }
+
+    public function create_reply(Disposisi $disposisi){
+        $status_dosen = DB::table('disposisi_user')
+                ->join('users', 'users.id', '=', 'disposisi_user.user_id')
+                ->join('dosen', 'dosen.user_id', '=', 'users.id')
+                ->where('disposisi_user.disposisi_id', $disposisi->id)
+                ->get();
+        $status_mahasiswa = DB::table('disposisi_user')
+                ->join('users', 'users.id', '=', 'disposisi_user.user_id')
+                ->join('mahasiswa', 'mahasiswa.user_id', '=', 'users.id')
+                ->where('disposisi_user.disposisi_id', $disposisi->id)
+                ->get();
+        $surat = Surat::findOrFail($disposisi->surat_id);
+        switch($disposisi->surat->jenis->kategori_id){
+            case(1):
+                $menu = 'masuk';
+            break;
+            case(2):
+                $menu = 'keluar';
+            break;
+        }
+        $nav = 'transaksi';
+        $user = Auth::user();
+        return view('disposisi.replySM', compact('nav', 'menu', 'surat', 'disposisi', 'user', 'status_dosen', 'status_mahasiswa'));
+    }
+
+    public function store_reply(Request $request, Disposisi $disposisi){
+        $surat = Surat::findOrFail($disposisi->surat_id);
+        $update_status = DB::table('disposisi_user')
+                        ->where('disposisi_id', $disposisi->id)
+                        ->where('user_id', Auth::user()->id)
+                        ->update([
+                            'status' => 5
+                        ]);
+
+        $catatan = new Catatan();
+        $catatan->user_id = Auth::user()->id;
+        $catatan->surat_id = $disposisi->surat_id;
+        $catatan->catatan = 'Balas data surat masuk nomor '. $surat->nosurat. ', ( Catatan balas :'. $request->catatan. ').';
+        $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
+        $catatan->save();
+
+        if($catatan){
+            return redirect()->route('show.disposisi', $disposisi)->with('success', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
+        }else{
+            return back()->with('error', 'Tanggapan surat gagal dikirim !!');
+        }
+
+    }
+
+    public function store_read(Disposisi $disposisi){
+
+        $update_status = DB::table('disposisi_user')
+                        ->where('disposisi_id', $disposisi->id)
+                        ->where('user_id', Auth::user()->id)
+                        ->update([
+                            'status' => 3
+                        ]);
+        if($update_status){
+            return redirect()->route('show.disposisi', $disposisi)->with('succes', 'TTanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
+        }else{
+            return back()->with('error', 'Tanggapan surat gagal dikirim !!');
+        }
+    }
+
+    public function store_continue(Disposisi $disposisi){
+        $update_status = DB::table('disposisi_user')
+                        ->where('disposisi_id', $disposisi->id)
+                        ->where('user_id', Auth::user()->id)
+                        ->update([
+                            'status' => 4
+                        ]);
+        if($update_status){
+            return redirect()->route('show.disposisi', $disposisi)->with('succes', 'TTanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
+        }else{
+            return back()->with('error', 'Tanggapan surat gagal dikirim !!');
+        }
+
     }
 }

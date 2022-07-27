@@ -41,7 +41,6 @@
                                     <td>{{ $data->keterangan }}</td>
                                     <td>
                                         <a href="{{ route('show.surat.masuk', $data) }}" class="btn btn-info" title="Lihat detail"><i class="fa fa-eye"></i></a>
-                                        <a href="{{ route('index.disposisi', $data) }}" class="btn btn-success" title="Disposisi Surat"><i class="fas fa-file"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

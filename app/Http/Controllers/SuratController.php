@@ -45,7 +45,8 @@ class SuratController extends Controller
                     ->where('surat.status', '!=', 0)
                     ->where('kategori_id', 1)
                     ->where('disposisi_user.user_id', Auth::user()->id)
-                    ->get(['surat.*']);
+                    ->select('surat.*')
+                    ->distinct()->get();
         }
         // dd($surat);
         return view('surat masuk.index', compact('nav', 'menu', 'surat', 'user'));
@@ -98,7 +99,6 @@ class SuratController extends Controller
         }
         if($suratSM){
             $suratSM->save();
-
             $catatan = new Catatan();
             $catatan->user_id = Auth::user()->id;
             $catatan->surat_id = $suratSM->id;
@@ -221,36 +221,6 @@ class SuratController extends Controller
         }else{
             return back()->with('error', 'Data gagal di hapus !!');
         }
-
-    }
-
-    public function create_reply(Surat $surat){
-        $nav = 'transaksi';
-        $menu = 'masuk';
-        return view('surat masuk.reply', compact('nav', 'menu', 'surat'));
-    }
-
-    public function store_reply(Request $request, Surat $surat){
-        $catatan = new Catatan();
-        $catatan->user_id = Auth::user()->id;
-        $catatan->surat_id = $surat->id;
-        $catatan->catatan = 'Balas data surat masuk nomor '. $surat->nosurat. ', ('. $request->catatan. ').';
-        $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
-        $catatan->save();
-
-        if($catatan){
-            return redirect()->route('index.surat.masuk')->with('success', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
-        }else{
-            return back()->with('error', 'Tanggapan surat gagal dikirim !!');
-        }
-
-    }
-
-    public function store_read(Surat $surat){
-
-    }
-
-    public function store_continue(Surat $surat){
 
     }
 

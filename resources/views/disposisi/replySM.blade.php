@@ -1,21 +1,21 @@
 @extends('layout')
-@section('title','Detail Surat Disposisi')
+@section('title','Reply Surat Masuk')
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
-        <a href="{{ route('index.disposisi', $surat) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+        <a href="{{ route('show.disposisi', $disposisi) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <h1>Detail Surat Disposisi</h1>
+    <h1>Reply Surat Masuk <b>{{ $surat->judul }}</b></h1>
 </div>
 
 <div class="section-body">
     <div class="card">
         <div class="card-header">
-            <h4>Detail</h4>
+            <h4>Reply Surat</h4>
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-12 col-md-8">
+                <div class="col-12 col-md-7">
                     <table class="table">
                         <tbody>
                             <tr>
@@ -45,38 +45,8 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <a href="" class="btn btn-warning" title="Update"><i class="far fa-edit"> Update</i></a>
-                        </div>
-                        <div class="col-md-2">
-                            <form action="" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"> Delete</i></button>
-                            </form>
-                        </div>
-                        @if ($user->isAdmin() == 1 || $user->isPimpinan() == 2)
-                            <div class="col-sm-2">
-                                <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
-                                    <button type="submit" class="btn btn-primary mr-2 show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"> Read</i></button>
-                                </form>
-                            </div>
-                            <div class="col-sm-2">
-                                <a href="{{ route('create.reply.surat.masuk', $disposisi) }}" class="btn btn-primary" title="Reply"><i class="fas fa-reply"> Reply</i></a>
-                            </div>
-                            <div class="col-sm-2">
-                                <form action="{{ route('continue.surat.masuk', $disposisi) }}" method="get">
-                                    <button type="submit" class="btn btn-primary mr-2 show_continue" data-toggle="tooltip" title="Continue"><i class="fa fa-play"> Continue</i></button>
-                                </form>
-                            </div>
-                        @endif
-                        <div class="col-md-2">
-                            <a href="" class="btn btn-success" title="Download"><i class="fa fa-download"> View File</i></a>
-                        </div>
-                    </div>
                 </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-5">
                     <table class="table">
                         <tbody>
                             @foreach ($status_dosen as $sta_dos)
@@ -129,6 +99,26 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="col-12">
+                        <form action="{{ route('store.reply.surat.masuk', $disposisi) }}" method="post">
+                            @csrf
+                            <label style="font-size: 16px">Catatan</label>
+                            <textarea name="catatan" cols="30" rows="10" class="form-control @error('catatan') is-invalid @enderror">Balas surat {{ $surat->judul }}, dengan catatan ......</textarea>
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                Masukkan catatan  !!
+                            </small>
+                            @error('catatan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                            <div class="row">
+                                <div class="col-12 col-md-2 offset-md-8">
+                                    <button type="submit" class="btn btn-primary" title="Reply"><i class="fa fa-paper-plane"> Reply surat</i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
