@@ -34,11 +34,14 @@
                                             <i class="fas fa-th"></i>
                                             </div>
                                         </td>
-                                        {{-- @php
-                                            dd($data->user->mahasiswa)
-                                        @endphp --}}
+                                      
                                         <td>{{ $data->waktu }}</td>
-                                        <td>{{ $data->user->username }}</td>
+                                        @foreach ($data->user->mahasiswa as $dat_maha)
+                                            <td>{{ $dat_maha->nama }}</td>
+                                        @endforeach
+                                        @foreach ($data->user->dosen as $dat_dos)
+                                            <td>{{ $dat_dos->nama }}</td>
+                                        @endforeach
                                         <td>{{ $data->surat->nosurat }}</td>
                                         <td>{{ $data->surat->judul }}</td>
                                         <td>{{ $data->surat->tanggal }}</td>

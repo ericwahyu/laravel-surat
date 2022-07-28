@@ -19,12 +19,18 @@ class CatatanController extends Controller
         //
         $nav = 'agenda';
         $menu = 'masuk';
-        $catatan = Catatan::join('surat', 'surat.id', '=', 'surat_id')
-                ->join('jenis', 'jenis.id', '=', 'jenis_id')
-                ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                ->where('kategori.id', 1)
-                ->get(['catatan.*']);
         $user = Auth::user();
+        $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
+                    ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.disposisi_id', '=', 'users.id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('kategori_id', 1)
+                    ->select('catatan.*')
+                    ->distinct()->get();
+        // dd($catatan);
         return view('catatan SM.index', compact('nav', 'menu', 'catatan', 'user'));
     }
 
@@ -33,11 +39,17 @@ class CatatanController extends Controller
         //
         $nav = 'agenda';
         $menu = 'keluar';
-        $catatan = Catatan::join('surat', 'surat.id', '=', 'surat_id')
-                ->join('jenis', 'jenis.id', '=', 'jenis_id')
-                ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                ->where('kategori.id', 2)
-                ->get(['catatan.*']);
+        $user = Auth::user();
+        $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
+                    ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.disposisi_id', '=', 'users.id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('kategori_id', 2)
+                    ->select('catatan.*')
+                    ->distinct()->get();
         return view('catatan SK.index', compact('nav', 'menu', 'catatan'));
     }
 

@@ -7,6 +7,8 @@ use App\Models\Surat;
 use App\Models\User;
 use App\Models\Catatan;
 use App\Models\Disposisiuser;
+use App\Models\Dosen;
+use App\Models\Mahasiswa;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\Auth;
@@ -58,8 +60,10 @@ class DisposisiController extends Controller
             break;
         }
         $nav = 'transaksi';
-        $user = User::all();
-        return view('disposisi.insert', compact('nav', 'menu', 'surat', 'user'));
+        $user = Auth::user();
+        $user_dosen = Dosen::join('users', 'dosen.user_id', '=', 'users.id' )->get();
+        $user_mahasiswa = Mahasiswa::join('users', 'mahasiswa.user_id', '=', 'users.id' )->get();
+        return view('disposisi.insert', compact('nav', 'menu', 'surat', 'user', 'user_dosen', 'user_mahasiswa'));
     }
 
     /**
@@ -253,6 +257,20 @@ class DisposisiController extends Controller
     public function destroy(Disposisi $disposisi)
     {
         $surat = Surat::findOrFail($disposisi->surat_id);
+        $catatan = new Catatan();
+        $catatan->surat_id = $surat->id;
+        $catatan->user_id = Auth::user()->id;
+        switch($disposisi->surat->jenis->kategori_id){
+            case(1):
+                $catatan->catatan = 'Menghapus disposisi surat masuk dengan nomor '.$surat->nosurat;
+                break;
+            case(2):
+                $catatan->catatan = 'Menghapus disposisi surat keluar dengan nomor '.$surat->nosurat;
+                break;
+        }
+        $catatan->waktu = Carbon::now();
+        $catatan->save();
+
         if($disposisi){
             $disposisi->delete();
             return redirect()->route('index.disposisi', $surat)->with('success', 'Data berhasil di Hapus !!');
@@ -287,7 +305,6 @@ class DisposisiController extends Controller
     }
 
     public function store_reply(Request $request, Disposisi $disposisi){
-        $surat = Surat::findOrFail($disposisi->surat_id);
         $update_status = DB::table('disposisi_user')
                         ->where('disposisi_id', $disposisi->id)
                         ->where('user_id', Auth::user()->id)
@@ -295,10 +312,11 @@ class DisposisiController extends Controller
                             'status' => 5
                         ]);
 
+        $surat = Surat::findOrFail($disposisi->surat_id);
         $catatan = new Catatan();
-        $catatan->user_id = Auth::user()->id;
         $catatan->surat_id = $disposisi->surat_id;
-        $catatan->catatan = 'Balas data surat masuk nomor '. $surat->nosurat. ', ( Catatan balas :'. $request->catatan. ').';
+        $catatan->user_id = Auth::user()->id;
+        $catatan->catatan = 'Tanggapan Balas data surat masuk nomor '. $surat->nosurat. ', ( Catatan balas :'. $request->catatan. ').';
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         $catatan->save();
 
@@ -318,6 +336,15 @@ class DisposisiController extends Controller
                         ->update([
                             'status' => 3
                         ]);
+
+        $surat = Surat::findOrFail($disposisi->surat_id);
+        $catatan = new Catatan();
+        $catatan->surat_id = $disposisi->surat_id;
+        $catatan->user_id = Auth::user()->id;
+        $catatan->catatan = 'Tanggapan membaca data surat masuk nomor '. $surat->nosurat;
+        $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
+        $catatan->save();
+
         if($update_status){
             return redirect()->route('show.disposisi', $disposisi)->with('succes', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
         }else{
@@ -332,6 +359,15 @@ class DisposisiController extends Controller
                         ->update([
                             'status' => 4
                         ]);
+
+        $surat = Surat::findOrFail($disposisi->surat_id);
+        $catatan = new Catatan();
+        $catatan->surat_id = $disposisi->surat_id;
+        $catatan->user_id = Auth::user()->id;
+        $catatan->catatan = 'Tanggapan lanjutkan proses data surat masuk nomor '. $surat->nosurat;
+        $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
+        $catatan->save();
+
         if($update_status){
             return redirect()->route('show.disposisi', $disposisi)->with('succes', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
         }else{
@@ -347,6 +383,15 @@ class DisposisiController extends Controller
                         ->update([
                             'status' => 6
                         ]);
+
+        $surat = Surat::findOrFail($disposisi->surat_id);
+        $catatan = new Catatan();
+        $catatan->surat_id = $disposisi->surat_id;
+        $catatan->user_id = Auth::user()->id;
+        $catatan->catatan = 'Tanggapan memberi tanda tangan data surat keluar nomor '. $surat->nosurat;
+        $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
+        $catatan->save();
+
         if($update_status){
             return redirect()->route('show.disposisi', $disposisi)->with('succes', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
         }else{

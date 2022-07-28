@@ -19,6 +19,7 @@
                                 <tr>
                                     <th class="text-center">#</th>
                                     <th>Waktu Masuk</th>
+                                    <th>Nama Penyatat</th>
                                     <th>No Surat</th>
                                     <th>Judul Surat</th>
                                     <th>Tanggal Surat</th>
@@ -35,6 +36,12 @@
                                             </div>
                                         </td>
                                         <td>{{ $data->waktu }}</td>
+                                        @foreach ($data->user->mahasiswa as $dat_maha)
+                                            <td>{{ $dat_maha->nama }}</td>
+                                        @endforeach
+                                        @foreach ($data->user->dosen as $dat_dos)
+                                            <td>{{ $dat_dos->nama }}</td>
+                                        @endforeach
                                         <td>{{ $data->surat->nosurat }}</td>
                                         <td>{{ $data->surat->judul }}</td>
                                         <td>{{ $data->surat->tanggal }}</td>

@@ -29,12 +29,8 @@ class SuratController extends Controller
         if($user->isAdmin() == 1){
             $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                     ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                    // ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                    // ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                    // ->join('users', 'disposisi_user.disposisi_id', '=', 'users.id')
                     ->where('surat.status', '!=', 0)
                     ->where('kategori_id', 1)
-                    // ->where('disposisi_user.user_id', Auth::user()->id)
                     ->get(['surat.*']);
         }elseif($user->isPimpinan() == 2 || $user->isPengelola() == 3){
             $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
@@ -215,6 +211,14 @@ class SuratController extends Controller
         //
         $surat->status = 0;
         $surat->save();
+
+        $catatan = new Catatan();
+        $catatan->user_id = Auth::user()->id;
+        $catatan->surat_id = $surat->id;
+        $catatan->catatan = 'Menghapus data surat masuk nomor '. $surat->nosurat;
+        $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
+        $catatan->save();
+
         if($surat){
             return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di hapus !!');
         }else{

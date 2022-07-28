@@ -31,10 +31,6 @@ class GenerateController extends Controller
         $nav = 'transaksi';
         $menu = 'keluar';
         $user = Auth::user();
-        // $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-        //             ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-        //             ->where('status', '!=', 0)
-        //             ->where('kategori_id', 2)->get(['surat.*']);
         if($user->isAdmin() == 1){
             $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                     ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
@@ -52,7 +48,7 @@ class GenerateController extends Controller
                     ->where('disposisi_user.user_id', Auth::user()->id)
                     ->select('surat.*')
                     ->distinct()->get();
-                    }
+        }
         return view('surat keluar.index', compact('nav', 'menu', 'generate', 'user'));
     }
 
@@ -241,6 +237,14 @@ class GenerateController extends Controller
         //
         $surat->status = 0;
         $surat->save();
+
+        $catatan = new Catatan();
+        $catatan->user_id = Auth::user()->id;
+        $catatan->surat_id = $surat->id;
+        $catatan->catatan = 'Menghapus data surat keluar nomor '. $surat->nosurat;
+        $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
+        
+        $catatan->save();
         if($surat){
             return redirect()->route('index.surat.keluar')->with('success', 'Data berhasil di hapus !!');
         }else{

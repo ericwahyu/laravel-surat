@@ -77,23 +77,36 @@
                                                     <label class="form-check-label" for="checkAll"></label>
                                                 </div>
                                             </th>
+                                            <th>Nama </th>
                                             <th>Username</th>
-                                            <th>Email</th>
                                             <th>Email</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($user as $users)
+                                        @foreach ($user_dosen as $us_dos)
                                             <tr>
                                                 <td>
                                                     <div class="sort-handler ui-sortable-handle text-center">
-                                                        <input class="form-check-input checkboxClass" type="checkbox" id="inlineCheckbox1" name="disposisi[]" value={{ $users->id }}>
+                                                        <input class="form-check-input checkboxClass" type="checkbox" id="inlineCheckbox1" name="disposisi[]" value={{ $us_dos->id }}>
                                                         <label class="form-check-label" for="inlineCheckbox1"></label>
                                                     </div>
                                                 </td>
-                                                <td>{{ $users->username }}</td>
-                                                <td>{{ $users->email }}</td>
-                                                <td>{{ $users->email }}</td>
+                                                <td>{{ $us_dos->nama }}</td>
+                                                <td>{{ $us_dos->username }}</td>
+                                                <td>{{ $us_dos->email }}</td>
+                                            </tr>
+                                        @endforeach
+                                        @foreach ($user_mahasiswa as $us_maha)
+                                            <tr>
+                                                <td>
+                                                    <div class="sort-handler ui-sortable-handle text-center">
+                                                        <input class="form-check-input checkboxClass" type="checkbox" id="inlineCheckbox1" name="disposisi[]" value={{ $us_maha->id }}>
+                                                        <label class="form-check-label" for="inlineCheckbox1"></label>
+                                                    </div>
+                                                </td>
+                                                <td>{{ $us_maha->nama }}</td>
+                                                <td>{{ $us_maha->username }}</td>
+                                                <td>{{ $us_maha->email }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
