@@ -36,7 +36,8 @@ class GenerateController extends Controller
                     ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                     ->where('surat.status', '!=', 0)
                     ->where('kategori_id', 2)
-                    ->get(['surat.*']);
+                    ->select('surat.*')
+                    ->distinct()->get();
         }elseif($user->isPimpinan() == 2 || $user->isPengelola() == 3){
             $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                     ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
@@ -243,7 +244,7 @@ class GenerateController extends Controller
         $catatan->surat_id = $surat->id;
         $catatan->catatan = 'Menghapus data surat keluar nomor '. $surat->nosurat;
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
-        
+
         $catatan->save();
         if($surat){
             return redirect()->route('index.surat.keluar')->with('success', 'Data berhasil di hapus !!');

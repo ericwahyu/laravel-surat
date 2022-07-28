@@ -31,7 +31,8 @@ class SuratController extends Controller
                     ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                     ->where('surat.status', '!=', 0)
                     ->where('kategori_id', 1)
-                    ->get(['surat.*']);
+                    ->select('surat.*')
+                    ->distinct()->get();
         }elseif($user->isPimpinan() == 2 || $user->isPengelola() == 3){
             $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                     ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')

@@ -174,19 +174,4 @@ class TemplateController extends Controller
 
     }
 
-    public function download($template){
-        $template = Template::findOrFail($template);
-        if($template != null){
-            $file = $template->file;
-            $pathToFile = 'surat/template/'.$file;
-            return response()->download($pathToFile);
-        }elseif($template == 'template_contoh.docx'){
-            $pathToFile = 'surat/template/template_contoh.docx';
-            return response()->download($pathToFile);
-        }else{
-            return back()->with('error', 'Data Kosong !!');
-        }
-
-    }
-
 }

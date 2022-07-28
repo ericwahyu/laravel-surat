@@ -49,7 +49,6 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('/edit/{template}', [TemplateController::class, 'edit'])->name('edit.template');
         Route::post('/update/{template}', [TemplateController::class, 'update'])->name('update.template');
         Route::delete('/destroy/{template}', [TemplateController::class, 'destroy'])->name('destroy.template');
-        Route::get('/download/{id}', [TemplateController::class, 'download'])->name('download.template');
     });
     Route::prefix('/transaksi/surat/masuk')->group(function(){
         Route::get('/', [SuratController::class, 'index'])->name('index.surat.masuk');
