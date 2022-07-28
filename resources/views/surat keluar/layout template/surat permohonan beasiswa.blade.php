@@ -132,7 +132,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Generate</button>
+            <button type="submit" class="btn btn-primary">Buat Surat dan Simpan Data</button>
         </div>
     </div>
 @endsection

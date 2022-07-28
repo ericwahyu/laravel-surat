@@ -45,7 +45,7 @@
                         @enderror
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Simpan Data</button>
                     </div>
                 </div>
             </div>

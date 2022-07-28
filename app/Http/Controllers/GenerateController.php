@@ -30,11 +30,29 @@ class GenerateController extends Controller
         //
         $nav = 'transaksi';
         $menu = 'keluar';
-        $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                    ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                    ->where('status', '!=', 0)
-                    ->where('kategori_id', 2)->get(['surat.*']);
         $user = Auth::user();
+        // $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+        //             ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+        //             ->where('status', '!=', 0)
+        //             ->where('kategori_id', 2)->get(['surat.*']);
+        if($user->isAdmin() == 1){
+            $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('kategori_id', 2)
+                    ->get(['surat.*']);
+        }elseif($user->isPimpinan() == 2 || $user->isPengelola() == 3){
+            $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.disposisi_id', '=', 'users.id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('kategori_id', 2)
+                    ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->select('surat.*')
+                    ->distinct()->get();
+                    }
         return view('surat keluar.index', compact('nav', 'menu', 'generate', 'user'));
     }
 
@@ -54,7 +72,7 @@ class GenerateController extends Controller
 
         if(file_exists(public_path('surat/template/'.$template->file))){
             switch($template->file){
-                case('11658842537_Surat Permohonan Beasiswa.docx'):
+                case('1658984447_Surat Permohonan Beasiswa.docx'):
                     return view('surat keluar.layout template.surat permohonan beasiswa', compact('nav', 'menu', 'template', 'jenis', 'user'));
                     break;
 
@@ -93,7 +111,7 @@ class GenerateController extends Controller
 
         $catatan = new Catatan();
         $catatan->surat_id = $surat->id;
-        $catatan->user_id = 1;
+        $catatan->user_id = Auth::user()->id;
         if($request->catatan == null){
             $catatan->catatan = 'Menambah data surat keluar dengan nomor '. $request->nomor_surat;
         }else{
@@ -114,7 +132,7 @@ class GenerateController extends Controller
 
         if(file_exists(public_path('surat/template/'.$template->file))){
             switch($template->file){
-                case('1658842537_Surat Permohonan Beasiswa.docx'):
+                case('1658984447_Surat Permohonan Beasiswa.docx'):
                     $file_surat = $this->TP_surat_permohonan_beasiswa($request, $tujukan);
                     break;
 
@@ -128,7 +146,7 @@ class GenerateController extends Controller
         $surat->save();
 
         if($surat){
-            return redirect()->route('index.surat.keluar')->with('success', 'Surat berhasil di generate !!');
+            return redirect()->route('index.disposisi', $surat)->with('success', 'Surat berhasil di generate !!');
         }else{
             return back()->with('error', 'Generate surat gagal !!');
         }
@@ -141,9 +159,13 @@ class GenerateController extends Controller
      * @param  \App\Models\Generate  $generate
      * @return \Illuminate\Http\Response
      */
-    public function show(Generate $generate)
+    public function show(Surat $surat)
     {
         //
+        $nav = 'transaksi';
+        $menu = 'keluar';
+        $user = Auth::user();
+        return view('surat keluar.show', compact('nav', 'menu', 'surat', 'user'));
     }
 
     /**
@@ -152,18 +174,13 @@ class GenerateController extends Controller
      * @param  \App\Models\Generate  $generate
      * @return \Illuminate\Http\Response
      */
-    public function edit($generate)
+    public function edit(Surat $surat)
     {
         //
-        $nav = 'datasurat';
+        $nav = 'transaksi';
         $menu = 'keluar';
-        $generate = DB::table('generate')
-                ->join('surat', 'generate.surat_id', '=', 'surat.id')
-                ->selectRaw('surat.*')
-                ->join('kategori', 'surat.kategori_id', '=', 'kategori.id')
-                ->where('generate.id', '=', $generate)
-                ->get();
-        return view('surat keluar.update', compact('nav', 'menu', 'generate'));
+        $jenis = Jenis::where('kategori_id', 2)->get();
+        return view('surat keluar.update', compact('nav', 'menu', 'jenis', 'surat'));
 
     }
 
@@ -174,23 +191,41 @@ class GenerateController extends Controller
      * @param  \App\Models\Generate  $generate
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $generate)
+    public function update(Request $request, Surat $surat)
     {
         //
         $request->validate([
-            'nama' => 'required',
-            'tanggal' => 'required|date'
+            'jenis_id' => 'required',
+            'nomor' => 'required',
+            'judul' => 'required',
+            'tanggal' => 'required|date',
+            'keterangan' => 'required',
+            'catatan' => 'nullable',
         ]);
-        $generate = Surat::find($generate);
+        $surat->jenis_id = $request->jenis_id;
+        $surat->nosurat = $request->nomor;
+        $surat->judul = $request->judul;
+        $surat->tanggal = $request->tanggal;
+        $surat->keterangan = $request->keterangan;
+        if($surat){
+            $surat->save();
 
-        $generate->nama = $request->nama;
-        $generate->tglkeluar = $request->tanggal;
+            $catatan = new Catatan();
+            $catatan->user_id = Auth::user()->id;
+            $catatan->surat_id = $surat->id;
+            if($request->catatan == null){
+                $catatan->catatan = 'Mengubah data surat keluar nomor '. $request->nomor;
+            }else{
+                $catatan->catatan = 'Mengubah data surat keluar nomor '. $request->nomor. ', ('. $request->catatan. ').';
+            }
+            $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
+        }
 
-        if(!$generate){
-            return back()->with('error', 'Data gagal di Update !!');
+        if($catatan){
+            $catatan->save();
+            return redirect()->route('show.surat.keluar', $surat)->with('success', 'Data berhasil di update !!');
         }else{
-            $generate->save();
-            return redirect()->route('index.surat.keluar')->with('success', 'Data berhasil di Update !!');
+            return back()->with('error', 'Data gagal di update !!');
         }
 
     }
@@ -201,18 +236,23 @@ class GenerateController extends Controller
      * @param  \App\Models\Generate  $generate
      * @return \Illuminate\Http\Response
      */
-    public function destroy($generate)
+    public function destroy(Surat $surat)
     {
         //
-        $generate = Surat::find($generate);
-        $filelama = public_path('surat/generate/'.$generate->file);
-
-        if(!$generate){
-            return back()->with('error', 'Data gagal di Update !!');
+        $surat->status = 0;
+        $surat->save();
+        if($surat){
+            return redirect()->route('index.surat.keluar')->with('success', 'Data berhasil di hapus !!');
         }else{
-            File::delete($filelama);
-            $generate->delete();
-            return redirect()->route('index.surat.keluar')->with('success', 'Data berhasil di Update !!');
+            return back()->with('error', 'Data gagal di hapus !!');
+        }
+    }
+
+    public function download_file(Surat $surat){
+        if(file_exists(public_path('surat/generate/'.$surat->file_surat))){
+            return response()->download('surat/generate/'.$surat->file_surat);
+        }else{
+            return back()->with('error', 'Download gagal');
         }
     }
 

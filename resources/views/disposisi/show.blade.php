@@ -15,7 +15,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-12 col-md-8">
+                <div class="col-12 col-md-7">
                     <table class="table">
                         <tbody>
                             <tr>
@@ -47,36 +47,48 @@
                     </table>
                     <div class="row">
                         <div class="col-md-2">
-                            <a href="" class="btn btn-warning" title="Update"><i class="far fa-edit"> Update</i></a>
+                            <a href="{{ route('edit.disposisi', $disposisi) }}" class="btn btn-warning" title="Update"><i class="far fa-edit"></i> Update</a>
                         </div>
                         <div class="col-md-2">
-                            <form action="" method="post">
+                            <form action="{{ route('destroy.disposisi', $disposisi) }}" method="post">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"> Delete</i></button>
+                                <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"></i> Delete</button>
                             </form>
                         </div>
-                        @if ($user->isAdmin() == 1 || $user->isPimpinan() == 2)
-                            <div class="col-sm-2">
-                                <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
-                                    <button type="submit" class="btn btn-primary mr-2 show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"> Read</i></button>
-                                </form>
-                            </div>
-                            <div class="col-sm-2">
-                                <a href="{{ route('create.reply.surat.masuk', $disposisi) }}" class="btn btn-primary" title="Reply"><i class="fas fa-reply"> Reply</i></a>
-                            </div>
-                            <div class="col-sm-2">
-                                <form action="{{ route('continue.surat.masuk', $disposisi) }}" method="get">
-                                    <button type="submit" class="btn btn-primary mr-2 show_continue" data-toggle="tooltip" title="Continue"><i class="fa fa-play"> Continue</i></button>
-                                </form>
-                            </div>
-                        @endif
-                        <div class="col-md-2">
-                            <a href="" class="btn btn-success" title="Download"><i class="fa fa-download"> View File</i></a>
+                        @switch($surat->jenis->kategori->id)
+                            @case(1)
+                                @if ($user->isAdmin() == 1 || $user->isPimpinan() == 2)
+                                    <div class="col-sm-2">
+                                        <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
+                                            <button type="submit" class="btn btn-primary mr-2 show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
+                                        </form>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <a href="{{ route('create.reply.surat.masuk', $disposisi) }}" class="btn btn-primary" title="Reply"><i class="fas fa-reply"></i> Reply</a>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <form action="{{ route('continue.surat.masuk', $disposisi) }}" method="get">
+                                            <button type="submit" class="btn btn-primary mr-2 show_continue" data-toggle="tooltip" title="Continue"><i class="fa fa-play"></i> Continue</button>
+                                        </form>
+                                    </div>
+                                @endif
+                                @break
+                            @case(2)
+                                <div class="col-md-2">
+                                    <form action="{{ route('ttd.surat.keluar', $disposisi) }}" method="get">
+                                        <button type="submit" class="btn btn-primary mr-2 show_ttd" data-toggle="tooltip" title="Tanda Tangan"><i class="fa fa-check"></i> Tanda Tangan</button>
+                                    </form>
+                                </div>
+                                @break
+                            @default
+                        @endswitch
+                        <div class="col-md-2 {{ ($surat->jenis->kategori->id == 2) ? 'offset-md-4' : ''}}">
+                            <a href="" class="btn btn-success" title="Download"><i class="fa fa-download"></i> View File</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-5">
                     <table class="table">
                         <tbody>
                             @foreach ($status_dosen as $sta_dos)
@@ -98,6 +110,9 @@
                                             @break
                                         @case(5)
                                             <td><span class="badge badge-success">Balas Surat</span></td>
+                                            @break
+                                        @case(6)
+                                            <td><span class="badge badge-success">Tertanda Tangan</span></td>
                                             @break
                                         @default
                                     @endswitch
@@ -122,6 +137,9 @@
                                             @break
                                         @case(5)
                                             <td><span class="badge badge-success">Balas Surat</span></td>
+                                            @break
+                                        @case(6)
+                                            <td><span class="badge badge-success">Tertanda Tangan</span></td>
                                             @break
                                         @default
                                     @endswitch

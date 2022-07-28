@@ -123,12 +123,17 @@ class DisposisiController extends Controller
             $catatan->waktu = Carbon::now();
             $catatan->save();
         }
-
-        if($disposisi){
-            return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di tambah !!');
-        }else{
-            return back()->with('error', 'Data gagal di Tambah !!');
+        $surat = Surat::findOrFail($disposisi->surat_id);
+        switch($surat->jenis->kategori_id){
+            case(1):
+                return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di tambah !!');
+                break;
+            case(2):
+                return redirect()->route('index.surat.keluar')->with('success', 'Data berhasil di tambah !!');
+                break;
         }
+        return back()->with('error', 'Data gagal di Tambah !!');
+
     }
 
     /**
@@ -247,7 +252,13 @@ class DisposisiController extends Controller
      */
     public function destroy(Disposisi $disposisi)
     {
-        dd($disposisi);
+        $surat = Surat::findOrFail($disposisi->surat_id);
+        if($disposisi){
+            $disposisi->delete();
+            return redirect()->route('index.disposisi', $surat)->with('success', 'Data berhasil di Hapus !!');
+        }else{
+            return back()->with('error', 'Data gagal di Hapus !!');
+        }
     }
 
     public function create_reply(Disposisi $disposisi){
@@ -308,7 +319,7 @@ class DisposisiController extends Controller
                             'status' => 3
                         ]);
         if($update_status){
-            return redirect()->route('show.disposisi', $disposisi)->with('succes', 'TTanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
+            return redirect()->route('show.disposisi', $disposisi)->with('succes', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
         }else{
             return back()->with('error', 'Tanggapan surat gagal dikirim !!');
         }
@@ -322,7 +333,22 @@ class DisposisiController extends Controller
                             'status' => 4
                         ]);
         if($update_status){
-            return redirect()->route('show.disposisi', $disposisi)->with('succes', 'TTanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
+            return redirect()->route('show.disposisi', $disposisi)->with('succes', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
+        }else{
+            return back()->with('error', 'Tanggapan surat gagal dikirim !!');
+        }
+
+    }
+
+    public function store_TTD(Disposisi $disposisi){
+        $update_status = DB::table('disposisi_user')
+                        ->where('disposisi_id', $disposisi->id)
+                        ->where('user_id', Auth::user()->id)
+                        ->update([
+                            'status' => 6
+                        ]);
+        if($update_status){
+            return redirect()->route('show.disposisi', $disposisi)->with('succes', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
         }else{
             return back()->with('error', 'Tanggapan surat gagal dikirim !!');
         }

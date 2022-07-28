@@ -364,6 +364,24 @@
                     }
                 });
             });
+
+            // confirm TTD surat Keluar
+            $('.show_ttd').click(function(event) {
+                var form =  $(this).closest("form");
+                var name = $(this).data("name");
+                event.preventDefault();
+                swal({
+                    title: 'Apakah anda yakin sudah memeriksa surat, dan memberi tanda tangan pada surat !! ',
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                    form.submit();
+                    }
+                });
+            });
         </script>
     </body>
 </html>

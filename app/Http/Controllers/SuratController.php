@@ -173,7 +173,6 @@ class SuratController extends Controller
         $surat->nosurat = $request->nomor;
         $surat->judul = $request->judul;
         $surat->tanggal = $request->tanggal;
-        $surat->status = 1;
         $surat->keterangan = $request->keterangan;
         if($request->hasFile('file')){
             $filelama = public_path('surat/masuk/'.$surat->file_surat);
@@ -199,7 +198,7 @@ class SuratController extends Controller
 
         if($catatan){
             $catatan->save();
-            return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di update !!');
+            return redirect()->route('show.surat.masuk', $surat)->with('success', 'Data berhasil di update !!');
         }else{
             return back()->with('error', 'Data gagal di update !!');
         }

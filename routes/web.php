@@ -66,6 +66,11 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('/create/{template}', [GenerateController::class, 'create'])->name('create.surat.keluar');
         Route::post('/store', [GenerateController::class, 'store'])->name('store.surat.keluar');
         Route::get('/index/template', [GenerateController::class, 'index_template'])->name('index.keluar.template');
+        Route::get('/show/{surat}', [GenerateController::class, 'show'])->name('show.surat.keluar');
+        Route::get('/edit/{surat}', [GenerateController::class, 'edit'])->name('edit.surat.keluar');
+        Route::post('/update/{surat}', [GenerateController::class, 'update'])->name('update.surat.keluar');
+        Route::delete('/destroy/{surat}', [GenerateController::class, 'destroy'])->name('destroy.surat.keluar');
+        Route::get('/download/{surat}', [GenerateController::class, 'download_file'])->name('download.surat.keluar');
     });
 
     Route::prefix('/surat/disposisi')->group(function(){
@@ -81,6 +86,7 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/store/reply/{disposisi}', [DisposisiController::class, 'store_reply'])->name('store.reply.surat.masuk');
         Route::get('/read/{disposisi}', [DisposisiController::class, 'store_read'])->name('read.surat.masuk');
         Route::get('/continue/{disposisi}', [DisposisiController::class, 'store_continue'])->name('continue.surat.masuk');
+        Route::get('/TTD/{disposisi}', [DisposisiController::class, 'store_TTD'])->name('ttd.surat.keluar');
     });
     Route::prefix('/agenda')->group(function(){
         Route::prefix('/surat/masuk')->group(function(){

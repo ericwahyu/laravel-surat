@@ -99,8 +99,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        {{-- <a href="{{ route('index.jenis') }}" type="button" class="btn btn-secondary">Close</a> --}}
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Simpan Data</button>
                     </div>
                 </div>
             </div>

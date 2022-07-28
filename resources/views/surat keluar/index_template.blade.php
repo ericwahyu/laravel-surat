@@ -1,11 +1,11 @@
 @extends('layout')
-@section('title','Form Tambah Surat Keluar')
+@section('title','Tambah Surat Keluar')
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
         <a href="{{ route('index.surat.keluar') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <h1>Buat Surat Keluar</h1>
+    <h1>Pilih Template</h1>
 </div>
 
 <div class="section-body">
@@ -43,7 +43,7 @@
                                         <form action="" method="post">
                                             @csrf
                                             @method('DELETE')
-                                            <a href="{{ route('create.surat.keluar', $data) }}" class="btn btn-warning" title="Generate Surat"><i class="far fa-edit"></i></a>
+                                            <a href="{{ route('create.surat.keluar', $data) }}" class="btn btn-primary" title="Buat Surat"><i class="fas fa-pen-alt"></i> Buat Surat</a>
                                             {{-- <button type="submit" class="btn btn-danger mr-2" onclick="return confirm('Apakah Anda yakin ingin menghapus {{ $data->judul }} ?')" title="Hapus"><i class="far fa-trash-alt"></i></button> --}}
                                         </form>
                                     </td>
