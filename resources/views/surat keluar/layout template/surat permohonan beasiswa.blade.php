@@ -71,11 +71,59 @@
                     </div>
                     <div class="form-group col-md-10">
                         <div class="row">
-                            <div class="form-group col-md-1">
+                            <div class="form-group col-md-2">
                                 <label style="font-size: 14px">Nama</label>
                             </div>
-                            <div class="form-group col-md-7">
-                                <input type="text" class="form-control @error('paragraf_2') is-invalid @enderror" name="paragraf_2" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_2') }}" required>
+                            <div class="form-group col-md-9">
+                                <input type="text" class="form-control @error('paragraf_21') is-invalid @enderror" name="paragraf_21" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_21') }}" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label style="font-size: 14px">NPM</label>
+                            </div>
+                            <div class="form-group col-md-9">
+                                <input type="text" class="form-control @error('paragraf_2.2') is-invalid @enderror" name="paragraf_22" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_22') }}" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label style="font-size: 14px">Semester</label>
+                            </div>
+                            <div class="form-group col-md-9">
+                                <input type="text" class="form-control @error('paragraf_23') is-invalid @enderror" name="paragraf_23" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_23') }}" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label style="font-size: 14px">Fakultas</label>
+                            </div>
+                            <div class="form-group col-md-9">
+                                <input type="text" class="form-control @error('paragraf_24') is-invalid @enderror" name="paragraf_24" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_24') }}" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label style="font-size: 14px">Jurusan</label>
+                            </div>
+                            <div class="form-group col-md-9">
+                                <input type="text" class="form-control @error('paragraf_25') is-invalid @enderror" name="paragraf_25" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_25') }}" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label style="font-size: 14px">Tempat, Tgl. Lahir</label>
+                            </div>
+                            <div class="form-group col-md-9">
+                                <input type="text" class="form-control @error('paragraf_26') is-invalid @enderror" name="paragraf_26" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_26') }}" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label style="font-size: 14px">Alamat</label>
+                            </div>
+                            <div class="form-group col-md-9">
+                                <input type="text" class="form-control @error('paragraf_27') is-invalid @enderror" name="paragraf_27" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_27') }}" required>
                             </div>
                         </div>
                     </div>
@@ -93,7 +141,16 @@
                         <label style="font-size: 14px">Paragraf 4</label>
                     </div>
                     <div class="form-group col-md-10">
-                        <input type="text" class="form-control @error('paragraf_4') is-invalid @enderror" name="paragraf_4" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_4') }}" required>
+                        <input type="text" class="form-control @error('paragraf_41') is-invalid @enderror" name="paragraf_41" value="Foto copy KTP" required>
+                    </div>
+                    <div class="form-group col-md-10 offset-md-2">
+                        <input type="text" class="form-control @error('paragraf_42') is-invalid @enderror" name="paragraf_42" value="Foto copy KTM" required>
+                    </div>
+                    <div class="form-group col-md-10 offset-md-2">
+                        <input type="text" class="form-control @error('paragraf_43') is-invalid @enderror" name="paragraf_43" value="Surat Keterangan Mahasiswa Aktif" required>
+                    </div>
+                    <div class="form-group col-md-10 offset-md-2">
+                        <input type="text" class="form-control @error('paragraf_44') is-invalid @enderror" name="paragraf_44" value="Surat Keterangan Tidak Menerima Beasiswa Lain" required>
                     </div>
                 </div>
             </div>
@@ -121,8 +178,11 @@
                                 <label style="font-size: 14px">hormat saya, </label>
                                 <select class="form-control @error('tertanda_1') is-invalid @enderror" name="tertanda_1" required>
                                     <option disabled selected>--Tertanda--</option>
-                                    @foreach ($user as $users)
-                                        <option value="{{ $users->id }}">{{ $users->username }}</option>
+                                    @foreach ($dosen as $dosens)
+                                        <option value="{{ $dosens->user_id }}">{{ $dosens->nama }}</option>
+                                    @endforeach
+                                    @foreach ($mahasiswa as $mahasiswas)
+                                        <option value="{{ $mahasiswas->user_id }}">{{ $mahasiswas->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>

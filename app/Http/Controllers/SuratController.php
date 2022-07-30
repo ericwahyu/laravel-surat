@@ -33,12 +33,12 @@ class SuratController extends Controller
                     ->where('kategori_id', 1)
                     ->select('surat.*')
                     ->distinct()->get();
-        }elseif($user->isPimpinan() == 2 || $user->isPengelola() == 3){
+        }else{
             $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                     ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                     ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
                     ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                    ->join('users', 'disposisi_user.disposisi_id', '=', 'users.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                     ->where('surat.status', '!=', 0)
                     ->where('kategori_id', 1)
                     ->where('disposisi_user.user_id', Auth::user()->id)

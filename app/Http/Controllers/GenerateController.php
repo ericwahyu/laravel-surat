@@ -8,6 +8,8 @@ use App\Models\Template;
 use App\Models\Jenis;
 use App\Models\User;
 use App\Models\Catatan;
+use App\Models\Mahasiswa;
+use App\Models\Dosen;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
@@ -38,18 +40,20 @@ class GenerateController extends Controller
                     ->where('kategori_id', 2)
                     ->select('surat.*')
                     ->distinct()->get();
-        }elseif($user->isPimpinan() == 2 || $user->isPengelola() == 3){
+        }else{
             $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                     ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                     ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
                     ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                    ->join('users', 'disposisi_user.disposisi_id', '=', 'users.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                     ->where('surat.status', '!=', 0)
                     ->where('kategori_id', 2)
                     ->where('disposisi_user.user_id', Auth::user()->id)
                     ->select('surat.*')
-                    ->distinct()->get();
+                    ->distinct()
+                    ->get();
         }
+        // dd($generate);
         return view('surat keluar.index', compact('nav', 'menu', 'generate', 'user'));
     }
 
@@ -65,16 +69,17 @@ class GenerateController extends Controller
         $nav = 'transaksi';
         $menu = 'keluar';
         $jenis = Jenis::where('kategori_id', 2)->get();
-        $user = User::all();
+        $dosen = Dosen::all();
+        $mahasiswa = Mahasiswa::all();
 
         if(file_exists(public_path('surat/template/'.$template->file))){
             switch($template->file){
-                case('1658984447_Surat Permohonan Beasiswa.docx'):
-                    return view('surat keluar.layout template.surat permohonan beasiswa', compact('nav', 'menu', 'template', 'jenis', 'user'));
+                case('1659161988_Surat Permohonan Beasiswa.docx'):
+                    return view('surat keluar.layout template.surat permohonan beasiswa', compact('nav', 'menu', 'template', 'jenis', 'dosen', 'mahasiswa'));
                     break;
 
                 case('1658561211_Surat Keterangan Aktif Kuliah.docx'):
-                    return view('surat keluar.layout template.surat keterangan aktif kuliah', compact('nav', 'menu', 'template', 'jenis', 'user'));
+                    return view('surat keluar.layout template.surat keterangan aktif kuliah', compact('nav', 'menu', 'template', 'jenis', 'dosen', 'mahasiswa'));
                 break;
             }
         }else{
@@ -123,13 +128,16 @@ class GenerateController extends Controller
         $generate->save();
 
         $surat = Surat::find($surat->id);
-        $tujukan = User::find($request->tertanda_1);
+
+        //cari nama untuk ttd
+        $tujukan = Mahasiswa::where('user_id', $request->tertanda_1)->get();
+        $tujukan = Dosen::where('user_id', $request->tertanda_1)->get();
 
         $template = Template::find($request->template_id);
 
         if(file_exists(public_path('surat/template/'.$template->file))){
             switch($template->file){
-                case('1658984447_Surat Permohonan Beasiswa.docx'):
+                case('1659161988_Surat Permohonan Beasiswa.docx'):
                     $file_surat = $this->TP_surat_permohonan_beasiswa($request, $tujukan);
                     break;
 
@@ -286,11 +294,22 @@ class GenerateController extends Controller
             $templateProcessor->setValue('tujuan_surat', $request->tujuan_surat);
             $templateProcessor->setValue('pembuka_surat', $request->pembuka_surat);
             $templateProcessor->setValue('paragraf_1', $request->paragraf_1);
-            $templateProcessor->setValue('paragraf_2', $request->paragraf_2);
+            $templateProcessor->setValue('paragraf_2.1', $request->paragraf_21);
+            $templateProcessor->setValue('paragraf_2.2', $request->paragraf_22);
+            $templateProcessor->setValue('paragraf_2.3', $request->paragraf_23);
+            $templateProcessor->setValue('paragraf_2.4', $request->paragraf_24);
+            $templateProcessor->setValue('paragraf_2.5', $request->paragraf_25);
+            $templateProcessor->setValue('paragraf_2.6', $request->paragraf_26);
+            $templateProcessor->setValue('paragraf_2.7', $request->paragraf_27);
             $templateProcessor->setValue('paragraf_3', $request->paragraf_3);
-            $templateProcessor->setValue('paragraf_4', $request->paragraf_4);
+            $templateProcessor->setValue('paragraf_4.1', $request->paragraf_41);
+            $templateProcessor->setValue('paragraf_4.2', $request->paragraf_42);
+            $templateProcessor->setValue('paragraf_4.3', $request->paragraf_43);
+            $templateProcessor->setValue('paragraf_4.4', $request->paragraf_44);
             $templateProcessor->setValue('penutup_surat', $request->penutup_surat);
-            $templateProcessor->setValue('tertanda_1', $tujukan->username);
+            foreach($tujukan as $tuju){
+                $templateProcessor->setValue('tertanda_1', $tuju->nama);
+            }
 
             $file_name = now()->timestamp . '_' . $request->judul . '.docx';
             $templateProcessor->saveAs($file_name);

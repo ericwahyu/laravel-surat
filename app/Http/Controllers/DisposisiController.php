@@ -37,13 +37,13 @@ class DisposisiController extends Controller
         $user = Auth::user();
         if($user->isAdmin() == 1){
             $data = Disposisi::join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                        ->join('users', 'disposisi_user.disposisi_id', '=', 'users.id')
+                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                         ->where('surat_id', $surat->id)
                         ->select('disposisi.*')
                         ->distinct()->get();
-        }elseif($user->isPimpinan() == 2 || $user->isPengelola() == 3){
+        }else{
             $data = Disposisi::join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                        ->join('users', 'disposisi_user.disposisi_id', '=', 'users.id')
+                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                         ->where('surat_id', $surat->id)
                         ->where('disposisi_user.user_id', Auth::user()->id)
                         ->select('disposisi.*')

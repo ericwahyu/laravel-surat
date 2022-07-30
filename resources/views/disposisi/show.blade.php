@@ -75,11 +75,13 @@
                                 @endif
                                 @break
                             @case(2)
-                                <div class="col-md-2">
-                                    <form action="{{ route('ttd.surat.keluar', $disposisi) }}" method="get">
-                                        <button type="submit" class="btn btn-primary mr-2 show_ttd" data-toggle="tooltip" title="Tanda Tangan"><i class="fa fa-check"></i> Tanda Tangan</button>
-                                    </form>
-                                </div>
+                                @if ($user->isAdmin() == 1 || $user->isPimpinan() == 2)
+                                    <div class="col-md-2">
+                                        <form action="{{ route('ttd.surat.keluar', $disposisi) }}" method="get">
+                                            <button type="submit" class="btn btn-primary mr-2 show_ttd" data-toggle="tooltip" title="Tanda Tangan"><i class="fa fa-check"></i> Tanda Tangan</button>
+                                        </form>
+                                    </div>
+                                @endif
                                 @break
                             @default
                         @endswitch
@@ -95,7 +97,7 @@
                                 <tr>
                                     <td>{{ $sta_dos->nama }}</td>
                                     <td>:</td>
-                                    @switch($sta_maha->status)
+                                    @switch($sta_dos->status)
                                         @case(1)
                                             <td><span class="badge badge-primary">Asal Surat</span></td>
                                             @break

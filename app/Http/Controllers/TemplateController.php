@@ -139,7 +139,7 @@ class TemplateController extends Controller
             if(File::exists($filelama)){
                 File::delete($filelama);
                 $file = $request->file('file');
-                $file_name = now()->timestamp . '_' . $request->nama.'.'.$file->getClientOriginalExtension();
+                $file_name = now()->timestamp . '_' .$request->nama.'.'.$file->getClientOriginalExtension();
                 $file->move('surat/template',$file_name);
                 $template->file = $file_name;
             }
