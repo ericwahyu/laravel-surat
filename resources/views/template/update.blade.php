@@ -5,7 +5,7 @@
     <div class="section-header-back">
         <a href="{{ route('index.template') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <h1>Tambah Template Surat</h1>
+    <h1>Update Template Surat</h1>
 </div>
 
 <div class="section-body">
@@ -27,7 +27,7 @@
                         <label for="formFile" class="form-label" style="font-size: 16px">Nama File</label>
                         <input class="form-control @error('file') is-invalid @enderror" type="file" id="formFile" name="file" value="{{ old('file') }}">
                         <small id="passwordHelpBlock" class="form-text text-muted">
-                            Nama file template adalah {{ $template->file }}, Apakah akan di rubah ??
+                           File template sudah ada. Apakah yakin akan di rubah ??
                         </small>
                         @error('file')
                             <div class="invalid-feedback">

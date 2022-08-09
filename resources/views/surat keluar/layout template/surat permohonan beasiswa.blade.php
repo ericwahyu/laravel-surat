@@ -83,7 +83,7 @@
                                 <label style="font-size: 14px">NPM</label>
                             </div>
                             <div class="form-group col-md-9">
-                                <input type="text" class="form-control @error('paragraf_2.2') is-invalid @enderror" name="paragraf_22" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_22') }}" required>
+                                <input type="text" class="form-control @error('paragraf_22') is-invalid @enderror" name="paragraf_22" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_22') }}" required>
                             </div>
                         </div>
                         <div class="row">

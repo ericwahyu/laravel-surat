@@ -24,7 +24,7 @@ Route::get('/', [LoginController::class, 'index'])->name('index.login');
 Route::post('/login', [LoginController::class, 'store'])->name('store.login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout.login');
 
-// Route::middleware(['isAdmin|isPengelola'])->group(function(){
+
 Route::group(['middleware' => ['auth']], function(){
     Route::get('/dashboard', function(){
         return view('dashboard', array(
@@ -35,8 +35,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::prefix('/umum')->group(function(){
         Route::prefix('/jenis')->group(function(){
             Route::get('/', [JenisController::class, 'index'])->name('index.jenis');
-            Route::get('/create', [JenisController::class, 'create'])->name('create.jenis');
-            Route::post('/store', [JenisController::class, 'store'])->name('store.jenis');
+            Route::get('/create', [JenisController::class, 'create'])->name('create.jenis')->middleware('checkRole:1,3');
+            Route::post('/store', [JenisController::class, 'store'])->name('store.jenis')->middleware('checkRole:1,3');
             Route::get('/edit/{jenis}', [JenisController::class, 'edit'])->name('edit.jenis');
             Route::post('/update/{jenis}', [JenisController::class, 'update'])->name('update.jenis');
             Route::delete('/destroy/{jenis}', [JenisController::class, 'destroy'])->name('destroy.jenis');
@@ -87,6 +87,7 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('/continue/{disposisi}', [DisposisiController::class, 'store_continue'])->name('continue.surat.masuk');
         Route::get('/TTD/{disposisi}', [DisposisiController::class, 'store_TTD'])->name('ttd.surat.keluar');
     });
+
     Route::prefix('/agenda')->group(function(){
         Route::prefix('/surat/masuk')->group(function(){
             Route::get('/', [CatatanController::class, 'indexsm'])->name('index.agenda.masuk');

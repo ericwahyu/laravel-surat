@@ -29,7 +29,7 @@ class CatatanController extends Controller
                     ->where('surat.status', '!=', 0)
                     ->where('kategori_id', 1)
                     ->select('catatan.*')
-                    ->distinct()->get();
+                    ->distinct()->latest()->get();
         // dd($catatan);
         return view('catatan SM.index', compact('nav', 'menu', 'catatan', 'user'));
     }
@@ -49,7 +49,7 @@ class CatatanController extends Controller
                     ->where('surat.status', '!=', 0)
                     ->where('kategori_id', 2)
                     ->select('catatan.*')
-                    ->distinct()->get();
+                    ->distinct()->latest()->get();
         return view('catatan SK.index', compact('nav', 'menu', 'catatan'));
     }
 

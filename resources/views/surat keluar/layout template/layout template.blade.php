@@ -1,5 +1,5 @@
 @extends('layout')
-{{-- @section('title', $template->nama) --}}
+@section('title', 'Generate '.$template->nama)
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
@@ -33,6 +33,26 @@
                             @enderror
                         </div>
                         <div class="form-group col-md-6">
+                            <label style="font-size: 16px">Keterangan Surat</label>
+                            <input type="text" class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" value="{{ old('keterangan') }}">
+                            @error('keterangan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label style="font-size: 16px">Judul Surat</label>
+                            <input type="text" class="form-control @error('judul') is-invalid @enderror" name="judul" value="{{ $template->nama }}">
+                            @error('judul')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-6">
                             <label style="font-size: 16px">Catatan</label>
                             <input type="text" class="form-control @error('catatan') is-invalid @enderror" name="catatan" value="{{ old('catatan') }}">
                             <small id="passwordHelpBlock" class="form-text text-muted">
@@ -45,20 +65,8 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <label style="font-size: 16px">Keterangan Surat</label>
-                            <input type="text" class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" value="{{ old('keterangan') }}">
-                            @error('keterangan')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
                 </div>
-                {{-- hiddin input --}}
-                    <input type="hidden" name="judul" value="{{ $template->nama }}">
+                {{-- hidden input --}}
                     <input type="hidden" name="template_id" value="{{ $template->id }}">
             </div>
             @yield('generate')

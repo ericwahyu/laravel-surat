@@ -72,6 +72,12 @@
                                             <button type="submit" class="btn btn-primary mr-2 show_continue" data-toggle="tooltip" title="Continue"><i class="fa fa-play"></i> Continue</button>
                                         </form>
                                     </div>
+                                @elseif ($user->isDosen() == 4)
+                                    <div class="col-sm-2">
+                                        <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
+                                            <button type="submit" class="btn btn-primary mr-2 show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
+                                        </form>
+                                    </div>
                                 @endif
                                 @break
                             @case(2)

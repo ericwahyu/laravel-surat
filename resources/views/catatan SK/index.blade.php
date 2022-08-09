@@ -1,8 +1,8 @@
 @extends('layout')
-@section('title','Agenda Surat Masuk')
+@section('title','Agenda Surat Keluar')
 @section('section')
 <div class="section-header">
-    <h1>Agenda Surat Masuk</h1>
+    <h1>Agenda Surat Keluar</h1>
     <div class="section-header-button">
 
     </div>
