@@ -174,10 +174,15 @@
                             </div>
                         </li>
                         <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                            <div class="d-sm-none d-lg-inline-block">{{ Auth::user()->username }}</div></a>
+                            @foreach (Auth::user()->mahasiswa as $user_mahasiswa)
+                                <div class="d-sm-none d-lg-inline-block">{{ $user_mahasiswa->nama }}</div></a>
+                            @endforeach
+                            @foreach (Auth::user()->dosen as $user_dosen)
+                                <div class="d-sm-none d-lg-inline-block">{{ $user_dosen->nama }}</div></a>
+                            @endforeach
                             <div class="dropdown-menu dropdown-menu-right">
                                 <div class="dropdown-title">Logged in 5 min ago</div>
-                                <a href="features-profile.html" class="dropdown-item has-icon">
+                                {{-- <a href="features-profile.html" class="dropdown-item has-icon">
                                     <i class="far fa-user"></i> Profile
                                 </a>
                                 <a href="features-activities.html" class="dropdown-item has-icon">
@@ -185,7 +190,7 @@
                                 </a>
                                 <a href="features-settings.html" class="dropdown-item has-icon">
                                     <i class="fas fa-cog"></i> Settings
-                                </a>
+                                </a> --}}
                                 <div class="dropdown-divider"></div>
                                 <form action="{{ route('logout.login') }}" method="post">
                                     @csrf
@@ -313,8 +318,8 @@
         <script type="text/javascript">
             // Confirm delete
             $('.show_confirm').click(function(event) {
-                var form =  $(this).closest("form");
-                var name = $(this).data("name");
+                let form =  $(this).closest("form");
+                let name = $(this).data("name");
                 event.preventDefault();
                 swal({
                     title: 'Apakah anda yakin akan menghapus data ini !! ',
@@ -331,8 +336,8 @@
 
             // confirm read surat masuk
             $('.show_read').click(function(event) {
-                var form =  $(this).closest("form");
-                var name = $(this).data("name");
+                let form =  $(this).closest("form");
+                let name = $(this).data("name");
                 event.preventDefault();
                 swal({
                     title: 'Apakah anda yakin sudah melihat surat, dan memberi tanggapan hanya membaca !! ',
@@ -349,8 +354,8 @@
 
             // confirm continue surat masuk
             $('.show_continue').click(function(event) {
-                var form =  $(this).closest("form");
-                var name = $(this).data("name");
+                let form =  $(this).closest("form");
+                let name = $(this).data("name");
                 event.preventDefault();
                 swal({
                     title: 'Apakah anda yakin sudah melihat surat, dan memberi tanggapan lanjutkan proses lanjutnya !! ',
@@ -367,8 +372,8 @@
 
             // confirm TTD surat Keluar
             $('.show_ttd').click(function(event) {
-                var form =  $(this).closest("form");
-                var name = $(this).data("name");
+                let form =  $(this).closest("form");
+                let name = $(this).data("name");
                 event.preventDefault();
                 swal({
                     title: 'Apakah anda yakin sudah memeriksa surat, dan memberi tanda tangan pada surat !! ',

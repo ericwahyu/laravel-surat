@@ -29,7 +29,6 @@
                                 <th>Perihal Disposisi</th>
                                 <th>Tanggal</th>
                                 <th>Isi Disposisi</th>
-                                {{-- <th>Tujukan Disposisi</th> --}}
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -45,13 +44,6 @@
                                     <td>{{ $disposisi->perihal }}</td>
                                     <td>{{ $disposisi->tanggal }}</td>
                                     <td>{{ $disposisi->isi }}</td>
-                                    {{-- <td>
-                                        <ul>
-                                            @foreach($disposisi->user as $user)
-                                                <li> {{ $user->username }} </li>
-                                            @endforeach
-                                        </ul>
-                                    </td> --}}
                                     <td>
                                         <form action="" method="post">
                                             @csrf

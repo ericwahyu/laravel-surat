@@ -43,10 +43,10 @@
                                     <form method="POST" action="{{ route('store.login') }}" class="needs-validation" novalidate="">
                                         @csrf
                                         <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <input id="email" type="email" class="form-control" name="email" tabindex="1" required autofocus>
+                                            <label for="text">Username or Email</label>
+                                            <input id="text" type="text" class="form-control" name="login" tabindex="1" required autofocus>
                                             <div class="invalid-feedback">
-                                                Please fill in your email
+                                                Please fill in your Username or Email
                                             </div>
                                         </div>
 

@@ -79,7 +79,10 @@ class GenerateController extends Controller
 
                 case('template surat keterangan aktif kuliah.docx'):
                     return view('surat keluar.layout template.surat keterangan aktif kuliah', compact('nav', 'menu', 'template', 'jenis', 'dosen', 'mahasiswa'));
-                break;
+                    break;
+                case('template undangan sistem PSA.docx'):
+                    return view('surat keluar.layout template.surat undangan sistem PSA', compact('nav', 'menu', 'template', 'jenis', 'dosen', 'mahasiswa'));
+                    break;
             }
         }else{
             return back()->with('error', 'Berkas tidak ditemukan !!');
@@ -101,7 +104,8 @@ class GenerateController extends Controller
             'catatan' => 'nullable',
         ]);
 
-        // dd($request);
+
+        dd($request);
         $surat = new Surat();
         $surat->jenis_id = $request->jenis_id;
         $surat->judul = $request->judul;
@@ -141,9 +145,11 @@ class GenerateController extends Controller
                 case('template surat permohonan beasiswa.docx'):
                     $file_surat = $this->TP_surat_permohonan_beasiswa($request, $tujukan);
                     break;
-
                 case('template surat keterangan aktif kuliah.docx'):
                     $file_surat = $this->TP_surat_keterangan_aktif($request, $tujukan);
+                    break;
+                case('template undangan sistem PSA.docx'):
+                    $file_surat = $this->TP_surat_undangan_surat_PSA($request, $tujukan);
                     break;
             }
         }
@@ -259,7 +265,7 @@ class GenerateController extends Controller
         if($surat){
             return redirect()->route('index.surat.keluar')->with('success', 'Data berhasil di hapus !!');
         }else{
-            return back()->with('error', 'Data gagal di hapus !!');
+            return back()->with('warning', 'Data gagal di hapus !!');
         }
     }
 
@@ -321,7 +327,7 @@ class GenerateController extends Controller
             return $file_name;
 
         }else{
-            return back()->with('error', 'Berkas tidak ditemukan !!');
+            return back()->with('warning', 'Berkas tidak ditemukan !!');
         }
 
     }
@@ -361,7 +367,49 @@ class GenerateController extends Controller
             return $file_name;
 
         }else{
-            return back()->with('error', 'Berkas tidak ditemukan !!');
+            return back()->with('warning', 'Berkas tidak ditemukan !!');
+        }
+
+    }
+
+    public function TP_surat_undangan_surat_PSA($request, $tujukan){
+        $template = Template::find($request->template_id);
+        $docs = public_path('surat/template/').$template->file;
+
+        // cek template
+        if (file_exists($docs)) {
+            //generate surat
+            $date = Carbon::parse($request->tanggal_surat)->isoFormat("D MMMM YYYY");
+            $tanggal = Carbon::parse($request->tanggal)->isoFormat("D MMMM YYYY");
+
+            $templateProcessor = new TemplateProcessor($docs);
+            $templateProcessor->setValue('tempat_surat', $request->tempat_surat);
+            $templateProcessor->setValue('tanggal_surat', $date);
+            $templateProcessor->setValue('nomor_surat', $request->nomor_surat);
+            $templateProcessor->setValue('lampiran_surat', $request->lampiran_surat);
+            $templateProcessor->setValue('perihal_surat', $request->perihal_surat);
+            $templateProcessor->setValue('tujuan_surat', $request->tujuan_surat);
+            $templateProcessor->setValue('pembuka_surat', $request->pembuka_surat);
+            $templateProcessor->setValue('hari', $request->hari);
+            $templateProcessor->setValue('tanggal', $tanggal);
+            $templateProcessor->setValue('jam', $request->jam);
+            $templateProcessor->setValue('waktu_catatan', $request->waktu_catatan);
+            $templateProcessor->setValue('tempat', $request->tempat);
+            $templateProcessor->setValue('penutup_surat', $request->penutup_surat);
+            foreach($tujukan as $tuju){
+                $templateProcessor->setValue('tertanda_1', $tuju->nama);
+            }
+
+            $file_name = now()->timestamp . '_' . $request->judul . '.docx';
+            $templateProcessor->saveAs($file_name);
+
+            // Pindah file
+            File::move(public_path() . '/' . $file_name, public_path('surat/generate/') .$file_name);
+
+            return $file_name;
+
+        }else{
+            return back()->with('warning', 'Berkas tidak ditemukan !!');
         }
 
     }

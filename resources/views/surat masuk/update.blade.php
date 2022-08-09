@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label style="font-size: 16px">Jenis Surat</label>
-                            <select class="form-control @error('kategori') is-invalid @enderror" name="jenis_id">
+                            <select class="form-control @error('jenis_id') is-invalid @enderror" name="jenis_id">
                                 <option selected value="{{ $surat->jenis->id }}">{{ $surat->jenis->nama_jenis }}</option>
                                 @foreach ($jenis as $jenis)
                                     @if ($surat->jenis->id != $jenis->id)
@@ -57,7 +57,7 @@
                             <small id="passwordHelpBlock" class="form-text text-muted">
                                 Masukkan catatan jika ada perlu !!
                             </small>
-                            @error('keterangan')
+                            @error('catatan')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

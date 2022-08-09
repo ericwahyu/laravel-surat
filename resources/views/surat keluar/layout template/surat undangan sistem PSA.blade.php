@@ -24,6 +24,24 @@
                     <label style="font-size: 16px">Nomor Surat</label>
                     <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" name="nomor_surat" placeholder="0123/PSI/ITATS/2021" value="{{ old('nomor_surat') }}" required>
                 </div>
+                <div class="form-group col-md-6">
+                    <label style="font-size: 16px">Perihal Surat</label>
+                    <input type="text" class="form-control @error('perihal_surat') is-invalid @enderror" name="perihal_surat"  value="Undangan Sosialisasi Sistem Pelayanan Satu Atap Online[beta]" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label style="font-size: 16px">Lampiran Surat</label>
+                    <input type="text" class="form-control @error('lampiran_surat') is-invalid @enderror" name="lampiran_surat" placeholder="Satu Lembar" value="{{ old('lampiran_surat') }}" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="form-group">
+                <label style="font-size: 16px">Tujuan Surat</label>
+                <input type="text" class="form-control @error('tujuan_surat') is-invalid @enderror" name="tujuan_surat" value="Kabag Unit/Staf Admin Fakultas/Marketing, Humas, dan PSA" required>
             </div>
         </div>
     </div>
@@ -31,7 +49,7 @@
         <div class="card-body">
             <div class="form-group">
                 <label style="font-size: 16px">Salam Pembuka</label>
-                <textarea name="pembuka_surat" class="form-control @error('pembuka_surat') is-invalid @enderror" cols="30" rows="10">Yang bertanda tangan di bawah ini Wakil Dekan III Universitas . . . . . . . . . . . . . dengan ini menerangkan bahwa : </textarea>
+                <textarea name="pembuka_surat" class="form-control @error('pembuka_surat') is-invalid @enderror" cols="30" rows="100">Sehubungan dengan rencana digitalisasi pelayanan mahasiswa di lingkungan Institut Teknologi Adhi Tama Surabaya (seperti pengurusan: DHS, Surat Aktif Kuliah, Surat Keterangan Lulus, dan lain-lain) yang sebelumnya digawangi oleh unit Pelayanan Satu Atap (PSA), dengan ini kami mengundang Bapak/Ibu Kabag Unit, Staf Admin Fakultas, serta Staf Marketing, Humas, dan PSA untuk menghadiri acara Sosialisasi Sistem Pelayanan Satu Atap Online[beta] pada:</textarea>
             </div>
         </div>
     </div>
@@ -46,60 +64,48 @@
                     <div class="form-group col-md-10">
                         <div class="row">
                             <div class="form-group col-md-2">
-                                <label style="font-size: 14px">Nama</label>
+                                <label style="font-size: 14px">Hari, Tanggal</label>
                             </div>
-                            <div class="form-group col-md-9">
-                                <input type="text" class="form-control @error('paragraf_21') is-invalid @enderror" name="paragraf_21" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_21') }}" required>
+                            <div class="form-group col-md-2">
+                                <select class="form-control @error('hari') is-invalid @enderror" name="hari" required>
+                                    <option disabled selected>-- Pilih Hari --</option>
+                                    <option value="Senin" {{ (old("hari") == 'Senin' ? "selected":"") }}>Senin</option>
+                                    <option value="Selasa" {{ (old("hari") == 'Selasa' ? "selected":"") }}>Selasa</option>
+                                    <option value="Rabu" {{ (old("hari") == 'Rabu' ? "selected":"") }}>Rabu</option>
+                                    <option value="Kamis" {{ (old("hari") == 'Kamis' ? "selected":"") }}>Kamis</option>
+                                    <option value="Jum'at" {{ (old("hari") == "Jum'at" ? "selected":"") }}>Jum'at</option>
+                                    <option value="Sabtu" {{ (old("hari") == 'Sabtu' ? "selected":"") }}>Sabtu</option>
+                                    <option value="Minggu" {{ (old("hari") == 'Minggu' ? "selected":"") }}>Minggu</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" placeholder="Tuliskan Sesuatu" value="{{ old('tanggal') }}" required>
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-2">
-                                <label style="font-size: 14px">NPM</label>
+                                <label style="font-size: 14px">Waktu</label>
                             </div>
-                            <div class="form-group col-md-9">
-                                <input type="text" class="form-control @error('paragraf_22') is-invalid @enderror" name="paragraf_22" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_22') }}" required>
+                            <div class="form-group col-md-2">
+                                <input type="time" class="form-control @error('jam') is-invalid @enderror" name="jam" placeholder="Tuliskan Sesuatu" value="{{ old('jam') }}" required>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <input type="text" class="form-control @error('') is-invalid @enderror" name="" placeholder="" value="WIB s.d. selesai" required readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-7 offset-md-2">
+                                <input type="text" class="form-control @error('waktu_catatan') is-invalid @enderror" name="waktu_catatan" placeholder="" value="(diawali makan siang bersama)" required>
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-2">
-                                <label style="font-size: 14px">Semester</label>
+                                <label style="font-size: 14px">Tempat</label>
                             </div>
-                            <div class="form-group col-md-9">
-                                <input type="text" class="form-control @error('paragraf_23') is-invalid @enderror" name="paragraf_23" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_23') }}" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-2">
-                                <label style="font-size: 14px">Fakultas</label>
-                            </div>
-                            <div class="form-group col-md-9">
-                                <input type="text" class="form-control @error('paragraf_24') is-invalid @enderror" name="paragraf_24" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_24') }}" required>
+                            <div class="form-group col-md-7">
+                                <input type="text" class="form-control @error('tempat') is-invalid @enderror" name="tempat" placeholder="Tuliskan Sesuatu" value="{{ old('tempat') }}" required>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-md-2">
-                                <label style="font-size: 14px">Jurusan</label>
-                            </div>
-                            <div class="form-group col-md-9">
-                                <input type="text" class="form-control @error('paragraf_25') is-invalid @enderror" name="paragraf_25" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_25') }}" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-2">
-                                <label style="font-size: 14px">Tempat, Tgl. Lahir</label>
-                            </div>
-                            <div class="form-group col-md-9">
-                                <input type="text" class="form-control @error('paragraf_26') is-invalid @enderror" name="paragraf_26" placeholder="Tuliskan Sesuatu" value="{{ old('paragraf_26') }}" required>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-2">
-                        <label style="font-size: 14px">Paragraf 2</label>
-                    </div>
-                    <div class="form-group col-md-10">
-                        <textarea name="paragraf_2" class="form-control @error('paragraf_2') is-invalid @enderror" cols="30" rows="10">Bahwa Mahasiswa yang bersangkutan adalah benar-benar Mahasiswa Universitas  . . . . . . . . dan masih aktif mengikuti kegiatan pembelajaran di Kampus.</textarea>
                     </div>
                 </div>
             </div>
@@ -109,7 +115,7 @@
         <div class="card-body">
             <div class="form-group">
                 <label style="font-size: 16px">Salam Penutup</label>
-                <textarea name="penutup_surat" class="form-control @error('penutup_surat') is-invalid @enderror" cols="30" rows="10">Demikian Surat Keterangan ini dibuat dengan sebenarnya untuk yang bersangkutan dan kiranya dapat dipergunakan seperlunya.</textarea>
+                <textarea name="penutup_surat" class="form-control @error('penutup_surat') is-invalid @enderror" cols="30" rows="10">Demikian undangan ini kami sampaikan. Atas perhatian Bapak/Ibu, kami ucapkan terima kasih.</textarea>
             </div>
         </div>
     </div>

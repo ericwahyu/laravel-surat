@@ -17,10 +17,10 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label style="font-size: 16px">Jenis Surat</label>
-                            <select class="form-control @error('kategori') is-invalid @enderror" name="jenis_id">
+                            <select class="form-control @error('jenis_id') is-invalid @enderror" name="jenis_id">
                                 <option disabled selected>-- Jenis Surat--</option>
                                 @foreach ($jenis as $jenis)
-                                    <option value="{{ $jenis->id }}">{{ $jenis->nama_jenis }}</option>
+                                    <option value="{{ $jenis->id }}" {{ (old("jenis_id") == $jenis->id ? "selected":"") }}>{{ $jenis->nama_jenis }}</option>
                                 @endforeach
                             </select>
                             @error('jenis_id')
@@ -55,7 +55,7 @@
                             <small id="passwordHelpBlock" class="form-text text-muted">
                                 Masukkan catatan jika ada perlu !!
                             </small>
-                            @error('keterangan')
+                            @error('catatan')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

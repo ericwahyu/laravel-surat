@@ -15,18 +15,27 @@ class LoginController extends Controller
 
     public function store(Request $request){
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+            'login'    => 'required',
+            'password' => 'required',
         ]);
 
-        $kredensil = $request->only('email','password');
+        $login_type = filter_var($request->input('login'), FILTER_VALIDATE_EMAIL )
+            ? 'email'
+            : 'username';
 
-        if(Auth::attempt($kredensil)) {
+        $request->merge([
+            $login_type => $request->input('login')
+        ]);
+
+        if (Auth::attempt($request->only($login_type, 'password'))) {
             return redirect()->route('dashboard')->with('success', 'login berhasil !!');
         }
 
-        return redirect()->route('index.login')->with('error','These credentials do not match our records.');
-
+        return redirect()->back()
+            ->withInput()
+            ->withErrors([
+                'login' => 'These credentials do not match our records.',
+            ]);
     }
 
     public function logout(Request $request){

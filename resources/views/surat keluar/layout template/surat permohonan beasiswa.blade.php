@@ -179,10 +179,10 @@
                                 <select class="form-control @error('tertanda_1') is-invalid @enderror" name="tertanda_1" required>
                                     <option disabled selected>--Tertanda--</option>
                                     @foreach ($dosen as $dosens)
-                                        <option value="{{ $dosens->user_id }}">{{ $dosens->nama }}</option>
+                                        <option value="{{ $dosens->user_id }}" {{ (old("tertanda_1") == $dosens->user_id ? "selected":"") }}>{{ $dosens->nama }}</option>
                                     @endforeach
                                     @foreach ($mahasiswa as $mahasiswas)
-                                        <option value="{{ $mahasiswas->user_id }}">{{ $mahasiswas->nama }}</option>
+                                        <option value="{{ $mahasiswas->user_id }}" {{ (old("tertanda_1") == $mahasiswas->user_id ? "selected":"") }}>{{ $mahasiswas->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
