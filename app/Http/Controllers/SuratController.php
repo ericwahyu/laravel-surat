@@ -20,33 +20,58 @@ class SuratController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        $user = Auth::user();
+        if($request->input('tahun')){
+            if($user->isAdmin() == 1){
+                $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                        ->where('surat.status', '!=', 0)
+                        ->where('kategori_id', 1)
+                        ->whereYear('surat.tanggal', $request->tahun)
+                        ->select('surat.*')
+                        ->distinct()->latest()->get();
+            }else{
+                $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                        ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                        ->where('surat.status', '!=', 0)
+                        ->where('kategori_id', 1)
+                        ->where('disposisi_user.user_id', Auth::user()->id)
+                        ->whereYear('surat.tanggal', $request->tahun)
+                        ->select('surat.*')
+                        ->distinct()->latest()->get();
+            }
+        }else{
+            if($user->isAdmin() == 1){
+                $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                        ->where('surat.status', '!=', 0)
+                        ->where('kategori_id', 1)
+                        ->select('surat.*')
+                        ->distinct()->latest()->get();
+            }else{
+                $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                        ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                        ->where('surat.status', '!=', 0)
+                        ->where('kategori_id', 1)
+                        ->where('disposisi_user.user_id', Auth::user()->id)
+                        ->select('surat.*')
+                        ->distinct()->latest()->get();
+            }
+        }
+
         $nav = 'transaksi';
         $menu = 'masuk';
-        $user = Auth::user();
-        if($user->isAdmin() == 1){
-            $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                    ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                    ->where('surat.status', '!=', 0)
-                    ->where('kategori_id', 1)
-                    ->select('surat.*')
-                    ->distinct()->get();
-        }else{
-            $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                    ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                    ->where('surat.status', '!=', 0)
-                    ->where('kategori_id', 1)
-                    ->where('disposisi_user.user_id', Auth::user()->id)
-                    ->select('surat.*')
-                    ->distinct()->get();
-        }
         // dd($surat);
-        return view('surat masuk.index', compact('nav', 'menu', 'surat', 'user'));
+        return view('surat masuk.index', compact('nav', 'menu', 'surat', 'user', 'request'));
     }
 
     /**
@@ -100,9 +125,9 @@ class SuratController extends Controller
             $catatan->user_id = Auth::user()->id;
             $catatan->surat_id = $suratSM->id;
             if($request->catatan == null){
-                $catatan->catatan = 'Menambah data surat masuk dengan nomor '. $request->nomor;
+                $catatan->catatan = 'Menambah data surat masuk, dengan nomor surat '. $request->nomor;
             }else{
-                $catatan->catatan = 'Menambah data surat masuk dengan nomor '. $request->nomor. ', ('. $request->catatan. ').';
+                $catatan->catatan = 'Menambah data surat masuk, dengan nomor surat '. $request->nomor. ', (catatan : '. $request->catatan. ').';
             }
             $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
             $catatan->save();
@@ -186,9 +211,9 @@ class SuratController extends Controller
             $catatan->user_id = Auth::user()->id;
             $catatan->surat_id = $surat->id;
             if($request->catatan == null){
-                $catatan->catatan = 'Mengubah data surat masuk nomor '. $request->nomor;
+                $catatan->catatan = 'Mengubah data surat masuk, dengan nomor surat '. $request->nomor;
             }else{
-                $catatan->catatan = 'Mengubah data surat masuk nomor '. $request->nomor. ', ('. $request->catatan. ').';
+                $catatan->catatan = 'Mengubah data surat masuk, dengan nomor surat '. $request->nomor. ', (catatan : '. $request->catatan. ').';
             }
             $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         }

@@ -36,7 +36,7 @@
                             <tr>
                                 <td>Tanggal Disposisi</td>
                                 <td>:</td>
-                                <td>{{ $disposisi->tanggal }}</td>
+                                <td>{{IdDateFormatter::format( $disposisi->tanggal, IdDateFormatter::COMPLETE) }}</td>
                             </tr>
                             <tr>
                                 <td>Isi Disposisi</td>
@@ -58,7 +58,7 @@
                         </div>
                         @switch($surat->jenis->kategori->id)
                             @case(1)
-                                @if ($user->isAdmin() == 1 || $user->isPimpinan() == 2)
+                                @if ($user->isAdmin()|| $user->isPimpinan())
                                     <div class="col-sm-2">
                                         <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
                                             <button type="submit" class="btn btn-primary mr-2 show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
@@ -72,7 +72,7 @@
                                             <button type="submit" class="btn btn-primary mr-2 show_continue" data-toggle="tooltip" title="Continue"><i class="fa fa-play"></i> Continue</button>
                                         </form>
                                     </div>
-                                @elseif ($user->isDosen() == 4)
+                                @elseif ($user->isDosen())
                                     <div class="col-sm-2">
                                         <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
                                             <button type="submit" class="btn btn-primary mr-2 show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
@@ -99,7 +99,7 @@
                 <div class="col-12 col-md-5">
                     <table class="table">
                         <tbody>
-                            @foreach ($status_dosen as $sta_dos)
+                            @foreach (DisposisiController::get_status_dosen($disposisi->id) as $sta_dos)
                                 <tr>
                                     <td>{{ $sta_dos->nama }}</td>
                                     <td>:</td>
@@ -126,7 +126,7 @@
                                     @endswitch
                                 </tr>
                             @endforeach
-                            @foreach ($status_mahasiswa as $sta_maha)
+                            @foreach (DisposisiController::get_status_mahasiswa($disposisi->id) as $sta_maha)
                                 <tr>
                                     <td>{{ $sta_maha->nama }}</td>
                                     <td>:</td>

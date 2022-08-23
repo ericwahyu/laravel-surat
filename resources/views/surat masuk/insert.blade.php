@@ -13,6 +13,9 @@
         <form action="{{ route('store.surat.masuk') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card">
+                <div class="card-header">
+                    <h4>Data Surat Masuk</h4>
+                </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="form-group col-md-6">
@@ -97,7 +100,6 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        {{-- <a href="{{ route('index.jenis') }}" type="button" class="btn btn-secondary">Close</a> --}}
                         <button type="submit" class="btn btn-primary">Simpan Data</button>
                     </div>
                 </div>

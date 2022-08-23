@@ -18,16 +18,21 @@ class checkRole
     public function handle(Request $request, Closure $next)
     {
         $allowedRoles = array_slice(func_get_args(), 2);
+        // DD($allowedRoles);
         $user = Auth::user();
         if(Auth::check()){
             if(in_array($user->isAdmin(), $allowedRoles)){
                 return $next($request);
-
             }elseif(in_array($user->isPimpinan(), $allowedRoles)){
                 return $next($request);
-
             }elseif(in_array($user->isPengelola(), $allowedRoles)){
                 return $next($request);
+            }elseif(in_array($user->isDosen(), $allowedRoles)){
+                return $next($request);
+            }elseif(in_array($user->isMahasiswa(), $allowedRoles)){
+                return $next($request);
+            }else{
+                return \abort(403);
             }
         }
         return \abort(403);

@@ -9,6 +9,7 @@ use App\Http\Controllers\DisposisiuserController;
 use App\Http\Controllers\CatatanController;
 use App\Http\Controllers\GenerateController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\KeperluanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout.login')
 
 
 Route::group(['middleware' => ['auth']], function(){
+    Route::post('/generateNomor', [GenerateController::class, 'generateNomorSurat'])->name('generateNomor');
+
     Route::get('/dashboard', function(){
         return view('dashboard', array(
             'nav' => 'dashboard',
@@ -35,20 +38,30 @@ Route::group(['middleware' => ['auth']], function(){
     Route::prefix('/umum')->group(function(){
         Route::prefix('/jenis')->group(function(){
             Route::get('/', [JenisController::class, 'index'])->name('index.jenis');
-            Route::get('/create', [JenisController::class, 'create'])->name('create.jenis')->middleware('checkRole:1,3');
-            Route::post('/store', [JenisController::class, 'store'])->name('store.jenis')->middleware('checkRole:1,3');
+            Route::get('/create', [JenisController::class, 'create'])->name('create.jenis')->middleware('checkRole:Admin,Pengelola');
+            Route::post('/store', [JenisController::class, 'store'])->name('store.jenis')->middleware('checkRole:Admin,Pengelola');
             Route::get('/edit/{jenis}', [JenisController::class, 'edit'])->name('edit.jenis');
             Route::post('/update/{jenis}', [JenisController::class, 'update'])->name('update.jenis');
             Route::delete('/destroy/{jenis}', [JenisController::class, 'destroy'])->name('destroy.jenis');
         });
-    });
-    Route::prefix('/template')->group(function(){
-        Route::get('/', [TemplateController::class, 'index'])->name('index.template');
-        Route::get('/create', [TemplateController::class, 'create'])->name('create.template');
-        Route::post('/store', [TemplateController::class, 'store'])->name('store.template');
-        Route::get('/edit/{template}', [TemplateController::class, 'edit'])->name('edit.template');
-        Route::post('/update/{template}', [TemplateController::class, 'update'])->name('update.template');
-        Route::delete('/destroy/{template}', [TemplateController::class, 'destroy'])->name('destroy.template');
+        Route::prefix('/keperluan')->group(function(){
+            Route::get('/', [KeperluanController::class, 'index'])->name('index.keperluan');
+            Route::get('/create', [KeperluanController::class, 'create'])->name('create.keperluan');
+            Route::post('/store', [KeperluanController::class, 'store'])->name('store.keperluan');
+            Route::get('/edit/{keperluan}', [KeperluanController::class, 'edit'])->name('edit.keperluan');
+            Route::post('/update/{keperluan}', [KeperluanController::class, 'update'])->name('update.keperluan');
+            Route::delete('/destroy/{keperluan}', [KeperluanController::class, 'destroy'])->name('destroy.keperluan');
+        });
+        Route::prefix('/template')->group(function(){
+            Route::get('/', [TemplateController::class, 'index'])->name('index.template');
+            Route::get('/create', [TemplateController::class, 'create'])->name('create.template');
+            Route::post('/store', [TemplateController::class, 'store'])->name('store.template');
+            Route::get('/edit/{template}', [TemplateController::class, 'edit'])->name('edit.template');
+            Route::post('/update/{template}', [TemplateController::class, 'update'])->name('update.template');
+            Route::delete('/destroy/{template}', [TemplateController::class, 'destroy'])->name('destroy.template');
+            Route::get('/formTestingTemplate/{template}', [TemplateController::class, 'formTestingTemplate'])->name('formtesting.template');
+            Route::post('/testingTemplate', [TemplateController::class, 'testingTemplate'])->name('testing.template');
+        });
     });
     Route::prefix('/transaksi/surat/masuk')->group(function(){
         Route::get('/', [SuratController::class, 'index'])->name('index.surat.masuk');
@@ -70,6 +83,7 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/update/{surat}', [GenerateController::class, 'update'])->name('update.surat.keluar');
         Route::delete('/destroy/{surat}', [GenerateController::class, 'destroy'])->name('destroy.surat.keluar');
         Route::get('/download/{surat}', [GenerateController::class, 'download_file'])->name('download.surat.keluar');
+        // Route::get('/generateNomor', [GenerateController::class, 'generateNomorSurat'])->name('generateNomor.surat.keluar');
     });
 
     Route::prefix('/surat/disposisi')->group(function(){

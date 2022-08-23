@@ -20,4 +20,8 @@ class UnitKerja extends Model
         return $this->hasMany(Mahasiswa::class);
     }
 
+    public function dosenunit(){
+        return $this->hasMany(Mahasiswa::class);
+    }
+
 }

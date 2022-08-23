@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title','Form Update Jenis Surat')
+@section('title','Update Jenis Surat')
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
@@ -14,6 +14,9 @@
             <form action="{{ route('update.jenis', $jenis) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card">
+                    <div class="card-header">
+                        <h4>Data Jenis Surat</h4>
+                    </div>
                     <div class="card-body">
                         <div class="form-group">
                             <label style="font-size: 16px">Kategori Jenis Surat</label>

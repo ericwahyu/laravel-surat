@@ -14,6 +14,9 @@
             @csrf
             <input type="hidden" name="pembuat" value="{{ Auth::user()->id }}">
             <div class="card">
+                <div class="card-header">
+                    <h4>Data Disposisi</h4>
+                </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="form-group col-md-6">
@@ -58,32 +61,34 @@
                             @enderror
                         </div>
                     </div>
-                    <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        Tambah penerima surat
-                    </a>
                 </div>
             </div>
-            <div class="collapse" id="collapseExample">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-2">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                <div class="sort-handler ui-sortable-handle text-center">
-                                                    <input class="form-check-input" type="checkbox" id="checkAll">
-                                                    <label class="form-check-label" for="checkAll"></label>
-                                                </div>
-                                            </th>
-                                            <th>Nama </th>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($user_dosen as $us_dos)
+            <div class="card">
+                <div class="card-header">
+                    <h4>Penerima Surat</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="table-2">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="sort-handler ui-sortable-handle text-center">
+                                                <input class="form-check-input" type="checkbox" id="checkAll">
+                                                <label class="form-check-label" for="checkAll"></label>
+                                            </div>
+                                        </th>
+                                        <th>Nama </th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($user_dosen as $us_dos)
+                                        @if ($us_dos->user_id === Auth::user()->id)
+                                            @continue
+                                        @else
                                             <tr>
                                                 <td>
                                                     <div class="sort-handler ui-sortable-handle text-center">
@@ -95,8 +100,12 @@
                                                 <td>{{ $us_dos->username }}</td>
                                                 <td>{{ $us_dos->email }}</td>
                                             </tr>
-                                        @endforeach
-                                        @foreach ($user_mahasiswa as $us_maha)
+                                        @endif
+                                    @endforeach
+                                    @foreach ($user_mahasiswa as $us_maha)
+                                        @if ($us_maha->user_id === Auth::user()->id)
+                                            @continue
+                                        @else
                                             <tr>
                                                 <td>
                                                     <div class="sort-handler ui-sortable-handle text-center">
@@ -108,14 +117,14 @@
                                                 <td>{{ $us_maha->username }}</td>
                                                 <td>{{ $us_maha->email }}</td>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                        @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Simpan Data</button>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan Data</button>
                     </div>
                 </div>
             </div>

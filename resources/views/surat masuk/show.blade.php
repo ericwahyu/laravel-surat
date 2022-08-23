@@ -11,7 +11,7 @@
 <div class="section-body">
     <div class="card">
         <div class="card-header">
-            <h4>Detail</h4>
+            <h4>Detail Data Surat Masuk</h4>
         </div>
         <div class="card-body">
             <div class="row">
@@ -36,7 +36,7 @@
                             <tr>
                                 <td>Tanggal Surat</td>
                                 <td>:</td>
-                                <td>{{ $surat->tanggal }}</td>
+                                <td>{{ IdDateFormatter::format($surat->tanggal, IdDateFormatter::COMPLETE) }}</td>
                             </tr>
                             <tr>
                                 <td>Keterangan Surat</td>

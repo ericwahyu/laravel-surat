@@ -29,6 +29,7 @@
                                 <th>Perihal Disposisi</th>
                                 <th>Tanggal</th>
                                 <th>Isi Disposisi</th>
+                                <th>Pihak Bersangkutan</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -42,8 +43,64 @@
                                     </td>
                                     <td>{{ $disposisi->surat->nosurat }}</td>
                                     <td>{{ $disposisi->perihal }}</td>
-                                    <td>{{ $disposisi->tanggal }}</td>
+                                    <td>{{ IdDateFormatter::format($disposisi->tanggal, IdDateFormatter::COMPLETE) }}</td>
                                     <td>{{ $disposisi->isi }}</td>
+                                    <td>
+                                        <table>
+                                            @foreach (DisposisiController::get_status_dosen($disposisi->id) as $status_dosen)
+                                                <tr>
+                                                    <td>{{ $status_dosen->nama }}</td>
+                                                    @switch($status_dosen->status)
+                                                        @case(1)
+                                                            <td><span class="badge badge-primary">Asal Surat</span></td>
+                                                            @break
+                                                        @case(2)
+                                                            <td><span class="badge badge-secondary">Terkirim</span></td>
+                                                            @break
+                                                        @case(3)
+                                                            <td><span class="badge badge-success">Terbaca</span></td>
+                                                            @break
+                                                        @case(4)
+                                                            <td><span class="badge badge-success">LanjutKan Proses</span></td>
+                                                            @break
+                                                        @case(5)
+                                                            <td><span class="badge badge-success">Balas Surat</span></td>
+                                                            @break
+                                                        @case(6)
+                                                            <td><span class="badge badge-success">Tertanda Tangan</span></td>
+                                                            @break
+                                                        @default
+                                                    @endswitch
+                                                </tr>
+                                            @endforeach
+                                            @foreach (DisposisiController::get_status_mahasiswa($disposisi->id) as $status_mahasiswa)
+                                                <tr>
+                                                    <td>{{ $status_mahasiswa->nama }}</td>
+                                                    @switch($status_mahasiswa->status)
+                                                        @case(1)
+                                                            <td><span class="badge badge-primary">Asal Surat</span></td>
+                                                            @break
+                                                        @case(2)
+                                                            <td><span class="badge badge-secondary">Terkirim</span></td>
+                                                            @break
+                                                        @case(3)
+                                                            <td><span class="badge badge-success">Terbaca</span></td>
+                                                            @break
+                                                        @case(4)
+                                                            <td><span class="badge badge-success">LanjutKan Proses</span></td>
+                                                            @break
+                                                        @case(5)
+                                                            <td><span class="badge badge-success">Balas Surat</span></td>
+                                                            @break
+                                                        @case(6)
+                                                            <td><span class="badge badge-success">Tertanda Tangan</span></td>
+                                                            @break
+                                                        @default
+                                                    @endswitch
+                                                </tr>
+                                            @endforeach
+                                        </table>
+                                    </td>
                                     <td>
                                         <form action="" method="post">
                                             @csrf

@@ -105,7 +105,7 @@ class DisposisiController extends Controller
         $disposisi_pembuat->status = 1;
         $disposisi_pembuat->save();
 
-        //input data tang di tujukan
+        //input data yang di tujukan
         foreach($request->disposisi as $dis_user){
             $disposisi_user = new Disposisiuser();
             $disposisi_user->disposisi_id = $disposisi->id;
@@ -114,23 +114,23 @@ class DisposisiController extends Controller
             $disposisi_user->save();
         }
 
-        // taambah data catatan
+        // tambah data catatan
         $catatan = new Catatan();
         $catatan->surat_id = $surat->id;
         $catatan->user_id = Auth::user()->id;
         switch($surat->jenis->kategori_id){
             case(1):
                 if($request->catatan == null){
-                    $catatan->catatan = 'Menambah disposisi surat masuk dengan nomor '.$surat->nosurat;
+                    $catatan->catatan = 'Menambah disposisi pada surat masuk, dengan nomor surat '.$surat->nosurat;
                 }else{
-                    $catatan->catatan = 'Menambah disposisi surat masuk dengan nomor ' . $surat->nosurat . ', ('.$request->catatan.').';
+                    $catatan->catatan = 'Menambah disposisi pada surat masuk, dengan nomor surat ' .$surat->nosurat. ', (catatan : '.$request->catatan.').';
                 }
                 break;
             case(2):
                 if($request->catatan == null){
-                    $catatan->catatan = 'Menambah disposisi surat keluar dengan nomor '.$surat->nosurat;
+                    $catatan->catatan = 'Menambah disposisi pada surat keluar, dengan nomor surat '.$surat->nosurat;
                 }else{
-                    $catatan->catatan = 'Menambah disposisi surat keluar dengan nomor ' . $surat->nosurat . ', ('.$request->catatan.').';
+                    $catatan->catatan = 'Menambah disposisi pada surat keluar, dengan nomor surat ' . $surat->nosurat . ', (catatan : '.$request->catatan.').';
                 }
             break;
         }
@@ -159,16 +159,6 @@ class DisposisiController extends Controller
     public function show(Disposisi $disposisi)
     {
         //
-        $status_dosen = DB::table('disposisi_user')
-                ->join('users', 'users.id', '=', 'disposisi_user.user_id')
-                ->join('dosen', 'dosen.user_id', '=', 'users.id')
-                ->where('disposisi_user.disposisi_id', $disposisi->id)
-                ->get();
-        $status_mahasiswa = DB::table('disposisi_user')
-                ->join('users', 'users.id', '=', 'disposisi_user.user_id')
-                ->join('mahasiswa', 'mahasiswa.user_id', '=', 'users.id')
-                ->where('disposisi_user.disposisi_id', $disposisi->id)
-                ->get();
         $surat = Surat::findOrFail($disposisi->surat_id);
         switch($surat->jenis->kategori_id){
             case(1):
@@ -180,7 +170,7 @@ class DisposisiController extends Controller
         }
         $nav = 'transaksi';
         $user = Auth::user();
-        return view('disposisi.show', compact('nav', 'menu', 'surat', 'disposisi', 'user', 'status_dosen', 'status_mahasiswa'));
+        return view('disposisi.show', compact('nav', 'menu', 'surat', 'disposisi', 'user'));
 
     }
 
@@ -234,16 +224,16 @@ class DisposisiController extends Controller
         switch($disposisi->surat->jenis->kategori_id){
             case(1):
                 if($request->catatan == null){
-                    $catatan->catatan = 'Mengubah disposisi surat masuk dengan nomor '.$disposisi->surat->nosurat;
+                    $catatan->catatan = 'Mengubah disposisi pada surat masuk, dengan nomor surat '.$disposisi->surat->nosurat;
                 }else{
-                    $catatan->catatan = 'Mengubah disposisi surat masuk dengan nomor ' .$disposisi->surat->nosurat. ', ('.$request->catatan.').';
+                    $catatan->catatan = 'Mengubah disposisi pada surat masuk, dengan nomor surat ' .$disposisi->surat->nosurat. ', (catatan : '.$request->catatan.').';
                 }
                 break;
             case(2):
                 if($request->catatan == null){
-                    $catatan->catatan = 'Mengubah disposisi surat keluar dengan nomor '.$disposisi->surat->nosurat;
+                    $catatan->catatan = 'Mengubah disposisi pada surat keluar, dengan nomor surat '.$disposisi->surat->nosurat;
                 }else{
-                    $catatan->catatan = 'Mengubah disposisi surat keluar dengan nomor ' .$disposisi->surat->nosurat. ', ('.$request->catatan.').';
+                    $catatan->catatan = 'Mengubah disposisi pada surat keluar, dengan nomor surat ' .$disposisi->surat->nosurat. ', (catatan : '.$request->catatan.').';
                 }
             break;
         }
@@ -273,10 +263,10 @@ class DisposisiController extends Controller
         $catatan->user_id = Auth::user()->id;
         switch($disposisi->surat->jenis->kategori_id){
             case(1):
-                $catatan->catatan = 'Menghapus disposisi surat masuk dengan nomor '.$surat->nosurat;
+                $catatan->catatan = 'Menghapus disposisi pada surat masuk, dengan nomor surat '.$surat->nosurat;
                 break;
             case(2):
-                $catatan->catatan = 'Menghapus disposisi surat keluar dengan nomor '.$surat->nosurat;
+                $catatan->catatan = 'Menghapus disposisi pada surat keluar, dengan nomor surat '.$surat->nosurat;
                 break;
         }
         $catatan->waktu = Carbon::now();
@@ -316,19 +306,28 @@ class DisposisiController extends Controller
     }
 
     public function store_reply(Request $request, Disposisi $disposisi){
-        $update_status = DB::table('disposisi_user')
-                        ->where('disposisi_id', $disposisi->id)
-                        ->where('user_id', Auth::user()->id)
-                        ->update([
-                            'status' => 5
-                        ]);
+        if (Auth::user()->isAdmin()) {
+            $disposisiAdmin = new Disposisiuser();
+            $disposisiAdmin->disposisi_id = $disposisi->id;
+            $disposisiAdmin->user_id =  Auth::user()->id;
+            $disposisiAdmin->status = 5;
+            $disposisiAdmin->save();
+        } else {
+            $update_status = DB::table('disposisi_user')
+                            ->where('disposisi_id', $disposisi->id)
+                            ->where('user_id', Auth::user()->id)
+                            ->update([
+                                'status' => 5
+                            ]);
+        }
 
         $surat = Surat::findOrFail($disposisi->surat_id);
+
         // tambah data catatan
         $catatan = new Catatan();
         $catatan->surat_id = $disposisi->surat_id;
         $catatan->user_id = Auth::user()->id;
-        $catatan->catatan = 'Tanggapan Balas data surat masuk nomor '. $surat->nosurat. ', ( Catatan balas :'. $request->catatan. ').';
+        $catatan->catatan = 'Memberi tanggapan balas data pada surat masuk, dengan nomor surat '. $surat->nosurat. ', (catatan balas : '. $request->catatan. ').';
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         $catatan->save();
 
@@ -337,24 +336,31 @@ class DisposisiController extends Controller
         }else{
             return back()->with('warning', 'Tanggapan surat gagal dikirim !!');
         }
-
     }
 
     public function store_read(Disposisi $disposisi){
-
-        $update_status = DB::table('disposisi_user')
-                        ->where('disposisi_id', $disposisi->id)
-                        ->where('user_id', Auth::user()->id)
-                        ->update([
-                            'status' => 3
-                        ]);
+        if (Auth::user()->isAdmin()) {
+            $disposisiAdmin = new Disposisiuser();
+            $disposisiAdmin->disposisi_id = $disposisi->id;
+            $disposisiAdmin->user_id =  Auth::user()->id;
+            $disposisiAdmin->status = 3;
+            $disposisiAdmin->save();
+        } else {
+            $update_status = DB::table('disposisi_user')
+                            ->where('disposisi_id', $disposisi->id)
+                            ->where('user_id', Auth::user()->id)
+                            ->update([
+                                'status' => 3
+                            ]);
+        }
 
         $surat = Surat::findOrFail($disposisi->surat_id);
+
         // tambah data catatan
         $catatan = new Catatan();
         $catatan->surat_id = $disposisi->surat_id;
         $catatan->user_id = Auth::user()->id;
-        $catatan->catatan = 'Tanggapan membaca data surat masuk nomor '. $surat->nosurat;
+        $catatan->catatan = 'Memberi tanggapan membaca pada surat masuk, dengan nomor surat '. $surat->nosurat;
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         $catatan->save();
 
@@ -366,19 +372,28 @@ class DisposisiController extends Controller
     }
 
     public function store_continue(Disposisi $disposisi){
-        $update_status = DB::table('disposisi_user')
-                        ->where('disposisi_id', $disposisi->id)
-                        ->where('user_id', Auth::user()->id)
-                        ->update([
-                            'status' => 4
-                        ]);
+        if (Auth::user()->isAdmin()) {
+            $disposisiAdmin = new Disposisiuser();
+            $disposisiAdmin->disposisi_id = $disposisi->id;
+            $disposisiAdmin->user_id =  Auth::user()->id;
+            $disposisiAdmin->status = 3;
+            $disposisiAdmin->save();
+        } else {
+            $update_status = DB::table('disposisi_user')
+                            ->where('disposisi_id', $disposisi->id)
+                            ->where('user_id', Auth::user()->id)
+                            ->update([
+                                'status' => 4
+                            ]);
+        }
 
         $surat = Surat::findOrFail($disposisi->surat_id);
+
         // tambah data catatan
         $catatan = new Catatan();
         $catatan->surat_id = $disposisi->surat_id;
         $catatan->user_id = Auth::user()->id;
-        $catatan->catatan = 'Tanggapan lanjutkan proses data surat masuk nomor '. $surat->nosurat;
+        $catatan->catatan = 'Memberi tanggapan lanjutkan proses pada surat masuk, dengan nomor surat '. $surat->nosurat;
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         $catatan->save();
 
@@ -387,23 +402,31 @@ class DisposisiController extends Controller
         }else{
             return back()->with('warning', 'Tanggapan surat gagal dikirim !!');
         }
-
     }
 
     public function store_TTD(Disposisi $disposisi){
-        $update_status = DB::table('disposisi_user')
-                        ->where('disposisi_id', $disposisi->id)
-                        ->where('user_id', Auth::user()->id)
-                        ->update([
-                            'status' => 6
-                        ]);
+        if (Auth::user()->isAdmin()) {
+            $disposisiAdmin = new Disposisiuser();
+            $disposisiAdmin->disposisi_id = $disposisi->id;
+            $disposisiAdmin->user_id =  Auth::user()->id;
+            $disposisiAdmin->status = 3;
+            $disposisiAdmin->save();
+        } else {
+            $update_status = DB::table('disposisi_user')
+                            ->where('disposisi_id', $disposisi->id)
+                            ->where('user_id', Auth::user()->id)
+                            ->update([
+                                'status' => 6
+                            ]);
+        }
 
         $surat = Surat::findOrFail($disposisi->surat_id);
+
         // tambah data catatan
         $catatan = new Catatan();
         $catatan->surat_id = $disposisi->surat_id;
         $catatan->user_id = Auth::user()->id;
-        $catatan->catatan = 'Tanggapan memberi tanda tangan data surat keluar nomor '. $surat->nosurat;
+        $catatan->catatan = 'Memberi tanggapan tanda tangan pada surat keluar, dengan nomor surat '. $surat->nosurat;
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         $catatan->save();
 
@@ -412,6 +435,23 @@ class DisposisiController extends Controller
         }else{
             return back()->with('warning', 'Tanggapan surat gagal dikirim !!');
         }
+    }
 
+    public function get_status_dosen($disposisi_id){
+        $status_dosen = DB::table('disposisi_user')
+            ->join('users', 'users.id', '=', 'disposisi_user.user_id')
+            ->join('dosen', 'dosen.user_id', '=', 'users.id')
+            ->where('disposisi_user.disposisi_id', $disposisi_id)
+            ->get();
+        return $status_dosen;
+    }
+
+    public function get_status_mahasiswa($disposisi_id){
+        $status_mahasiswa = DB::table('disposisi_user')
+                ->join('users', 'users.id', '=', 'disposisi_user.user_id')
+                ->join('mahasiswa', 'mahasiswa.user_id', '=', 'users.id')
+                ->where('disposisi_user.disposisi_id', $disposisi_id)
+                ->get();
+        return $status_mahasiswa;
     }
 }

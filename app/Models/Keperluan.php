@@ -5,15 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Dosenunit extends Model
+class Keperluan extends Model
 {
     use HasFactory;
-    protected $table = 'dosen_unit';
+    protected $table = 'keperluan';
     protected $primarykey = 'id';
     protected $fillable = [];
-
-    public function unit_kerja(){
-        return $this->belongsTo(UnitKerja::class);
-    }
-
 }

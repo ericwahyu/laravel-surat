@@ -13,6 +13,21 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
+                    <form action="{{ route('index.agenda.keluar') }}" method="get">
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label style="font-size: 16px">Tanggal Awal</label>
+                                <input type="date" class="form-control @error('tanggalAwal') is-invalid @enderror" name="tanggalAwal" value="{{ $request->tanggalAwal }}">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label style="font-size: 16px">Tanggal Akhir</label>
+                                <input type="date" class="form-control @error('tanggalAkhir') is-invalid @enderror" name="tanggalAkhir" value="{{ $request->tanggalAkhir }}">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <button type="submit" class="btn btn-primary" style="margin-top: 35px">Filter Data</button>
+                            </div>
+                        </div>
+                    </form>
                     <div class="table-responsive">
                         <table class="table table-striped" id="table-1">
                             <thead>
@@ -35,7 +50,7 @@
                                             <i class="fas fa-th"></i>
                                             </div>
                                         </td>
-                                        <td>{{ $data->waktu }}</td>
+                                        <td>{{ IdDateFormatter::format($data->waktu, IdDateFormatter::COMPLETE_WITH_TIME) }}</td>
                                         @foreach ($data->user->mahasiswa as $dat_maha)
                                             <td>{{ $dat_maha->nama }}</td>
                                         @endforeach
@@ -44,7 +59,7 @@
                                         @endforeach
                                         <td>{{ $data->surat->nosurat }}</td>
                                         <td>{{ $data->surat->judul }}</td>
-                                        <td>{{ $data->surat->tanggal }}</td>
+                                        <td>{{ IdDateFormatter::format($data->surat->tanggal, IdDateFormatter::COMPLETE) }}</td>
                                         <td>{{ $data->catatan }}</td>
                                         {{-- <td>
                                             <form action="" method="post">

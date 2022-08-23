@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title','Form Tambah Template')
+@section('title','Tambah Template')
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
@@ -13,6 +13,9 @@
         <form action="{{ route('store.template') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card">
+                <div class="card-header">
+                    <h4>Data Template</h4>
+                </div>
                 <div class="card-body">
                     <div class="form-group">
                         <label style="font-size: 16px">Nama Template</label>
@@ -37,16 +40,41 @@
                     </div>
                     <div class="form-group">
                         <label style="font-size: 16px">Keterangan</label>
-                        <textarea class="form-control @error('keterangan') is-invalid @enderror" name="keterangan">{{ old('keterangan') }}</textarea>
+                        <textarea class="form-control @error('keterangan') is-invalid @enderror" name="keterangan">Jabatan yang bersangkutan :</textarea>
                         @error('keterangan')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan Data</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4>Content Template</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <label style="font-size: 16px">Body Template</label>
+                        <textarea class="summernote" name="isiBody" id="summernote" cols="30" rows="10" required>{{ old('isiBody') }}</textarea>
+                        @error('isiBody')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
+                    <div class="row mt-md-3">
+                        <label style="font-size: 16px">Jumlah Tanda Tangan</label>
+                        <input type="number" class="form-control @error('jumlah_ttd') is-invalid @enderror" name="jumlah_ttd" id="" value="{{ old('jumlah_ttd') }}">
+                        @error('jumlah_ttd')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Simpan Data</button>
                 </div>
             </div>
         </form>

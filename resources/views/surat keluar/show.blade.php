@@ -36,7 +36,7 @@
                             <tr>
                                 <td>Tanggal Surat</td>
                                 <td>:</td>
-                                <td>{{ $surat->tanggal }}</td>
+                                <td>{{ IdDateFormatter::format($surat->tanggal, IdDateFormatter::COMPLETE) }}</td>
                             </tr>
                             <tr>
                                 <td>Keterangan Surat</td>

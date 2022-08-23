@@ -16,10 +16,13 @@ class CreateGenerateTable extends Migration
         Schema::create('generate', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('template_id');
+            $table->unsignedBigInteger('keperluan_id');
             $table->unsignedBigInteger('surat_id');
+            $table->string('file_surat')->nullable();
             $table->timestamps();
 
             $table->foreign('template_id')->references('id')->on('template')->onDelete('cascade');
+            $table->foreign('keperluan_id')->references('id')->on('keperluan')->onDelete('cascade');
             $table->foreign('surat_id')->references('id')->on('surat')->onDelete('cascade');
         });
     }

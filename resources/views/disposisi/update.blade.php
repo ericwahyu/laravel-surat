@@ -13,6 +13,9 @@
         <form action="{{ route('update.disposisi', $disposisi) }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card">
+                <div class="card-header">
+                    <h4>Data Disposisi</h4>
+                </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="form-group col-md-6">

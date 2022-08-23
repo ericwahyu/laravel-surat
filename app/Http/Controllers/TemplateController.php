@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 use Response;
 use App\Models\Template;
 use App\Models\Kategori;
+use App\Models\Mahasiswa;
+use App\Models\Dosen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use \Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Carbon;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Shared\Html;
+use \PhpOffice\PhpWord\TemplateProcessor;
+
 
 
 class TemplateController extends Controller
@@ -53,33 +60,33 @@ class TemplateController extends Controller
     public function store(Request $request)
     {
         //
+        // dd($request);
         $request->validate([
             'nama' => 'required',
             'file' => 'required|mimes:docx,doc,pdf',
-            'keterangan' => 'nullable'
+            'keterangan' => 'nullable',
+            'isiBody' => 'required',
+            'jumlah_ttd' => 'required',
         ]);
+        // dd($request);
+        $template = new Template();
+        $template->nama = $request->nama;
+        if($request->hasFile('file')){
+            $file = $request->file('file');
+            $file_name = now()->timestamp . '_' .$file->getClientOriginalName().'.'.$file->getClientOriginalExtension();
+            // $file_name = $file->getClientOriginalName();
+            $file->move('surat/template',$file_name);
+            $template->file = $file_name;
+        }
+        $template->keterangan = $request->keterangan;
+        $template->isiBody = $request->isiBody;
+        $template->jumlah_ttd = $request->jumlah_ttd;
 
-        $file_cek = $request->file('file');
-        if(file_exists(public_path('surat/template/').$file_cek->getClientOriginalName())){
-            return back()->with('warning', 'File upload sudah ada !!');
+        if($template){
+            $template->save();
+            return redirect()->route('index.template')->with('success', 'Data berhasil di tambah !!');
         }else{
-            $template = new Template();
-            $template->nama = $request->nama;
-            if($request->hasFile('file')){
-                $file = $request->file('file');
-                // $file_name = now()->timestamp . '_' . $request->nama.'.'.$file->getClientOriginalExtension();
-                $file_name = $file->getClientOriginalName();
-                $file->move('surat/template',$file_name);
-                $template->file = $file_name;
-            }
-            $template->keterangan = $request->keterangan;
-
-            if($template){
-                $template->save();
-                return redirect()->route('index.template')->with('success', 'Data berhasil di tambah !!');
-            }else{
-                return back()->with('warning', 'Data gagal di Tambah !!');
-            }
+            return back()->with('warning', 'Data gagal di Tambah !!');
         }
     }
 
@@ -123,25 +130,27 @@ class TemplateController extends Controller
         $request->validate([
             'nama' => 'required',
             'file' => 'mimes:docx,doc|unique:template',
-            'keterangan' => 'nullable'
+            'keterangan' => 'nullable',
+            'isiBody' => 'required',
+            'jumlah_ttd' => 'required',
         ]);
 
 
         $template->nama = $request->nama;
         $template->keterangan = $request->keterangan;
         if($request->hasFile('file')){
-            //cek file template
-            $file_cek = $request->file('file');
-            if(file_exists(public_path('surat/template/').$file_cek->getClientOriginalName())){
-                return back()->with('warning', 'File upload sudah ada !!');
-            }else{
-                $file = $request->file('file');
-                // $file_name = now()->timestamp . '_' .$request->nama.'.'.$file->getClientOriginalExtension();
-                $file_name = $file->getClientOriginalName();
-                $file->move('surat/template',$file_name);
-                $template->file = $file_name;
-            }
+            //delete file lama
+            $filelama = public_path('surat/template/'.$template->file);
+            File::delete($filelama);
+
+            $file = $request->file('file');
+            $file_name = now()->timestamp . '_' .$file->getClientOriginalName().'.'.$file->getClientOriginalExtension();
+            // $file_name = $file->getClientOriginalName();
+            $file->move('surat/template',$file_name);
+            $template->file = $file_name;
         }
+        $template->isiBody = $request->isiBody;
+        $template->jumlah_ttd = $request->jumlah_ttd;
 
         if($template){
             $template->save();
@@ -170,6 +179,108 @@ class TemplateController extends Controller
             return back()->with('warning', 'Data gagal di Hapus !!');
         }
 
+    }
+
+    public function formTestingTemplate(Template $template){
+
+        $nav = 'umum';
+        $menu = 'template';
+        $dosen = Dosen::all();
+        $mahasiswa = Mahasiswa::all();
+
+        return view('template.test', compact('nav', 'menu', 'template', 'dosen', 'mahasiswa'));
+
+    }
+
+    public function testingTemplate(Request $request){
+        // dd($request);
+        $template = Template::find($request->template_id);
+        $docs = public_path('surat/template/').$template->file;
+
+        $date = Carbon::parse($request->tanggal_surat)->isoFormat("D MMMM YYYY");
+        // cek template
+        try {
+            if (file_exists($docs)) {
+                //generate surat
+                $templateProcessor = new TemplateProcessor($docs);
+                $templateProcessor->setValue('tempat_surat', $request->tempat_surat);
+                $templateProcessor->setValue('tanggal_surat', $date);
+
+                //add html to word
+                $isiBody = str_replace('<br>','&nbsp;',$request->isiBody);
+                $word = new PhpWord();
+                $section = $word->addSection();
+                Html::addHtml($section, $isiBody, false, false);
+                $containers = $section->getElements();
+                $templateProcessor->cloneBlock('body', count($containers), true, true);
+                for($i = 0; $i < count($containers); $i++) {
+                    $templateProcessor->setComplexBlock('isiBody#' . ($i+1), $containers[$i]);
+                }
+
+                //set pihak bersangkutan
+                for($j = 1; $j <= $template->jumlah_ttd; $j++){
+                    $jabatan = 'jabatan_'.$j;
+                    $req_jabatan = $request->$jabatan;
+                    $templateProcessor->setValue($jabatan, $req_jabatan);
+
+                    $tertanda = 'tertanda_'.$j;
+                    $req_tertanda = $request->$tertanda;
+                    $tujukan = $this->getUser($req_tertanda);
+
+                    $nama = 'nama_'.$j;
+                    $nip = 'nip_'.$j;
+                    foreach($tujukan as $tuju){
+                        $templateProcessor->setValue($nama, $tuju->nama);
+                        $templateProcessor->setValue($nip, $tuju->id);
+                    }
+                }
+
+                $file_name = now()->timestamp . '_' . 'Testing Template'. '.docx';
+                $templateProcessor->saveAs($file_name);
+
+                // Pindah file
+                File::move(public_path() . '/' . $file_name, public_path('surat/template/').$file_name);
+
+                return $this->setNomor($request, $file_name);
+
+            }else{
+                return back()->with('warning', 'Berkas tidak ditemukan !!');
+            }
+        } catch (\Throwable $th) {
+            return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template, Silahkan Ubah !!');
+        }
+
+    }
+
+    public function setNomor($request, $suratFile){
+        $suratLama = public_path('surat/template/').$suratFile;
+        if (file_exists($suratLama)) {
+            //generate surat
+            $templateProcessor = new TemplateProcessor($suratLama);
+            $templateProcessor->setValue('nomor_surat', $request->nomor_surat);
+
+            $file_name = 'Testing Template'. '.docx';
+            $templateProcessor->saveAs($file_name);
+            // Pindah file surat Baru
+            File::move(public_path() . '/' . $file_name, public_path('surat/template/').$file_name);
+            //hapus surat lama
+            File::delete($suratLama);
+
+            $file_path = public_path('surat/template/').$file_name;
+            return response()->download($file_path);
+        }
+    }
+
+    // get pihak yang bersangkutan
+    public function getUser($user_id){
+        $dosen = Dosen::where('user_id', $user_id)->get();
+        $mahasiswa = Mahasiswa::where('user_id', $user_id)->get();
+
+        if($dosen->isNotEmpty()){
+            return $dosen;
+        }else if($mahasiswa->isNotEmpty()){
+            return $mahasiswa;
+        }
     }
 
 }

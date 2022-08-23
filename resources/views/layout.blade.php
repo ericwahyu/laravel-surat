@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
         <title>@yield('title')</title>
 
@@ -21,11 +22,16 @@
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css') }}">
 
+        {{-- Summernote --}}
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
+
         <!-- Template CSS -->
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
 
         <!-- Start GA -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script async src="{{ asset('https://www.googletagmanager.com/gtag/js?id=UA-94034622-3') }}"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -182,7 +188,7 @@
                             @endforeach
                             <div class="dropdown-menu dropdown-menu-right">
                                 <div class="dropdown-title">Logged in 5 min ago</div>
-                                {{-- <a href="features-profile.html" class="dropdown-item has-icon">
+                                <a href="features-profile.html" class="dropdown-item has-icon">
                                     <i class="far fa-user"></i> Profile
                                 </a>
                                 <a href="features-activities.html" class="dropdown-item has-icon">
@@ -190,11 +196,11 @@
                                 </a>
                                 <a href="features-settings.html" class="dropdown-item has-icon">
                                     <i class="fas fa-cog"></i> Settings
-                                </a> --}}
+                                </a>
                                 <div class="dropdown-divider"></div>
                                 <form action="{{ route('logout.login') }}" method="post">
                                     @csrf
-                                    <button type="submit" class="dropdown-item has-icon text-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                                    <button type="submit" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
                                 </form>
                             </div>
                         </li>
@@ -221,6 +227,7 @@
                                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Umum</span></a>
                                 <ul class="dropdown-menu">
                                     <li class="{{ ($menu == 'jenis') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.jenis') }}"><i class="far fa-folder-open"></i> Jenis Surat</a></li>
+                                    <li class="{{ ($menu == 'keperluan') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.keperluan') }}"><i class="far fa-folder-open"></i> Keperluan Surat</a></li>
                                     <li class="{{ ($menu == 'template') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.template') }}"><i class="far fa-folder-open"></i> Template Surat</a></li>
                                 </ul>
                             </li>
@@ -265,6 +272,7 @@
                 </footer> --}}
             </div>
         </div>
+        @yield('script')
 
         <!-- General JS Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -296,6 +304,21 @@
         <script src="{{ asset('assets/js/page/forms-advanced-forms.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-ion-icons.js') }}"></script>
+
+        {{-- Summernote --}}
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+        <script>
+            $('#summernote').summernote({
+                height: 500,
+                toolbar: [
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['para', ['paragraph']],
+                ],
+            });
+            $('#summernote').summernote('fontName', 'Times New Roman');
+        </script>
 
         <!-- Template JS File -->
         <script src="{{ asset('assets/js/scripts.js') }}"></script>

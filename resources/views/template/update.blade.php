@@ -13,6 +13,9 @@
         <form action="{{ route('update.template', $template) }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card">
+                <div class="card-header">
+                    <h4>Data Template</h4>
+                </div>
                 <div class="card-body">
                     <div class="form-group">
                         <label style="font-size: 16px">Nama Template</label>
@@ -44,9 +47,34 @@
                             </div>
                         @enderror
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan Data</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4>Content Template</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mt-md-3">
+                        <label style="font-size: 16px">Isi Body Template</label>
+                        <textarea class="summernote" name="isiBody" id="summernote" cols="30" rows="10" required>{{ $template->isiBody }}</textarea>
+                        @error('isiBody')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
+                    <div class="row mt-md-3">
+                        <label style="font-size: 16px">Jumlah Tanda Tangan</label>
+                        <input type="number" class="form-control @error('jumlah_ttd') is-invalid @enderror" name="jumlah_ttd" id="" value="{{ $template->jumlah_ttd }}">
+                        @error('jumlah_ttd')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Simpan Data</button>
                 </div>
             </div>
         </form>

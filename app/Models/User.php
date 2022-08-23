@@ -69,13 +69,13 @@ class User extends Authenticatable
 
         if($mahasiswa->isNotEmpty()){
             foreach($mahasiswa as $id_maha){
-                $unit_kerja[] = $id_maha->unit_kerja_id;
+                $unit_kerja[] = $id_maha->unit_kerja->nama;
             }
         }elseif($dosen->isNotEmpty()){
             foreach($dosen as $id_dos){
                 $unit_dosen = Dosenunit::where('dosen_id', $id_dos->id)->get();
                 foreach($unit_dosen as $unit){
-                    $unit_kerja[] = $unit->unit_kerja_id;
+                    $unit_kerja[] = $unit->unit_kerja->nama;
                 }
             }
         }
@@ -87,11 +87,12 @@ class User extends Authenticatable
         $admin = $this->isMahasiswa_or_Dosen();
         $data = count($admin);
         for($i = 0; $i < $data; $i++){
-            if($admin[$i] == 1){
-                return 1;
+            if($admin[$i] == 'Admin'){
+                return true;
                 break;
             }
         }
+        return false;
     }
 
     public function isPimpinan(){
@@ -99,11 +100,12 @@ class User extends Authenticatable
         $data = count($pimpinan);
 
         for($i = 0; $i < $data; $i++){
-            if($pimpinan[$i] == 2){
-                return 2;
+            if($pimpinan[$i] == 'Pimpinan'){
+                return true;
                 break;
             }
         }
+        return false;
     }
 
     public function isPengelola(){
@@ -111,8 +113,8 @@ class User extends Authenticatable
         $data = count($pengelola);
 
         for($i = 0; $i < $data; $i++){
-            if($pengelola[$i] == 3){
-                return 3;
+            if($pengelola[$i] == 'Pengelola'){
+                return true;
                 break;
             }
         }
@@ -123,8 +125,8 @@ class User extends Authenticatable
         $data = count($dosen);
 
         for($i = 0; $i < $data; $i++){
-            if($dosen[$i] == 4){
-                return 4;
+            if($dosen[$i] == 'Dosen'){
+                return true;
                 break;
             }
         }
@@ -135,8 +137,8 @@ class User extends Authenticatable
         $data = count($mahsiswa);
 
         for($i = 0; $i < $data; $i++){
-            if($mahsiswa[$i] == 5){
-                return 5;
+            if($mahsiswa[$i] == 'Mahasiswa'){
+                return true;
                 break;
             }
         }

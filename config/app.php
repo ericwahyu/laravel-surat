@@ -231,6 +231,11 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
 
+        'IdDateFormatter' => FrosyaLabs\Lang\IdDateFormatter::class,
+        'DisposisiController' => \App\Http\Controllers\DisposisiController::class,
+        'GenerateController' => \App\Http\Controllers\GenerateController::class,
+        'Carbon' => Illuminate\Support\Carbon::class,
+
     ],
 
 ];

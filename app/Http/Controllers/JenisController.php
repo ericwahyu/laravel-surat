@@ -56,10 +56,10 @@ class JenisController extends Controller
             'nama' => 'required|max:100'
         ]);
 
-        $insert = new Jenis();
-        $insert->kategori_id = $request->kategori_id;
-        $insert->nama_jenis = $request->nama;
-        $insert->save();
+        $kategori = new Jenis();
+        $kategori->kategori_id = $request->kategori_id;
+        $kategori->nama_jenis = $request->nama;
+        $kategori->save();
 
         return redirect()->route('index.jenis')->with('success', 'Berhasil tambah data !!');
     }
