@@ -35,15 +35,28 @@
                 </div>
                 <div class="row">
                     <div class="form-group">
-                        <label style="font-size: 16px">Buat Surat</label>
-                        <textarea class="summernote" name="isiBody" id="summernote" cols="30" rows="10" required>{{ $template->isiBody }}</textarea>
-                        @error('isiBody')
+                        <label style="font-size: 16px">Body Surat</label>
+                        <textarea class="summernote" name="isi_body" id="summernote" cols="30" rows="10" required>{{ $template->isi_body }}</textarea>
+                        @error('isi_body')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
                 </div>
+                @if ($template->isi_footer != null)
+                    <div class="row">
+                        <div class="form-group">
+                            <label style="font-size: 16px">Footer Surat</label>
+                            <textarea class="summernote2" name="isi_footer" id="summernote2" cols="30" rows="10" >{{ $template->isi_footer }}</textarea>
+                            @error('isi_footer')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                @endif
                 <div class="row mt-md-3">
                     <label style="font-size: 16px">Tanda Tangan</label>
                     @for ($ttd = 1; $ttd <= $template->jumlah_ttd; $ttd++)

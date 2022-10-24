@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDosenTable extends Migration
+class CreatePihakTtdTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateDosenTable extends Migration
      */
     public function up()
     {
-        Schema::create('dosen', function (Blueprint $table) {
-            $table->string('id')->primary()->autoIncrement();
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('nama');
+        Schema::create('pihak_ttd', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('generate_id');
+            $table->string('jabatan');
+            $table->string('nip');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('generate_id')->references('id')->on('generate')->onDelete('cascade');
         });
     }
 
@@ -30,6 +31,6 @@ class CreateDosenTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dosen');
+        Schema::dropIfExists('pihak_ttd');
     }
 }

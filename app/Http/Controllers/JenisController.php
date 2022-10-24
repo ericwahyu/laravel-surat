@@ -58,7 +58,7 @@ class JenisController extends Controller
 
         $kategori = new Jenis();
         $kategori->kategori_id = $request->kategori_id;
-        $kategori->nama_jenis = $request->nama;
+        $kategori->nama = $request->nama;
         $kategori->save();
 
         return redirect()->route('index.jenis')->with('success', 'Berhasil tambah data !!');
@@ -107,7 +107,7 @@ class JenisController extends Controller
         ]);
 
         $jenis->kategori_id = $request->kategori_id;
-        $jenis->nama_jenis = $request->nama;
+        $jenis->nama = $request->nama;
         $jenis->save();
 
         if($jenis){

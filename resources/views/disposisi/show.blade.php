@@ -81,7 +81,7 @@
                                 @endif
                                 @break
                             @case(2)
-                                @if ($user->isAdmin() == 1 || $user->isPimpinan() == 2)
+                                @if ($user->isAdmin()|| $user->isPimpinan())
                                     <div class="col-md-2">
                                         <form action="{{ route('ttd.surat.keluar', $disposisi) }}" method="get">
                                             <button type="submit" class="btn btn-primary mr-2 show_ttd" data-toggle="tooltip" title="Tanda Tangan"><i class="fa fa-check"></i> Tanda Tangan</button>

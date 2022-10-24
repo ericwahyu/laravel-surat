@@ -11,6 +11,7 @@ use App\Models\Catatan;
 use App\Models\Mahasiswa;
 use App\Models\Dosen;
 use App\Models\Keperluan;
+use App\Models\PihakTTD;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
@@ -94,9 +95,9 @@ class GenerateController extends Controller
         $menu = 'keluar';
         $jenis = Jenis::where('kategori_id', 2)->get();
         $dosen = Dosen::all();
-        $keperluan = Keperluan::all();
         $mahasiswa = Mahasiswa::all();
-
+        $keperluan = Keperluan::all();
+        // dd($dosen);
         return view('surat keluar.insert', compact('nav', 'menu', 'template','keperluan', 'jenis', 'dosen', 'mahasiswa'));
     }
 
@@ -109,8 +110,7 @@ class GenerateController extends Controller
     public function store(Request $request)
     {
         //
-        // return $this->generateSurat($request);
-        // dd($surat);
+        // dd($request);
         $request->validate([
             'jenis_id' => 'required',
             'judul' => 'required',
@@ -118,12 +118,12 @@ class GenerateController extends Controller
             'catatan' => 'nullable',
         ]);
 
+        list($file_name, $pihak) = $this->generateSurat($request);
+
         $surat = new Surat();
         $surat->jenis_id = $request->jenis_id;
         $surat->judul = $request->judul;
-
-        $file_surat = $this->generateSurat($request);
-        $surat->file_surat = $file_surat;
+        $surat->file= $file_name;
         $surat->nosurat = $request->nomor_surat;
         $surat->tanggal = $request->tanggal_surat;
         $surat->status = 1;
@@ -133,7 +133,19 @@ class GenerateController extends Controller
         $generate = new Generate();
         $generate->template_id = $request->template_id;
         $generate->surat_id = $surat->id;
+        $generate->content = $request->isi_body;
+        $generate->tempat = $request->tempat_surat;
         $generate->save();
+
+        //add pihak ttd
+        $template = Template::find($request->template_id);
+        for ($i=0; $i < $template->jumlah_ttd; $i++) {
+            $pihak_ttd = new PihakTTD();
+            $pihak_ttd->generate_id = $generate->id;
+            $pihak_ttd->jabatan = $pihak[$i][0];
+            $pihak_ttd->nip = $pihak[$i][1];
+            $pihak_ttd->save();
+        }
 
         $catatan = new Catatan();
         $catatan->surat_id = $surat->id;
@@ -180,7 +192,14 @@ class GenerateController extends Controller
         $nav = 'transaksi';
         $menu = 'keluar';
         $jenis = Jenis::where('kategori_id', 2)->get();
-        return view('surat keluar.update', compact('nav', 'menu', 'jenis', 'surat'));
+        $generate = Generate::join('template', 'template.id', '=', 'generate.template_id')
+                    ->where('surat_id', $surat->id)
+                    ->select('generate.*')
+                    ->first();
+        $pihak_ttd = PihakTTD::where('generate_id', $generate->id)->get();
+        $dosen = Dosen::all();
+        $mahasiswa = Mahasiswa::all();
+        return view('surat keluar.update', compact('nav', 'menu', 'jenis', 'surat', 'generate', 'pihak_ttd', 'dosen', 'mahasiswa'));
 
     }
 
@@ -194,6 +213,7 @@ class GenerateController extends Controller
     public function update(Request $request, Surat $surat)
     {
         //
+        // dd($request);
         $request->validate([
             'jenis_id' => 'required',
             'nomor' => 'required',
@@ -202,14 +222,47 @@ class GenerateController extends Controller
             'keterangan' => 'required',
             'catatan' => 'nullable',
         ]);
+
+        //hapus surat lama
+        $suratLama = public_path('surat/generate/').$surat->file;
+        File::delete($suratLama);
+
+        // //php word
+        list($file_name, $pihak) = $this->generateSurat($request);
+
         $surat->jenis_id = $request->jenis_id;
-        $surat->nosurat = $request->nomor;
+        // $surat->nosurat = $request->nomor;
+        $surat->file= $file_name;
         $surat->judul = $request->judul;
         $surat->tanggal = $request->tanggal;
         $surat->keterangan = $request->keterangan;
-        if($surat){
-            $surat->save();
+        $surat->save();
 
+        $generate = Generate::find($request->generate_id);
+        $generate->tempat = $request->tempat_surat;
+        $generate->content = $request->isi_body;
+        $generate->save();
+
+        $template = Template::find($request->template_id);
+        for ($x=1; $x <= $template->jumlah_ttd; $x++) {
+            $jabatan = 'jabatan_'.$x;
+            $req_jabatan = $request->$jabatan;
+
+            $tertanda = 'tertanda_'.$x;
+            $req_tertanda = $request->$tertanda;
+
+            $id = 'ttd_id_'.$x;
+            $req_id = $request->$id;
+
+            $update_status = DB::table('pihak_ttd')
+                            ->where('id', $req_id)
+                            ->update([
+                                'jabatan' => $req_jabatan,
+                                'nip' => $req_tertanda,
+                            ]);
+        }
+
+        if($surat){
             $catatan = new Catatan();
             $catatan->user_id = Auth::user()->id;
             $catatan->surat_id = $surat->id;
@@ -257,8 +310,8 @@ class GenerateController extends Controller
     }
 
     public function download_file(Surat $surat){
-        if(file_exists(public_path('surat/generate/'.$surat->file_surat))){
-            return response()->download('surat/generate/'.$surat->file_surat);
+        if(file_exists(public_path('surat/generate/'.$surat->file))){
+            return response()->download('surat/generate/'.$surat->file);
         }else{
             return back()->with('error', 'Download gagal');
         }
@@ -277,16 +330,16 @@ class GenerateController extends Controller
 
         $date = Carbon::parse($request->tanggal_surat)->isoFormat("D MMMM YYYY");
         // cek template
-        try {
-            //code...
+        // try {
             if (file_exists($docs)) {
+
                 //generate surat
                 $templateProcessor = new TemplateProcessor($docs);
                 $templateProcessor->setValue('tempat_surat', $request->tempat_surat);
                 $templateProcessor->setValue('tanggal_surat', $date);
 
                 //add html to word
-                $isiBody = str_replace('<br>','&nbsp;',$request->isiBody);
+                $isiBody = str_replace('<br>','&nbsp;',$request->isi_body);
                 $word = new PhpWord();
                 $section = $word->addSection();
                 Html::addHtml($section, $isiBody, false, false);
@@ -311,6 +364,8 @@ class GenerateController extends Controller
                     foreach($tujukan as $tuju){
                         $templateProcessor->setValue($nama, $tuju->nama);
                         $templateProcessor->setValue($nip, $tuju->id);
+
+                        $pihak[] = array($request->$jabatan, $tuju->id);
                     }
                 }
 
@@ -320,18 +375,18 @@ class GenerateController extends Controller
                 // Pindah file
                 File::move(public_path() . '/' . $file_name, public_path('surat/generate/').$file_name);
 
-                return $this->setNomor($request, $file_name);
+                return $this->setNomor($request, $file_name, $pihak);
 
             }else{
                 return back()->with('warning', 'Berkas tidak ditemukan !!');
             }
-        } catch (\Throwable $th) {
+        // } catch (\Throwable $th) {
             return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template, Silahkan Ubah !!');
-        }
+        // }
     }
 
     //set nomor dan mengubah surat
-    public function setNomor($request, $suratFile){
+    public function setNomor($request, $suratFile, $pihak){
         $suratLama = public_path('surat/generate/').$suratFile;
         if (file_exists($suratLama)) {
             //generate surat
@@ -345,14 +400,15 @@ class GenerateController extends Controller
             //hapus surat lama
             File::delete($suratLama);
 
-            return $file_name;
+            // return $file_name and $pihak;
+            return [$file_name, $pihak];
         }
     }
 
     // get pihak yang bersangkutan
     public function getUser($user_id){
-        $dosen = Dosen::where('user_id', $user_id)->get();
-        $mahasiswa = Mahasiswa::where('user_id', $user_id)->get();
+        $dosen = Dosen::where('id', $user_id)->get();
+        $mahasiswa = Mahasiswa::where('id', $user_id)->get();
 
         if($dosen->isNotEmpty()){
             return $dosen;
@@ -361,9 +417,13 @@ class GenerateController extends Controller
         }
     }
 
+    private function addPihak($nip){
+        $pihak[] += $nip;
+    }
+
     //generate nomor surat
     public function generateNomor(Request $request){
-        // $keperluan = Keperluan::findOrFail($id);
-        // return response()->json($keperluan->nama);
+        $data = $request->input('surat');
+        return response()->json($data);
     }
 }

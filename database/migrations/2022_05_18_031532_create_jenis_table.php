@@ -15,8 +15,8 @@ class CreateJenisTable extends Migration
     {
         Schema::create('jenis', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_jenis');
             $table->unsignedBigInteger('kategori_id');
+            $table->string('nama');
             $table->timestamps();
 
             $table->foreign('kategori_id')->references('id')->on('kategori')->onDelete('cascade');

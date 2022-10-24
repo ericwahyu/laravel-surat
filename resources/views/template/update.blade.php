@@ -54,16 +54,27 @@
                     <h4>Content Template</h4>
                 </div>
                 <div class="card-body">
-                    <div class="row mt-md-3">
+                    <div class="form-group">
                         <label style="font-size: 16px">Isi Body Template</label>
-                        <textarea class="summernote" name="isiBody" id="summernote" cols="30" rows="10" required>{{ $template->isiBody }}</textarea>
-                        @error('isiBody')
+                        <textarea class="summernote" name="isi_body" id="summernote" cols="30" rows="10" required>{{ $template->isi_body }}</textarea>
+                        @error('isi_body')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
-                    <div class="row mt-md-3">
+                    @if ($template->isi_footer != null)
+                        <div class="form-group">
+                            <label style="font-size: 16px">Isi Footer Template</label>
+                            <textarea class="summernote2" name="isi_footer" id="summernote2" cols="30" rows="10" required>{{ $template->isi_footer }}</textarea>
+                            @error('isi_footer')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    @endif
+                    <div class="form-group">
                         <label style="font-size: 16px">Jumlah Tanda Tangan</label>
                         <input type="number" class="form-control @error('jumlah_ttd') is-invalid @enderror" name="jumlah_ttd" id="" value="{{ $template->jumlah_ttd }}">
                         @error('jumlah_ttd')

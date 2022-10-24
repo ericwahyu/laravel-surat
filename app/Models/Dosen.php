@@ -11,6 +11,7 @@ class Dosen extends Model
     protected $table = 'dosen';
     protected $primarykey = 'id';
     protected $fillable = [];
+    public $incrementing = false;
 
     public function user(){
         return $this->belongsTo(User::class);

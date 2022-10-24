@@ -23,7 +23,7 @@
                             <select class="form-control @error('jenis_id') is-invalid @enderror" name="jenis_id">
                                 <option disabled selected>-- Jenis Surat--</option>
                                 @foreach ($jenis as $jenis)
-                                    <option value="{{ $jenis->id }}" {{ (old("jenis_id") == $jenis->id ? "selected":"") }}>{{ $jenis->nama_jenis }}</option>
+                                    <option value="{{ $jenis->id }}" {{ (old("jenis_id") == $jenis->id ? "selected":"") }}>{{ $jenis->nama }}</option>
                                 @endforeach
                             </select>
                             @error('jenis_id')
@@ -72,38 +72,17 @@
         </div>
         <div class="card">
             <div class="card-header">
-                <h4>Generate Surat</h4>
+                <h4>Content Generate Surat</h4>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label style="font-size: 16px">Generate Nomor Surat</label>
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label for="kodeHuruf" style="font-size: 13px">Kode Huruf</label>
-                                <input type="text" class="form-control" id="kodeHuruf" name="kodeHuruf" required>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="kodeKeperluan" style="font-size: 13px">Kode Keperluan</label>
-                                <select id="kodeKeperluan" class="form-control" name="kodeKeperluan" required>
-                                    <option disabled selected>-- Keperluan Surat--</option>
-                                    @foreach ($keperluan as $keperluan)
-                                        <option value="{{ $keperluan->id }}" {{ (old("kodeKeperluan") == $keperluan->id ? "selected":"") }}>{{ $keperluan->nama }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-md-2">
-                                <label for="kodeTahun" style="font-size: 13px">Tahun</label>
-                                <input type="text" class="form-control" id="kodeTahun" name="kodeTahun" value="{{ Carbon::now()->format('Y') }}" required>
-                            </div>
-                            <div class="form-group col-md-3" style="margin-top: 32px">
-                                {{-- <button type="button" class="btn btn-primary" onclick="generate()" id="generateButton"> Generate Nomor</button> --}}
-                            </div>
-                        </div>
+                        <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" id="nomorSurat" name="nomor_surat" required readonly>
                     </div>
                     <div class="form-group col-md-6" style="margin-top: 32px">
-                        <label style="font-size: 13px">Nomor Surat</label>
-                        <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" id="nomorSurat" name="nomor_surat" required>
+                        <!-- Button trigger modal -->
+                        <button  class="btn btn-primary" id="btn-Modal" onclick="modal()">Launch demo modal</button>
                     </div>
                 </div>
                 <div class="row">
@@ -119,7 +98,7 @@
                 <div class="row">
                     <div class="form-group">
                         <label style="font-size: 16px">Buat Surat</label>
-                        <textarea class="summernote" name="isiBody" id="summernote" cols="30" rows="10" required>{{ $template->isiBody }}</textarea>
+                        <textarea class="summernote" name="isi_body" id="summernote" cols="30" rows="10" required>{{ $template->isi_body }}</textarea>
                         @error('isiBody')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -137,7 +116,7 @@
                             <select class="form-control @error('tertanda_{{ $ttd }}') is-invalid @enderror" name="tertanda_{{ $ttd }}" required>
                                 <option disabled selected>--Tertanda--</option>
                                 @foreach ($dosen as $dosens)
-                                    <option value="{{ $dosens->user_id }}" {{ (old("tertanda_1") == $dosens->user_id ? "selected":"") }}>{{ $dosens->nama }}</option>
+                                    <option value="{{ $dosens->id }}" {{ (old("tertanda_1") == $dosens->user_id ? "selected":"") }}>{{ $dosens->nama }}</option>
                                 @endforeach
                                 @foreach ($mahasiswa as $mahasiswas)
                                     <option value="{{ $mahasiswas->user_id }}" {{ (old("tertanda_1") == $mahasiswas->user_id ? "selected":"") }}>{{ $mahasiswas->nama }}</option>
@@ -154,19 +133,59 @@
     </form>
 </div>
 @endsection
+@section('modal')
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Generate Nomor Surat</h1>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-generate">
+                    @csrf
+                    <div class="form-group">
+                        <label style="font-size: 16px">Surat</label>
+                        <input type="text" class="form-control @error('tempat_surat') is-invalid @enderror" name="surat" placeholder="Surabaya" value="{{ old('surat') }}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Generate</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+@endsection
 @section('script')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-    $(document).ready(function(){
-        $('#kodeKeperluan').change(function(){
-            let kodehuruf = document.getElementById('kodeHuruf').value;
-            let kodekeperluan = document.getElementById('kodeKeperluan').value;
-            let kodetahun = document.getElementById('kodeTahun').value;
-            console.log(kodehuruf);
-            console.log(kodekeperluan);
-            console.log(kodetahun);
+    $('document').ready(function(){
+        $('#form-generate').on('submit', function(e){
+            e.preventDefault();
 
-            $('#nomorSurat').val(`${kodehuruf}/${kodekeperluan}/${kodetahun}`);
+            $.ajax({
+                type : "POST",
+                url : "/generateNomor",
+                data : $('#form-generate').serialize(),
+                success : function(data){
+                    $('#modal').modal('hide');
+                    $('#nomorSurat').val(data);
+                    console.log(data);
+                    $('#form-generate')[0].reset();
+                }
+            });
         });
     });
+
+    function modal(){
+        $('#modal').modal('show'); //modal tampil
+    }
+
+    function close(){
+        $('#modal').modal('hide');
+    }
+
 </script>
 @endsection

@@ -45,7 +45,7 @@
                                         <i class="fas fa-th"></i>
                                         </div>
                                     </td>
-                                    <td>{{ $data->jenis->nama_jenis }}</td>
+                                    <td>{{ $data->jenis->nama }}</td>
                                     <td>{{ $data->nosurat }}</td>
                                     <td>{{ $data->judul }}</td>
                                     <td>{{ IdDateFormatter::format($data->tanggal, IdDateFormatter::COMPLETE) }}</td>

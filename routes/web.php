@@ -27,7 +27,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout.login')
 
 
 Route::group(['middleware' => ['auth']], function(){
-    Route::post('/generateNomor', [GenerateController::class, 'generateNomorSurat'])->name('generateNomor');
+    Route::post('/generateNomor', [GenerateController::class, 'generateNomor'])->name('generateNomor');
 
     Route::get('/dashboard', function(){
         return view('dashboard', array(

@@ -65,7 +65,7 @@ class TemplateController extends Controller
             'nama' => 'required',
             'file' => 'required|mimes:docx,doc,pdf',
             'keterangan' => 'nullable',
-            'isiBody' => 'required',
+            'isi_body' => 'required',
             'jumlah_ttd' => 'required',
         ]);
         // dd($request);
@@ -79,7 +79,8 @@ class TemplateController extends Controller
             $template->file = $file_name;
         }
         $template->keterangan = $request->keterangan;
-        $template->isiBody = $request->isiBody;
+        $template->isi_body = $request->isi_body;
+        $template->isi_footer = $request->isi_footer;
         $template->jumlah_ttd = $request->jumlah_ttd;
 
         if($template){
@@ -131,7 +132,7 @@ class TemplateController extends Controller
             'nama' => 'required',
             'file' => 'mimes:docx,doc|unique:template',
             'keterangan' => 'nullable',
-            'isiBody' => 'required',
+            'isi_body' => 'required',
             'jumlah_ttd' => 'required',
         ]);
 
@@ -149,7 +150,8 @@ class TemplateController extends Controller
             $file->move('surat/template',$file_name);
             $template->file = $file_name;
         }
-        $template->isiBody = $request->isiBody;
+        $template->isi_body = $request->isi_body;
+        $template->isi_footer = $request->isi_footer;
         $template->jumlah_ttd = $request->jumlah_ttd;
 
         if($template){
@@ -193,21 +195,20 @@ class TemplateController extends Controller
     }
 
     public function testingTemplate(Request $request){
-        // dd($request);
         $template = Template::find($request->template_id);
         $docs = public_path('surat/template/').$template->file;
 
         $date = Carbon::parse($request->tanggal_surat)->isoFormat("D MMMM YYYY");
         // cek template
-        try {
-            if (file_exists($docs)) {
-                //generate surat
-                $templateProcessor = new TemplateProcessor($docs);
-                $templateProcessor->setValue('tempat_surat', $request->tempat_surat);
-                $templateProcessor->setValue('tanggal_surat', $date);
+        if (file_exists($docs)) {
+            //generate surat
+            $templateProcessor = new TemplateProcessor($docs);
+            $templateProcessor->setValue('tempat_surat', $request->tempat_surat);
+            $templateProcessor->setValue('tanggal_surat', $date);
 
+            // try {
                 //add html to word
-                $isiBody = str_replace('<br>','&nbsp;',$request->isiBody);
+                $isiBody = str_replace('<br>','&nbsp;',$request->isi_body);
                 $word = new PhpWord();
                 $section = $word->addSection();
                 Html::addHtml($section, $isiBody, false, false);
@@ -216,6 +217,7 @@ class TemplateController extends Controller
                 for($i = 0; $i < count($containers); $i++) {
                     $templateProcessor->setComplexBlock('isiBody#' . ($i+1), $containers[$i]);
                 }
+
 
                 //set pihak bersangkutan
                 for($j = 1; $j <= $template->jumlah_ttd; $j++){
@@ -235,20 +237,38 @@ class TemplateController extends Controller
                     }
                 }
 
+                if($request->isi_footer != null){
+                    $isiFooter = str_replace('<br>','&nbsp;',$request->isi_footer);
+                    $word = new PhpWord();
+                    $section = $word->addSection();
+                    Html::addHtml($section, $isiFooter, false, false);
+                    $containers = $section->getElements();
+                    $templateProcessor->cloneBlock('footer', count($containers), true, true);
+                    for($i = 0; $i < count($containers); $i++) {
+                        $templateProcessor->setComplexBlock('isiFooter#' . ($i+1), $containers[$i]);
+                    }
+                }
+
+            // } catch (\Throwable $th) {
+            //     return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template, Silahkan Ubah !!');
+            // }
+
                 $file_name = now()->timestamp . '_' . 'Testing Template'. '.docx';
                 $templateProcessor->saveAs($file_name);
 
                 // Pindah file
                 File::move(public_path() . '/' . $file_name, public_path('surat/template/').$file_name);
 
+                //test success
+                $template->isi_body = $request->isi_body;
+                $template->isi_footer = $request->isi_footer;
+                $template->save();
+
                 return $this->setNomor($request, $file_name);
 
             }else{
                 return back()->with('warning', 'Berkas tidak ditemukan !!');
             }
-        } catch (\Throwable $th) {
-            return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template, Silahkan Ubah !!');
-        }
 
     }
 

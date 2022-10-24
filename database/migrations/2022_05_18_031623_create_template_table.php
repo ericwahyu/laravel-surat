@@ -18,7 +18,8 @@ class CreateTemplateTable extends Migration
             $table->string('nama');
             $table->string('file');
             $table->string('keterangan')->nullable();
-            $table->text('isiBody');
+            $table->text('isi_body');
+            $table->text('isi_footer')->nullable();
             $table->string('jumlah_ttd');
             $table->timestamps();
         });

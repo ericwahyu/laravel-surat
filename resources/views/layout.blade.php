@@ -31,7 +31,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
 
         <!-- Start GA -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
         <script async src="{{ asset('https://www.googletagmanager.com/gtag/js?id=UA-94034622-3') }}"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -61,7 +61,7 @@
                                         <a href="#">Mark All As Read</a>
                                     </div>
                                 </div>
-                                <div class="dropdown-list-content dropdown-list-message">
+                                {{-- <div class="dropdown-list-content dropdown-list-message">
                                     <a href="#" class="dropdown-item dropdown-item-unread">
                                         <div class="dropdown-item-avatar">
                                             <img alt="image" src="assets/img/avatar/avatar-1.png" class="rounded-circle">
@@ -114,7 +114,7 @@
                                             <div class="time">Yesterday</div>
                                         </div>
                                     </a>
-                                </div>
+                                </div> --}}
                                 <div class="dropdown-footer text-center">
                                     <a href="#">View All <i class="fas fa-chevron-right"></i></a>
                                 </div>
@@ -127,7 +127,7 @@
                                     <a href="#">Mark All As Read</a>
                                     </div>
                                 </div>
-                                <div class="dropdown-list-content dropdown-list-icons">
+                                {{-- <div class="dropdown-list-content dropdown-list-icons">
                                     <a href="#" class="dropdown-item dropdown-item-unread">
                                         <div class="dropdown-item-icon bg-primary text-white">
                                             <i class="fas fa-code"></i>
@@ -173,7 +173,7 @@
                                             <div class="time">Yesterday</div>
                                         </div>
                                     </a>
-                                </div>
+                                </div> --}}
                                 <div class="dropdown-footer text-center">
                                     <a href="#">View All <i class="fas fa-chevron-right"></i></a>
                                 </div>
@@ -236,6 +236,7 @@
                                 <ul class="dropdown-menu">
                                     <li class="{{ ($menu == 'masuk') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.masuk') }}"><i class="far fa-envelope"></i>Surat Masuk</a></li>
                                     <li class="{{ ($menu == 'keluar') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.keluar') }}"><i class="far fa-envelope-open"></i>Surat Keluar</a></li>
+                                    <li class="{{ ($menu == 'search') ? 'active' : '' }}"><a class="nav-link" href=""><i class="fas fa-search"></i>Cari Surat</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown {{ ($nav == 'agenda') ? 'active' : '' }}">
@@ -261,7 +262,7 @@
                         </div> --}}
                     </section>
                 </div>
-
+                @yield('modal')
                 {{-- <div class="footer-left">
                     Copyright &copy; 2021 <div class="bullet"></div> Design By <a href="">EWA</a>
                 </div>
@@ -275,7 +276,6 @@
         @yield('script')
 
         <!-- General JS Scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="{{ asset('assets/modules/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/modules/popper.js') }}"></script>
         <script src="{{ asset('assets/modules/tooltip.js') }}"></script>
@@ -304,6 +304,7 @@
         <script src="{{ asset('assets/js/page/forms-advanced-forms.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-ion-icons.js') }}"></script>
+        {{-- <script src="{{ asset('assets/js/page/bootstrap-modal.js') }}"></script> --}}
 
         {{-- Summernote --}}
         <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
@@ -315,9 +316,22 @@
                     ['fontname', ['fontname']],
                     ['fontsize', ['fontsize']],
                     ['para', ['paragraph']],
+                    ['height', ['height']],
+                    ['table', ['table']]
                 ],
             });
             $('#summernote').summernote('fontName', 'Times New Roman');
+
+            $('#summernote2').summernote({
+                height: 200,
+                toolbar: [
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['para', ['paragraph']],
+                ],
+            });
+            // $('#summernote').summernote('fontName', 'Times New Roman');
         </script>
 
         <!-- Template JS File -->

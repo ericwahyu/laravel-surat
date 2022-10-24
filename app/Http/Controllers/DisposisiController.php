@@ -49,7 +49,6 @@ class DisposisiController extends Controller
                         ->select('disposisi.*')
                         ->distinct()->get();
         }
-
         return view('disposisi.index', compact('nav','menu','data','surat', 'user'));
     }
 
@@ -440,9 +439,10 @@ class DisposisiController extends Controller
     public function get_status_dosen($disposisi_id){
         $status_dosen = DB::table('disposisi_user')
             ->join('users', 'users.id', '=', 'disposisi_user.user_id')
-            ->join('dosen', 'dosen.user_id', '=', 'users.id')
+            // ->join('dosen', 'dosen.user_id', '=', 'users.id')
             ->where('disposisi_user.disposisi_id', $disposisi_id)
             ->get();
+            dd($status_dosen);
         return $status_dosen;
     }
 

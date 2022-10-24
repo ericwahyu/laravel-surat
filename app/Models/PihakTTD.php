@@ -5,19 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Template extends Model
+class PihakTTD extends Model
 {
     use HasFactory;
-    protected $table = 'template';
+    protected $table = 'pihak_ttd';
     protected $primarykey = 'id';
     protected $fillable = [];
 
-    public function surat(){
-        return $this->belongsToMany(Surat::class);
-    }
-
     public function generate(){
-        return $this->hasMany(Generate::class);
+        return $this->belongsTo(Generate::class);
     }
-
 }

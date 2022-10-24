@@ -45,8 +45,8 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <a href="{{ route('edit.template', $data) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i> Update</a>
-                                                    <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i> Delete</button>
                                                     <a href="{{ route('formtesting.template', $data) }}" class="btn btn-info" title="Testing Template"><i class="fa fa-quote-left"></i> Testing</a>
+                                                    <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i> Delete</button>
                                                 </form>
                                             </td>
                                         @endif

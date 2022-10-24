@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class KategoriSeeder extends Seeder
+class UnitkerjaSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,21 +15,25 @@ class KategoriSeeder extends Seeder
     public function run()
     {
         //
-        $kategori =[
+        $unitKerja =[
             [
-                'nama' => 'surat masuk',
+                'nama' => 'Admin',
                 'created_at' => null,
                 'updated_at' => null,
             ],
             [
-                'nama' => 'surat keluar',
+                'nama' => 'Pimpinan',
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            [
+                'nama' => 'Pengelola',
                 'created_at' => null,
                 'updated_at' => null,
             ],
 
         ];
 
-        DB::table('kategori')->insert($kategori);
-
+        DB::table('unit_kerja')->insert($unitKerja);
     }
 }

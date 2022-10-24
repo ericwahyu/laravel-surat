@@ -37,8 +37,8 @@
                                             <i class="fas fa-th"></i>
                                             </div>
                                         </td>
-                                        <td>{{ $data->kategori->nama_kategori }}</td>
-                                        <td>{{ $data->nama_jenis }}</td>
+                                        <td>{{ $data->kategori->nama }}</td>
+                                        <td>{{ $data->nama }}</td>
                                         <td>
                                             <form id="delete" action="{{ route('destroy.jenis', $data) }}" method="post">
                                                 @csrf

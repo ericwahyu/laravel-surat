@@ -15,7 +15,7 @@ class CreateDosenUnitTable extends Migration
     {
         Schema::create('dosen_unit', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('dosen_id');
+            $table->string('dosen_id');
             $table->unsignedBigInteger('unit_kerja_id');
             $table->timestamps();
 

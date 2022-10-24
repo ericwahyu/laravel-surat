@@ -12,5 +12,12 @@ class Generate extends Model
     protected $primarykey = 'id';
     protected $fillable = [];
 
+    public function pihak(){
+        return $this->hasMany(PihakTTD::class);
+    }
+
+    public function template(){
+        return $this->belongsTo(Template::class);
+    }
 }
 

@@ -21,7 +21,7 @@
                             <tr>
                                 <td>Jenis Surat</td>
                                 <td>:</td>
-                                <td>{{ $surat->jenis->nama_jenis }}</td>
+                                <td>{{ $surat->jenis->nama }}</td>
                             </tr>
                             <tr>
                                 <td>Nomor Surat</td>

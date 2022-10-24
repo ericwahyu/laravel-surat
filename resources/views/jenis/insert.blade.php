@@ -23,7 +23,7 @@
                             <select class="form-control @error('kategori_id') is-invalid @enderror" name="kategori_id">
                                 <option disabled selected>-- Kategori Jenis Surat--</option>
                                 @foreach ($kategori as $kategori)
-                                    <option value="{{ $kategori->id }}" {{ (old("kategori_id") == $kategori->id ? "selected":"") }}>{{ $kategori->nama_kategori }}</option>
+                                    <option value="{{ $kategori->id }}" {{ (old("kategori_id") == $kategori->id ? "selected":"") }}>{{ $kategori->nama }}</option>
                                 @endforeach
                             </select>
                             @error('kategori_id')

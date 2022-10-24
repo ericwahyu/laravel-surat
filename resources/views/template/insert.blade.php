@@ -54,16 +54,25 @@
                     <h4>Content Template</h4>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <div class="form-group">
                         <label style="font-size: 16px">Body Template</label>
-                        <textarea class="summernote" name="isiBody" id="summernote" cols="30" rows="10" required>{{ old('isiBody') }}</textarea>
-                        @error('isiBody')
+                        <textarea class="summernote" name="isi_body" id="summernote" cols="30" rows="10" required>{{ old('isi_body') }}</textarea>
+                        @error('isi_body')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
-                    <div class="row mt-md-3">
+                    <div class="form-group">
+                        <label style="font-size: 16px">Footer Template</label>
+                        <textarea class="form-control" name="isi_footer">{{ old('isi_footer') }}</textarea>
+                        @error('isi_footer')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label style="font-size: 16px">Jumlah Tanda Tangan</label>
                         <input type="number" class="form-control @error('jumlah_ttd') is-invalid @enderror" name="jumlah_ttd" id="" value="{{ old('jumlah_ttd') }}">
                         @error('jumlah_ttd')
