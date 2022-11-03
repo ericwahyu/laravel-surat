@@ -10,6 +10,8 @@ use App\Http\Controllers\CatatanController;
 use App\Http\Controllers\GenerateController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KeperluanController;
+use App\Http\Controllers\SearchController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -83,7 +85,11 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/update/{surat}', [GenerateController::class, 'update'])->name('update.surat.keluar');
         Route::delete('/destroy/{surat}', [GenerateController::class, 'destroy'])->name('destroy.surat.keluar');
         Route::get('/download/{surat}', [GenerateController::class, 'download_file'])->name('download.surat.keluar');
-        // Route::get('/generateNomor', [GenerateController::class, 'generateNomorSurat'])->name('generateNomor.surat.keluar');
+    });
+
+    Route::prefix('/search/')->group(function(){
+        Route::get('/', [SearchController::class, 'index'])->name('index.search');
+        Route::get('/data', [SearchController::class, 'search'])->name('search.data');
     });
 
     Route::prefix('/surat/disposisi')->group(function(){

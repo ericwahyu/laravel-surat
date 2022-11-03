@@ -209,10 +209,10 @@
                 <div class="main-sidebar sidebar-style-2">
                     <aside id="sidebar-wrapper">
                         <div class="sidebar-brand">
-                            <a href="index.html">ITATS</a>
+                            <a href="{{ route('dashboard') }}">ITATS</a>
                         </div>
                         <div class="sidebar-brand sidebar-brand-sm">
-                            <a href="index.html">ITATS</a>
+                            <a href="{{ route('dashboard') }}">ITATS</a>
                         </div>
                         <ul class="sidebar-menu">
                             <li class="menu-header">Dashboard</li>
@@ -236,7 +236,7 @@
                                 <ul class="dropdown-menu">
                                     <li class="{{ ($menu == 'masuk') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.masuk') }}"><i class="far fa-envelope"></i>Surat Masuk</a></li>
                                     <li class="{{ ($menu == 'keluar') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.keluar') }}"><i class="far fa-envelope-open"></i>Surat Keluar</a></li>
-                                    <li class="{{ ($menu == 'search') ? 'active' : '' }}"><a class="nav-link" href=""><i class="fas fa-search"></i>Cari Surat</a></li>
+                                    <li class="{{ ($menu == 'search') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.search') }}"><i class="fas fa-search"></i>Cari Surat</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown {{ ($nav == 'agenda') ? 'active' : '' }}">

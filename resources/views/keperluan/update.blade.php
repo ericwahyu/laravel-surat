@@ -27,6 +27,15 @@
                                     </div>
                                 @enderror
                             </div>
+                            <div class="form-group">
+                                <label style="font-size: 16px">Kode Keperluan Surat</label>
+                                <input type="text" class="form-control @error('kode') is-invalid @enderror" name="kode" placeholder="" value="{{ $keperluan->kode }}">
+                                @error('kode')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Simpan Data</button>
                             </div>

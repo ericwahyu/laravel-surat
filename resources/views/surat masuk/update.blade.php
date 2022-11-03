@@ -21,10 +21,10 @@
                         <div class="form-group col-md-6">
                             <label style="font-size: 16px">Jenis Surat</label>
                             <select class="form-control @error('jenis_id') is-invalid @enderror" name="jenis_id">
-                                <option selected value="{{ $surat->jenis->id }}">{{ $surat->jenis->nama_jenis }}</option>
+                                <option selected value="{{ $surat->jenis->id }}">{{ $surat->jenis->nama }}</option>
                                 @foreach ($jenis as $jenis)
                                     @if ($surat->jenis->id != $jenis->id)
-                                        <option value="{{ $jenis->id }}">{{ $jenis->nama_jenis }}</option>
+                                        <option value="{{ $jenis->id }}">{{ $jenis->nama }}</option>
                                     @endif
                                 @endforeach
                             </select>

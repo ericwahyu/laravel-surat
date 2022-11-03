@@ -68,6 +68,7 @@
                 </div>
                 {{-- hidden input --}}
                     <input type="hidden" name="template_id" value="{{ $template->id }}">
+                    <input type="hidden" name="keperluan_id" id="keperluanId">
             </div>
         </div>
         <div class="card">
@@ -78,11 +79,12 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label style="font-size: 16px">Generate Nomor Surat</label>
-                        <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" id="nomorSurat" name="nomor_surat" required readonly>
+                        <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" id="nomorSurat" name="nomor_surat" value="{{ old('nomor_surat') }}" required readonly>
                     </div>
                     <div class="form-group col-md-6" style="margin-top: 32px">
                         <!-- Button trigger modal -->
-                        <button  class="btn btn-primary" id="btn-Modal" onclick="modal()">Launch demo modal</button>
+                        {{-- <a class="btn btn-primary" id="btn-Modal" onclick="modal()">Generate Nomor</a> --}}
+                        <button class="btn btn-primary" id="btn-Modal" onclick="modal()">Generate Nomor</button>
                     </div>
                 </div>
                 <div class="row">
@@ -106,6 +108,17 @@
                         @enderror
                     </div>
                 </div>
+                @if ($template->isi_footer != null)
+                        <div class="form-group">
+                            <label style="font-size: 16px">Isi Footer Template</label>
+                            <textarea class="summernote2" name="isi_footer" id="summernote2" cols="30" rows="10" required>{{ $template->isi_footer }}</textarea>
+                            @error('isi_footer')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    @endif
                 <div class="row mt-md-3">
                     <label style="font-size: 16px">Tanda Tangan</label>
                     @for ($ttd = 1; $ttd <= $template->jumlah_ttd; $ttd++)
@@ -140,14 +153,25 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Generate Nomor Surat</h1>
+                {{-- <a href="" type="button" class="btn-close" data-dismiss="modal" aria-hidden="true"></a> --}}
                 <button type="button" class="btn-close" data-dismiss="modal" aria-hidden="true"></button>
             </div>
             <div class="modal-body">
                 <form id="form-generate">
                     @csrf
                     <div class="form-group">
-                        <label style="font-size: 16px">Surat</label>
-                        <input type="text" class="form-control @error('tempat_surat') is-invalid @enderror" name="surat" placeholder="Surabaya" value="{{ old('surat') }}">
+                        <label style="font-size: 16px">Keperluan Surat</label>
+                        <select class="form-control @error('keperluan_id') is-invalid @enderror" name="keperluan_id">
+                            <option disabled selected>-- Keperluan Surat--</option>
+                            @foreach ($keperluan as $keperluan)
+                                <option value="{{ $keperluan->id }}" {{ (old("keperluan_id") == $keperluan->id ? "selected":"") }}>{{ $keperluan->nama }} -- {{ $keperluan->kode }}</option>
+                            @endforeach
+                        </select>
+                        @error('keperluan_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -167,13 +191,17 @@
 
             $.ajax({
                 type : "POST",
-                url : "/generateNomor",
+                url : "{{ route('generateNomor') }}",
                 data : $('#form-generate').serialize(),
-                success : function(data){
+                success : function(response){
                     $('#modal').modal('hide');
-                    $('#nomorSurat').val(data);
-                    console.log(data);
+                    $('#nomorSurat').val(response.nomor);
+                    $('#keperluanId').val(response.keperluan_id);
+                    console.log(response);
                     $('#form-generate')[0].reset();
+                },
+                error : function(response){
+                    console.log(response);
                 }
             });
         });
@@ -181,10 +209,6 @@
 
     function modal(){
         $('#modal').modal('show'); //modal tampil
-    }
-
-    function close(){
-        $('#modal').modal('hide');
     }
 
 </script>

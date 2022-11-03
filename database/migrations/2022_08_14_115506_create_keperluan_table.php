@@ -16,6 +16,7 @@ class CreateKeperluanTable extends Migration
         Schema::create('keperluan', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
+            $table->string('kode');
             $table->timestamps();
         });
     }

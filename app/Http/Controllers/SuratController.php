@@ -117,7 +117,7 @@ class SuratController extends Controller
             $file = $request->file('file');
             $file_name = now()->timestamp . '_' . $request->judul.'.'.$file->getClientOriginalExtension();
             $file->move('surat/masuk',$file_name);
-            $suratSM->file_surat = $file_name;
+            $suratSM->file = $file_name;
         }
         if($suratSM){
             $suratSM->save();
@@ -197,12 +197,12 @@ class SuratController extends Controller
         $surat->tanggal = $request->tanggal;
         $surat->keterangan = $request->keterangan;
         if($request->hasFile('file')){
-            $filelama = public_path('surat/masuk/'.$surat->file_surat);
+            $filelama = public_path('surat/masuk/'.$surat->file);
             File::delete($filelama);
             $file = $request->file('file');
             $file_name = now()->timestamp . '_' . $request->judul.'.'.$file->getClientOriginalExtension();
             $file->move('surat/masuk',$file_name);
-            $surat->file_surat = $file_name;
+            $surat->file = $file_name;
         }
         if($surat){
             $surat->save();
@@ -254,8 +254,8 @@ class SuratController extends Controller
     }
 
     public function download_file(Surat $surat){
-        if(file_exists(public_path('surat/masuk/'.$surat->file_surat))){
-            return response()->download('surat/masuk/'.$surat->file_surat);
+        if(file_exists(public_path('surat/masuk/'.$surat->file))){
+            return response()->download('surat/masuk/'.$surat->file);
         }else{
             return back()->with('error', 'Download gagal');
         }

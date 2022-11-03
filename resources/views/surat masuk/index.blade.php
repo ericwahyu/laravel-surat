@@ -45,13 +45,13 @@
                                         <i class="fas fa-th"></i>
                                         </div>
                                     </td>
-                                    <td>{{ $data->jenis->nama_jenis }}</td>
+                                    <td>{{ $data->jenis->nama }}</td>
                                     <td>{{ $data->nosurat }}</td>
                                     <td>{{ $data->judul }}</td>
                                     <td>{{ IdDateFormatter::format($data->tanggal, IdDateFormatter::COMPLETE) }}</td>
                                     <td>{{ $data->keterangan }}</td>
                                     <td>
-                                        <a href="{{ route('show.surat.masuk', $data) }}" class="btn btn-info" title="Lihat detail"><i class="fa fa-eye"></i> Lihat Detail Surat</a>
+                                        <a href="{{ route('show.surat.masuk', $data->id) }}" class="btn btn-info" title="Lihat detail"><i class="fa fa-eye"></i> Lihat Detail Surat</a>
                                     </td>
                                 </tr>
                             @endforeach

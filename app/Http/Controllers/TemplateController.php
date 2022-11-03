@@ -63,7 +63,7 @@ class TemplateController extends Controller
         // dd($request);
         $request->validate([
             'nama' => 'required',
-            'file' => 'required|mimes:docx,doc,pdf',
+            'file' => 'required|mimes:docx,doc',
             'keterangan' => 'nullable',
             'isi_body' => 'required',
             'jumlah_ttd' => 'required',
@@ -73,7 +73,8 @@ class TemplateController extends Controller
         $template->nama = $request->nama;
         if($request->hasFile('file')){
             $file = $request->file('file');
-            $file_name = now()->timestamp . '_' .$file->getClientOriginalName().'.'.$file->getClientOriginalExtension();
+            $file_name = now()->timestamp . '_' .$file->getClientOriginalName();
+            // dd($file_name);
             // $file_name = $file->getClientOriginalName();
             $file->move('surat/template',$file_name);
             $template->file = $file_name;
@@ -145,7 +146,7 @@ class TemplateController extends Controller
             File::delete($filelama);
 
             $file = $request->file('file');
-            $file_name = now()->timestamp . '_' .$file->getClientOriginalName().'.'.$file->getClientOriginalExtension();
+            $file_name = now()->timestamp . '_' .$file->getClientOriginalName();
             // $file_name = $file->getClientOriginalName();
             $file->move('surat/template',$file_name);
             $template->file = $file_name;

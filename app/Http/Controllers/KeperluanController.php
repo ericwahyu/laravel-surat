@@ -54,7 +54,8 @@ class KeperluanController extends Controller
         ]);
 
         $keperluan = new Keperluan();
-        $keperluan->nama = strtoupper($request->nama);
+        $keperluan->nama = $request->nama;
+        $keperluan->kode = strtoupper($request->kode);
         $keperluan->save();
 
         return redirect()->route('index.keperluan')->with('success', 'Berhasil tambah data !!');
@@ -99,10 +100,12 @@ class KeperluanController extends Controller
     {
         //
         $request->validate([
-            'nama' => 'required|max:100'
+            'nama' => 'required|max:100',
+            'kode' => 'required|max:100'
         ]);
 
-        $keperluan->nama = strtoupper($request->nama);
+        $keperluan->nama = $request->nama;
+        $keperluan->kode = strtoupper($request->kode);
         $keperluan->save();
 
         return redirect()->route('index.keperluan')->with('success', 'Data berhasil di Update !!');

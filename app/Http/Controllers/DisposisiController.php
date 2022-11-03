@@ -363,7 +363,7 @@ class DisposisiController extends Controller
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         $catatan->save();
 
-        if($update_status){
+        if($catatan){
             return redirect()->route('show.disposisi', $disposisi)->with('succes', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
         }else{
             return back()->with('warning', 'Tanggapan surat gagal dikirim !!');
@@ -396,7 +396,7 @@ class DisposisiController extends Controller
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         $catatan->save();
 
-        if($update_status){
+        if($catatan){
             return redirect()->route('show.disposisi', $disposisi)->with('succes', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
         }else{
             return back()->with('warning', 'Tanggapan surat gagal dikirim !!');
@@ -429,7 +429,7 @@ class DisposisiController extends Controller
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         $catatan->save();
 
-        if($update_status){
+        if($catatan){
             return redirect()->route('show.disposisi', $disposisi)->with('succes', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
         }else{
             return back()->with('warning', 'Tanggapan surat gagal dikirim !!');
@@ -439,10 +439,10 @@ class DisposisiController extends Controller
     public function get_status_dosen($disposisi_id){
         $status_dosen = DB::table('disposisi_user')
             ->join('users', 'users.id', '=', 'disposisi_user.user_id')
-            // ->join('dosen', 'dosen.user_id', '=', 'users.id')
+            ->join('dosen', 'dosen.user_id', '=', 'users.id')
             ->where('disposisi_user.disposisi_id', $disposisi_id)
             ->get();
-            dd($status_dosen);
+            // dd($status_dosen);
         return $status_dosen;
     }
 

@@ -65,7 +65,7 @@
                     </div>
                     <div class="form-group">
                         <label style="font-size: 16px">Footer Template</label>
-                        <textarea class="form-control" name="isi_footer">{{ old('isi_footer') }}</textarea>
+                        <textarea class="summernote2" id="summernote2" name="isi_footer">{{ old('isi_footer') }}</textarea>
                         @error('isi_footer')
                             <div class="invalid-feedback">
                                 {{ $message }}

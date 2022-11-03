@@ -97,7 +97,7 @@ class GenerateController extends Controller
         $dosen = Dosen::all();
         $mahasiswa = Mahasiswa::all();
         $keperluan = Keperluan::all();
-        // dd($dosen);
+        // dd($keperluan);
         return view('surat keluar.insert', compact('nav', 'menu', 'template','keperluan', 'jenis', 'dosen', 'mahasiswa'));
     }
 
@@ -110,6 +110,7 @@ class GenerateController extends Controller
     public function store(Request $request)
     {
         //
+        // return $this->generateSurat($request);
         // dd($request);
         $request->validate([
             'jenis_id' => 'required',
@@ -118,7 +119,10 @@ class GenerateController extends Controller
             'catatan' => 'nullable',
         ]);
 
-        list($file_name, $pihak) = $this->generateSurat($request);
+        list($file_name, $pihak, $suratLama) = $this->generateSurat($request);
+
+        $surattanpanomor = public_path('surat/generate/').$suratLama;
+        File::delete($surattanpanomor);
 
         $surat = new Surat();
         $surat->jenis_id = $request->jenis_id;
@@ -133,6 +137,7 @@ class GenerateController extends Controller
         $generate = new Generate();
         $generate->template_id = $request->template_id;
         $generate->surat_id = $surat->id;
+        $generate->keperluan_id = $request->keperluan_id;
         $generate->content = $request->isi_body;
         $generate->tempat = $request->tempat_surat;
         $generate->save();
@@ -330,14 +335,14 @@ class GenerateController extends Controller
 
         $date = Carbon::parse($request->tanggal_surat)->isoFormat("D MMMM YYYY");
         // cek template
-        // try {
-            if (file_exists($docs)) {
+        if (file_exists($docs)) {
 
-                //generate surat
-                $templateProcessor = new TemplateProcessor($docs);
-                $templateProcessor->setValue('tempat_surat', $request->tempat_surat);
-                $templateProcessor->setValue('tanggal_surat', $date);
+            //generate surat
+            $templateProcessor = new TemplateProcessor($docs);
+            $templateProcessor->setValue('tempat_surat', $request->tempat_surat);
+            $templateProcessor->setValue('tanggal_surat', $date);
 
+            // try {
                 //add html to word
                 $isiBody = str_replace('<br>','&nbsp;',$request->isi_body);
                 $word = new PhpWord();
@@ -369,20 +374,33 @@ class GenerateController extends Controller
                     }
                 }
 
-                $file_name = now()->timestamp . '_' . $request->judul . '.docx';
-                $templateProcessor->saveAs($file_name);
+                if($request->isi_footer != null){
+                    $isiFooter = str_replace('<br>','&nbsp;',$request->isi_footer);
+                    $word = new PhpWord();
+                    $section = $word->addSection();
+                    Html::addHtml($section, $isiFooter, false, false);
+                    $containers = $section->getElements();
+                    $templateProcessor->cloneBlock('footer', count($containers), true, true);
+                    for($i = 0; $i < count($containers); $i++) {
+                        $templateProcessor->setComplexBlock('isiFooter#' . ($i+1), $containers[$i]);
+                    }
+                }
 
-                // Pindah file
-                File::move(public_path() . '/' . $file_name, public_path('surat/generate/').$file_name);
+            // } catch (\Throwable $th) {
+                // return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template, Silahkan Ubah !!');
+            // }
 
-                return $this->setNomor($request, $file_name, $pihak);
+            $fileSurat = now()->timestamp . '_' . $request->judul . '.docx';
+            $templateProcessor->saveAs($fileSurat);
 
-            }else{
-                return back()->with('warning', 'Berkas tidak ditemukan !!');
-            }
-        // } catch (\Throwable $th) {
-            return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template, Silahkan Ubah !!');
-        // }
+            // Pindah file
+            File::move(public_path() . '/' . $fileSurat, public_path('surat/generate/').$fileSurat);
+
+            return $this->setNomor($request, $fileSurat, $pihak);
+
+        }else{
+            return back()->with('warning', 'Berkas tidak ditemukan !!');
+        }
     }
 
     //set nomor dan mengubah surat
@@ -398,10 +416,10 @@ class GenerateController extends Controller
             // Pindah file surat Baru
             File::move(public_path() . '/' .$file_name, public_path('surat/generate/').$file_name);
             //hapus surat lama
-            File::delete($suratLama);
+            // File::delete($suratLama);
 
             // return $file_name and $pihak;
-            return [$file_name, $pihak];
+            return [$file_name, $pihak, $suratLama];
         }
     }
 
@@ -417,13 +435,31 @@ class GenerateController extends Controller
         }
     }
 
-    private function addPihak($nip){
-        $pihak[] += $nip;
-    }
+    // private function addPihak($nip){
+    //     $pihak[] += $nip;
+    // }
 
     //generate nomor surat
     public function generateNomor(Request $request){
+        $request->validate([
+            'keperluan_id' => 'required',
+        ]);
+        $keperluan = Keperluan::find($request->input('keperluan_id'))->first();
         $data = $request->input('surat');
-        return response()->json($data);
+
+        // karna array dimulai dari 0 maka kita tambah di awal data kosong
+        // bisa juga mulai dari "1"=>"I"
+        $bulanRomawi = array("", "I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
+        $noUrutAkhir = Generate::where('keperluan_id', $keperluan->id)->count();
+        if($noUrutAkhir) {
+           $nomor = sprintf("%03s", abs($noUrutAkhir + 1)) .'/'. $keperluan->kode .'/'. 'ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
+        }
+        else {
+          $nomor = sprintf("%03s", 1) .'/'. $keperluan->kode .'/'. 'ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
+        }
+        return response()->json([
+            'nomor' => $nomor,
+            'keperluan_id' => $keperluan->id
+        ]);
     }
 }

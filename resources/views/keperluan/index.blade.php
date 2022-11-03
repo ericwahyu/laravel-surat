@@ -23,6 +23,7 @@
                                 <tr>
                                     <th class="text-center">#</th>
                                     <th>Nama Keperluan Surat</th>
+                                    <th>Kode Keperluan Surat</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -35,6 +36,7 @@
                                             </div>
                                         </td>
                                         <td>{{ $data->nama }}</td>
+                                        <td>{{ $data->kode }}</td>
                                         <td>
                                             <form id="delete" action="{{ route('destroy.keperluan', $data) }}" method="post">
                                                 @csrf
