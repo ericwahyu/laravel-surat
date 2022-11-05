@@ -16,9 +16,9 @@ class Surat extends Model
         return $this->belongsTo(Jenis::class);
     }
 
-    public function template(){
-        return $this->belongsToMany(Template::class);
-    }
+    // public function template(){
+    //     return $this->belongsToMany(Template::class);
+    // }
 
     public function disposisi(){
         return $this->hasMany(Disposisi::class);
@@ -26,5 +26,9 @@ class Surat extends Model
 
     public function catatan(){
         return $this->hasMany(Catatan::class);
+    }
+
+    public function template(){
+        return $this->belongsToMany(Template::class, 'generate', 'template_id', 'surat_id')->withPivot('content');
     }
 }

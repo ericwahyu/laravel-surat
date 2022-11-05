@@ -98,8 +98,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group">
-                        <label style="font-size: 16px">Buat Surat</label>
+                    <div class="form-group col-sm-11">
+                        <label style="font-size: 16px">Isi Content Surat</label>
                         <textarea class="summernote" name="isi_body" id="summernote" cols="30" rows="10" required>{{ $template->isi_body }}</textarea>
                         @error('isiBody')
                             <div class="invalid-feedback">
@@ -107,18 +107,24 @@
                             </div>
                         @enderror
                     </div>
+                    <div class="form-group col-sm-1" style="margin-top: 10px">
+                        <a data-toggle="tooltip" title="Langkah Penulisan Content Surat :
+                                                        1. Untuk nomor surat di inputkan variable ${nomor_surat}
+                                                        2. Jika muncul peringatan terjadi kesalahan menulis maka edit ulang isi content, karena ada beberapa tag html yang tidak terbaca oleh PHPWORD" >
+                        <i class="fas fa-exclamation-circle"></i><b> info</b></a>
+                    </div>
                 </div>
                 @if ($template->isi_footer != null)
-                        <div class="form-group">
-                            <label style="font-size: 16px">Isi Footer Template</label>
-                            <textarea class="summernote2" name="isi_footer" id="summernote2" cols="30" rows="10" required>{{ $template->isi_footer }}</textarea>
-                            @error('isi_footer')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    @endif
+                    <div class="form-group">
+                        <label style="font-size: 16px">Isi Footer Template</label>
+                        <textarea class="summernote2" name="isi_footer" id="summernote2" cols="30" rows="10" required>{{ $template->isi_footer }}</textarea>
+                        @error('isi_footer')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                @endif
                 <div class="row mt-md-3">
                     <label style="font-size: 16px">Tanda Tangan</label>
                     @for ($ttd = 1; $ttd <= $template->jumlah_ttd; $ttd++)

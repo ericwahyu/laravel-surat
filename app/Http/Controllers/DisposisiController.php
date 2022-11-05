@@ -375,7 +375,7 @@ class DisposisiController extends Controller
             $disposisiAdmin = new Disposisiuser();
             $disposisiAdmin->disposisi_id = $disposisi->id;
             $disposisiAdmin->user_id =  Auth::user()->id;
-            $disposisiAdmin->status = 3;
+            $disposisiAdmin->status = 4;
             $disposisiAdmin->save();
         } else {
             $update_status = DB::table('disposisi_user')
@@ -408,7 +408,7 @@ class DisposisiController extends Controller
             $disposisiAdmin = new Disposisiuser();
             $disposisiAdmin->disposisi_id = $disposisi->id;
             $disposisiAdmin->user_id =  Auth::user()->id;
-            $disposisiAdmin->status = 3;
+            $disposisiAdmin->status = 6;
             $disposisiAdmin->save();
         } else {
             $update_status = DB::table('disposisi_user')

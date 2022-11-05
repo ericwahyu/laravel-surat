@@ -12,12 +12,16 @@ class Template extends Model
     protected $primarykey = 'id';
     protected $fillable = [];
 
-    public function surat(){
-        return $this->belongsToMany(Surat::class);
-    }
+    // public function surat(){
+    //     return $this->belongsToMany(Surat::class);
+    // }
 
     public function generate(){
         return $this->hasMany(Generate::class);
+    }
+
+    public function surat(){
+        return $this->belongsToMany(Surat::class, 'generate', 'template_id', 'surat_id')->withPivot('content');
     }
 
 }

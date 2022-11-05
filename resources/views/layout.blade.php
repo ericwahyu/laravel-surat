@@ -23,7 +23,8 @@
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css') }}">
 
         {{-- Summernote --}}
-        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+        {{-- <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet"> --}}
+        <link rel="stylesheet" href="{{ asset('assets/modules/summernote/summernote-bs4.css') }}">
 
 
         <!-- Template CSS -->
@@ -54,14 +55,14 @@
                         </ul>
                     </form>
                     <ul class="navbar-nav navbar-right position-absolute top-45 end-0">
-                        <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown" class="nav-link nav-link-lg message-toggle beep"><i class="far fa-envelope"></i></a>
+                        {{-- <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown" class="nav-link nav-link-lg message-toggle beep"><i class="far fa-envelope"></i></a>
                             <div class="dropdown-menu dropdown-list dropdown-menu-right">
                                 <div class="dropdown-header">Messages
                                     <div class="float-right">
                                         <a href="#">Mark All As Read</a>
                                     </div>
                                 </div>
-                                {{-- <div class="dropdown-list-content dropdown-list-message">
+                                <div class="dropdown-list-content dropdown-list-message">
                                     <a href="#" class="dropdown-item dropdown-item-unread">
                                         <div class="dropdown-item-avatar">
                                             <img alt="image" src="assets/img/avatar/avatar-1.png" class="rounded-circle">
@@ -114,7 +115,7 @@
                                             <div class="time">Yesterday</div>
                                         </div>
                                     </a>
-                                </div> --}}
+                                </div>
                                 <div class="dropdown-footer text-center">
                                     <a href="#">View All <i class="fas fa-chevron-right"></i></a>
                                 </div>
@@ -127,7 +128,7 @@
                                     <a href="#">Mark All As Read</a>
                                     </div>
                                 </div>
-                                {{-- <div class="dropdown-list-content dropdown-list-icons">
+                                <div class="dropdown-list-content dropdown-list-icons">
                                     <a href="#" class="dropdown-item dropdown-item-unread">
                                         <div class="dropdown-item-icon bg-primary text-white">
                                             <i class="fas fa-code"></i>
@@ -173,12 +174,12 @@
                                             <div class="time">Yesterday</div>
                                         </div>
                                     </a>
-                                </div> --}}
+                                </div>
                                 <div class="dropdown-footer text-center">
                                     <a href="#">View All <i class="fas fa-chevron-right"></i></a>
                                 </div>
                             </div>
-                        </li>
+                        </li> --}}
                         <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                             @foreach (Auth::user()->mahasiswa as $user_mahasiswa)
                                 <div class="d-sm-none d-lg-inline-block">{{ $user_mahasiswa->nama }}</div></a>
@@ -236,7 +237,7 @@
                                 <ul class="dropdown-menu">
                                     <li class="{{ ($menu == 'masuk') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.masuk') }}"><i class="far fa-envelope"></i>Surat Masuk</a></li>
                                     <li class="{{ ($menu == 'keluar') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.keluar') }}"><i class="far fa-envelope-open"></i>Surat Keluar</a></li>
-                                    <li class="{{ ($menu == 'search') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.search') }}"><i class="fas fa-search"></i>Cari Surat</a></li>
+                                    <li class="{{ ($menu == 'search') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.search') }}"><i class="fas fa-search"></i>Pencarian Surat</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown {{ ($nav == 'agenda') ? 'active' : '' }}">
@@ -304,10 +305,10 @@
         <script src="{{ asset('assets/js/page/forms-advanced-forms.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-ion-icons.js') }}"></script>
-        {{-- <script src="{{ asset('assets/js/page/bootstrap-modal.js') }}"></script> --}}
+        <script src="{{ asset('assets/js/page/bootstrap-modal.js') }}"></script>
 
         {{-- Summernote --}}
-        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+        <script src="{{ asset('assets/modules/summernote/summernote-bs4.js') }}"></script>
         <script>
             $('#summernote').summernote({
                 height: 500,
@@ -317,7 +318,7 @@
                     ['fontsize', ['fontsize']],
                     ['para', ['paragraph']],
                     ['height', ['height']],
-                    ['table', ['table']]
+                    // ['table', ['table']]
                 ],
             });
             $('#summernote').summernote('fontName', 'Times New Roman');
@@ -331,7 +332,7 @@
                     ['para', ['paragraph']],
                 ],
             });
-            // $('#summernote').summernote('fontName', 'Times New Roman');
+            $('#summernote2').summernote('fontName', 'Times New Roman');
         </script>
 
         <!-- Template JS File -->

@@ -11,6 +11,16 @@ use App\Http\Controllers\GenerateController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KeperluanController;
 use App\Http\Controllers\SearchController;
+use App\Models\Generate;
+use App\Models\Surat;
+use App\Models\Template;
+use App\Models\Jenis;
+use App\Models\User;
+use App\Models\Catatan;
+use App\Models\Mahasiswa;
+use App\Models\Dosen;
+use App\Models\Keperluan;
+use App\Models\PihakTTD;
 
 
 /*
@@ -32,10 +42,23 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('/generateNomor', [GenerateController::class, 'generateNomor'])->name('generateNomor');
 
     Route::get('/dashboard', function(){
+        $countUser = User::count();
+        $countSuratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                            ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                            ->where('kategori_id', 1)->count();
+        $countSuratKeluar = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                            ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+                            ->where('kategori_id', 2)->count();
+        $countCatatan = Catatan::count();
         return view('dashboard', array(
             'nav' => 'dashboard',
-            'menu' => 'dashboard'));
-        })->name('dashboard');
+            'menu' => 'dashboard',
+            'user' => $countUser,
+            'suratmasuk' => $countSuratMasuk,
+            'suratkeluar' => $countSuratKeluar,
+            'agenda' => $countCatatan
+        ));
+    })->name('dashboard');
 
     Route::prefix('/umum')->group(function(){
         Route::prefix('/jenis')->group(function(){

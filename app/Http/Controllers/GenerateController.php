@@ -36,6 +36,8 @@ class GenerateController extends Controller
         if($request->input('tahun')){
             if($user->isAdmin()){
                 $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                        ->join('generate', 'surat.id', '=', 'generate.surat_id')
+                        ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->where('surat.status', '!=', 0)
                         ->where('kategori_id', 2)
@@ -44,6 +46,8 @@ class GenerateController extends Controller
                         ->distinct()->latest()->get();
             }else{
                 $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                        ->join('generate', 'surat.id', '=', 'generate.surat_id')
+                        ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
@@ -58,6 +62,8 @@ class GenerateController extends Controller
         }else{
             if($user->isAdmin()){
                 $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                        ->join('generate', 'surat.id', '=', 'generate.surat_id')
+                        ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->where('surat.status', '!=', 0)
                         ->where('kategori_id', 2)
@@ -65,6 +71,8 @@ class GenerateController extends Controller
                         ->distinct()->latest()->get();
             }else{
                 $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                        ->join('generate', 'surat.id', '=', 'generate.surat_id')
+                        ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
@@ -232,7 +240,6 @@ class GenerateController extends Controller
         $suratLama = public_path('surat/generate/').$surat->file;
         File::delete($suratLama);
 
-        // //php word
         list($file_name, $pihak) = $this->generateSurat($request);
 
         $surat->jenis_id = $request->jenis_id;
@@ -312,6 +319,16 @@ class GenerateController extends Controller
         }else{
             return back()->with('warning', 'Data gagal di hapus !!');
         }
+    }
+
+    public function getGenerate($surat_id){
+        $getGenerate = Generate::join('surat', 'surat.id', '=', 'generate.surat_id')
+                ->join('keperluan', 'generate.keperluan_id', '=', 'keperluan.id')
+                ->where('generate.surat_id', $surat_id)
+                ->select('generate.*')
+                ->get();
+                // dd($getGenerate);
+        return $getGenerate;
     }
 
     public function download_file(Surat $surat){

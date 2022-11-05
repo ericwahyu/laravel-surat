@@ -19,5 +19,11 @@ class Generate extends Model
     public function template(){
         return $this->belongsTo(Template::class);
     }
+
+    public function keperluan(){
+        return $this->belongsTo(Keperluan::class);
+    }
+
+
 }
 

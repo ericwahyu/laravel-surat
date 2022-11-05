@@ -51,7 +51,7 @@
                                     <td>{{ IdDateFormatter::format($data->tanggal, IdDateFormatter::COMPLETE) }}</td>
                                     <td>{{ $data->keterangan }}</td>
                                     <td>
-                                        <a href="{{ route('show.surat.masuk', $data->id) }}" class="btn btn-info" title="Lihat detail"><i class="fa fa-eye"></i> Lihat Detail Surat</a>
+                                        <a href="{{ route('show.surat.masuk', $data->id) }}" class="btn btn-info" title="Lihat detail"><i class="fa fa-eye"></i> Detail</a>
                                     </td>
                                 </tr>
                             @endforeach

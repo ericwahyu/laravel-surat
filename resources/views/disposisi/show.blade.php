@@ -56,7 +56,39 @@
                                 <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"></i> Delete</button>
                             </form>
                         </div>
-                        @switch($surat->jenis->kategori->id)
+                        <div class="col-md-2">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary">Beri Tanggapan</button>
+                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    @switch($surat->jenis->kategori->id)
+                                        @case(1)
+                                            @if ($user->isAdmin() || $user->isPimpinan())
+                                                <a class="dropdown-item" href="{{ route('read.surat.masuk', $disposisi) }}"><i class="far fa-eye"></i> Read</a>
+                                                <a class="dropdown-item" href="{{ route('create.reply.surat.masuk', $disposisi) }}"><i class="fas fa-reply"></i> Reply</a>
+                                                <a class="dropdown-item" href="{{ route('continue.surat.masuk', $disposisi) }}"><i class="fa fa-play"></i> Continue</a>
+                                            @elseif ($user->isDosen())
+                                                <a class="dropdown-item" href="{{ route('read.surat.masuk', $disposisi) }}"><i class="far fa-eye"></i> Read</a>
+                                            @endif
+                                            @break
+                                        @case(2)
+                                            @if ($user->isAdmin()|| $user->isPimpinan())
+                                                <a class="dropdown-item" href="{{ route('ttd.surat.keluar', $disposisi) }}"><i class="fa fa-check"></i> Tanda Tangan</a>
+                                                {{-- <div class="col-md-2">
+                                                    <form action="{{ route('ttd.surat.keluar', $disposisi) }}" method="get">
+                                                        <button type="submit" class="btn btn-primary mr-2 show_ttd" data-toggle="tooltip" title="Tanda Tangan"><i class="fa fa-check"></i> Tanda Tangan</button>
+                                                    </form>
+                                                </div> --}}
+                                            @endif
+                                            @break
+                                        @default
+                                    @endswitch
+                                </div>
+                            </div>
+                        </div>
+                        {{-- @switch($surat->jenis->kategori->id)
                             @case(1)
                                 @if ($user->isAdmin()|| $user->isPimpinan())
                                     <div class="col-sm-2">
@@ -90,10 +122,7 @@
                                 @endif
                                 @break
                             @default
-                        @endswitch
-                        <div class="col-md-2 {{ ($surat->jenis->kategori->id == 2) ? 'offset-md-4' : ''}}">
-                            <a href="" class="btn btn-success" title="Download"><i class="fa fa-download"></i> View File</a>
-                        </div>
+                        @endswitch --}}
                     </div>
                 </div>
                 <div class="col-12 col-md-5">

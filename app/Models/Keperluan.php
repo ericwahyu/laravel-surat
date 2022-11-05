@@ -11,4 +11,8 @@ class Keperluan extends Model
     protected $table = 'keperluan';
     protected $primarykey = 'id';
     protected $fillable = [];
+
+    public function generate(){
+        return $this->hasMany(Generate::class);
+    }
 }
