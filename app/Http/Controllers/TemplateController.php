@@ -207,7 +207,7 @@ class TemplateController extends Controller
             $templateProcessor->setValue('tempat_surat', $request->tempat_surat);
             $templateProcessor->setValue('tanggal_surat', $date);
 
-            // try {
+            try {
                 //add html to word
                 $isiBody = str_replace('<br>','&nbsp;',$request->isi_body);
                 $word = new PhpWord();
@@ -250,9 +250,9 @@ class TemplateController extends Controller
                     }
                 }
 
-            // } catch (\Throwable $th) {
-            //     return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template, Silahkan Ubah !!');
-            // }
+            } catch (\Throwable $th) {
+                return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template, Silahkan Ubah !!');
+            }
 
                 $file_name = now()->timestamp . '_' . 'Testing Template'. '.docx';
                 $templateProcessor->saveAs($file_name);
