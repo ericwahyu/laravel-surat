@@ -47,7 +47,7 @@
                                     <td>{{ $disposisi->isi }}</td>
                                     <td>
                                         <table>
-                                            @foreach (DisposisiController::get_status_dosen($disposisi->id) as $status_dosen)
+                                            @foreach (DisposisiController::get_dosen($disposisi->id) as $status_dosen)
                                                 <tr>
                                                     <td>{{ $status_dosen->nama }}</td>
                                                     @switch($status_dosen->status)
@@ -73,7 +73,7 @@
                                                     @endswitch
                                                 </tr>
                                             @endforeach
-                                            @foreach (DisposisiController::get_status_mahasiswa($disposisi->id) as $status_mahasiswa)
+                                            @foreach (DisposisiController::get_mahasiswa($disposisi->id) as $status_mahasiswa)
                                                 <tr>
                                                     <td>{{ $status_mahasiswa->nama }}</td>
                                                     @switch($status_mahasiswa->status)

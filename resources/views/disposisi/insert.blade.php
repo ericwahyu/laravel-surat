@@ -69,8 +69,21 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group">
+                        {{-- <div class="table-responsive">
+                            <table class="table table-bordered table-md">
+                                <tr>
+                                    <th>Jenis Surat</th>
+                                    <th>Nomor Surat</th>
+                                    <th>Judul Surat</th>
+                                    <th>Tanggal Surat</th>
+                                    <th>Ketengan Surat</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tbody id="dataSuratKeluar"></tbody>
+                            </table>
+                        </div> --}}
                         <div class="table-responsive">
-                            <table class="table table-striped" id="table-2">
+                            <table class="table table-bordered table-md">
                                 <thead>
                                     <tr>
                                         <th>
@@ -103,7 +116,7 @@
                                         @endif
                                     @endforeach
                                     @foreach ($user_mahasiswa as $us_maha)
-                                        @if ($us_maha->user_id === Auth::user()->id)
+                                        @if ($us_maha->user_id == Auth::user()->id)
                                             @continue
                                         @else
                                             <tr>

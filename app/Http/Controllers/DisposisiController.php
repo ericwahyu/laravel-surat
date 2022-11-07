@@ -305,7 +305,18 @@ class DisposisiController extends Controller
     }
 
     public function store_reply(Request $request, Disposisi $disposisi){
-        if (Auth::user()->isAdmin()) {
+        $getStatusDosen = $this->get_dosen($disposisi->id, Auth::user()->id);
+        $getStatusMahasiswa = $this->get_mahasiswa($disposisi->id, Auth::user()->id);
+        if ($getStatusDosen->isNotEmpty()) {
+            foreach($getStatusDosen as $get){
+                $get_status = $get->status;
+            }
+        }elseif($getStatusMahasiswa->isNotEmpty()) {
+            foreach($getStatusMahasiswa as $get){
+                $get_status = $get->status;
+            }
+        }
+        if (Auth::user()->isAdmin()|| $get_status == 1) {
             $disposisiAdmin = new Disposisiuser();
             $disposisiAdmin->disposisi_id = $disposisi->id;
             $disposisiAdmin->user_id =  Auth::user()->id;
@@ -338,7 +349,19 @@ class DisposisiController extends Controller
     }
 
     public function store_read(Disposisi $disposisi){
-        if (Auth::user()->isAdmin()) {
+        $getStatusDosen = $this->get_dosen($disposisi->id, Auth::user()->id);
+        $getStatusMahasiswa = $this->get_mahasiswa($disposisi->id, Auth::user()->id);
+        if ($getStatusDosen->isNotEmpty()) {
+            foreach($getStatusDosen as $get){
+                $get_status = $get->status;
+            }
+        }elseif($getStatusMahasiswa->isNotEmpty()) {
+            foreach($getStatusMahasiswa as $get){
+                $get_status = $get->status;
+            }
+        }
+
+        if (Auth::user()->isAdmin() || $get_status == 1) {
             $disposisiAdmin = new Disposisiuser();
             $disposisiAdmin->disposisi_id = $disposisi->id;
             $disposisiAdmin->user_id =  Auth::user()->id;
@@ -371,7 +394,19 @@ class DisposisiController extends Controller
     }
 
     public function store_continue(Disposisi $disposisi){
-        if (Auth::user()->isAdmin()) {
+        $getStatusDosen = $this->get_dosen($disposisi->id, Auth::user()->id);
+        $getStatusMahasiswa = $this->get_mahasiswa($disposisi->id, Auth::user()->id);
+        if ($getStatusDosen->isNotEmpty()) {
+            foreach($getStatusDosen as $get){
+                $get_status = $get->status;
+            }
+        }elseif($getStatusMahasiswa->isNotEmpty()) {
+            foreach($getStatusMahasiswa as $get){
+                $get_status = $get->status;
+            }
+        }
+
+        if (Auth::user()->isAdmin() || $get_status == 1) {
             $disposisiAdmin = new Disposisiuser();
             $disposisiAdmin->disposisi_id = $disposisi->id;
             $disposisiAdmin->user_id =  Auth::user()->id;
@@ -404,7 +439,19 @@ class DisposisiController extends Controller
     }
 
     public function store_TTD(Disposisi $disposisi){
-        if (Auth::user()->isAdmin()) {
+        $getStatusDosen = $this->get_dosen($disposisi->id, Auth::user()->id);
+        $getStatusMahasiswa = $this->get_mahasiswa($disposisi->id, Auth::user()->id);
+        if ($getStatusDosen->isNotEmpty()) {
+            foreach($getStatusDosen as $get){
+                $get_status = $get->status;
+            }
+        }elseif($getStatusMahasiswa->isNotEmpty()) {
+            foreach($getStatusMahasiswa as $get){
+                $get_status = $get->status;
+            }
+        }
+
+        if (Auth::user()->isAdmin() || $get_status == 1) {
             $disposisiAdmin = new Disposisiuser();
             $disposisiAdmin->disposisi_id = $disposisi->id;
             $disposisiAdmin->user_id =  Auth::user()->id;
@@ -436,22 +483,43 @@ class DisposisiController extends Controller
         }
     }
 
-    public function get_status_dosen($disposisi_id){
-        $status_dosen = DB::table('disposisi_user')
-            ->join('users', 'users.id', '=', 'disposisi_user.user_id')
-            ->join('dosen', 'dosen.user_id', '=', 'users.id')
-            ->where('disposisi_user.disposisi_id', $disposisi_id)
-            ->get();
-            // dd($status_dosen);
-        return $status_dosen;
+    public function get_dosen($disposisi_id = null, $user_id = null){
+        if($disposisi_id != null && $user_id == null){
+            $get_dosen = DB::table('disposisi_user')
+                ->join('users', 'users.id', '=', 'disposisi_user.user_id')
+                ->join('dosen', 'dosen.user_id', '=', 'users.id')
+                ->where('disposisi_user.disposisi_id', $disposisi_id)
+                ->get();
+        }elseif($disposisi_id != null && $user_id != null){
+            $get_dosen = DB::table('disposisi_user')
+                ->join('users', 'users.id', '=', 'disposisi_user.user_id')
+                ->join('dosen', 'dosen.user_id', '=', 'users.id')
+                ->where('disposisi_user.disposisi_id', $disposisi_id)
+                ->where(function($query) use ($user_id){
+                    $query->where('disposisi_user.user_id', $user_id);
+                    })
+                ->get();
+        }
+        return $get_dosen;
     }
 
-    public function get_status_mahasiswa($disposisi_id){
-        $status_mahasiswa = DB::table('disposisi_user')
+    public function get_mahasiswa($disposisi_id = null, $user_id = null){
+        if ($disposisi_id != null && $user_id == null) {
+            $status_mahasiswa = DB::table('disposisi_user')
                 ->join('users', 'users.id', '=', 'disposisi_user.user_id')
                 ->join('mahasiswa', 'mahasiswa.user_id', '=', 'users.id')
                 ->where('disposisi_user.disposisi_id', $disposisi_id)
                 ->get();
+        }elseif($disposisi_id != null && $user_id != null) {
+            $status_mahasiswa = DB::table('disposisi_user')
+                ->join('users', 'users.id', '=', 'disposisi_user.user_id')
+                ->join('mahasiswa', 'mahasiswa.user_id', '=', 'users.id')
+                ->where('disposisi_user.disposisi_id', $disposisi_id)
+                ->where(function($query) use ($user_id){
+                    $query->where('disposisi_user.user_id', $user_id);
+                    })
+                ->get();
+        }
         return $status_mahasiswa;
     }
 }

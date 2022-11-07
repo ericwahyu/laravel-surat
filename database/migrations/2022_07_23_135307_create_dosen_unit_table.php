@@ -19,8 +19,8 @@ class CreateDosenUnitTable extends Migration
             $table->unsignedBigInteger('unit_kerja_id');
             $table->timestamps();
 
-            $table->foreign('dosen_id')->references('id')->on('dosen')->onDelete('cascade');
-            $table->foreign('unit_kerja_id')->references('id')->on('unit_kerja')->onDelete('cascade');
+            $table->foreign('dosen_id')->references('id')->on('dosen');
+            $table->foreign('unit_kerja_id')->references('id')->on('unit_kerja');
         });
     }
 

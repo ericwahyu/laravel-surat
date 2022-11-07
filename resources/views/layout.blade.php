@@ -315,7 +315,7 @@
                 toolbar: [
                     ['font', ['bold', 'italic', 'underline', 'clear']],
                     ['fontname', ['fontname']],
-                    ['fontsize', ['fontsize']],
+                    // ['fontsize', ['fontsize']],
                     ['para', ['paragraph']],
                     ['height', ['height']],
                     // ['table', ['table']]
@@ -328,8 +328,9 @@
                 toolbar: [
                     ['font', ['bold', 'italic', 'underline', 'clear']],
                     ['fontname', ['fontname']],
-                    ['fontsize', ['fontsize']],
+                    // ['fontsize', ['fontsize']],
                     ['para', ['paragraph']],
+                    ['height', ['height']],
                 ],
             });
             $('#summernote2').summernote('fontName', 'Times New Roman');

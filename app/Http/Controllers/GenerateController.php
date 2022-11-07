@@ -234,6 +234,7 @@ class GenerateController extends Controller
             'tanggal' => 'required|date',
             'keterangan' => 'required',
             'catatan' => 'nullable',
+            'file' => 'mimes:docx,doc,pdf',
         ]);
 
         //hapus surat lama
@@ -252,7 +253,19 @@ class GenerateController extends Controller
 
         $generate = Generate::find($request->generate_id);
         $generate->tempat = $request->tempat_surat;
+        // $generate->file = $request->file;
+        if($request->hasFile('file')){
+            //delete file lama
+            $filelama = public_path('surat/generate/tertandatangan/'.$generate->file);
+            File::delete($filelama);
+
+            $file = $request->file('file');
+            $file_name = now()->timestamp . '_' .$file->getClientOriginalName();
+            $file->move('surat/generate/tertandatangan',$file_name);
+            $generate->file = $file_name;
+        }
         $generate->content = $request->isi_body;
+        $generate->footer_content = $request->isi_footer;
         $generate->save();
 
         $template = Template::find($request->template_id);
@@ -332,7 +345,18 @@ class GenerateController extends Controller
     }
 
     public function download_file(Surat $surat){
-        if(file_exists(public_path('surat/generate/'.$surat->file))){
+        $getGenerate = $this->getGenerate($surat->id);
+        foreach($getGenerate as $generate){
+            $fileGenerate = $generate->file;
+        }
+        if($fileGenerate){
+            // dd($fileGenerate);
+            if(file_exists(public_path('surat/generate/tertandatangan/'.$fileGenerate))){
+                return response()->download('surat/generate/tertandatangan/'.$fileGenerate);
+            }else{
+                return back()->with('error', 'Download gagal');
+            }
+        }elseif(file_exists(public_path('surat/generate/'.$surat->file))){
             return response()->download('surat/generate/'.$surat->file);
         }else{
             return back()->with('error', 'Download gagal');
@@ -359,7 +383,7 @@ class GenerateController extends Controller
             $templateProcessor->setValue('tempat_surat', $request->tempat_surat);
             $templateProcessor->setValue('tanggal_surat', $date);
 
-            // try {
+            try {
                 //add html to word
                 $isiBody = str_replace('<br>','&nbsp;',$request->isi_body);
                 $word = new PhpWord();
@@ -403,9 +427,9 @@ class GenerateController extends Controller
                     }
                 }
 
-            // } catch (\Throwable $th) {
-                // return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template, Silahkan Ubah !!');
-            // }
+            } catch (\Throwable $th) {
+                return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template, Silahkan Ubah !!');
+            }
 
             $fileSurat = now()->timestamp . '_' . $request->judul . '.docx';
             $templateProcessor->saveAs($fileSurat);
@@ -451,10 +475,6 @@ class GenerateController extends Controller
             return $mahasiswa;
         }
     }
-
-    // private function addPihak($nip){
-    //     $pihak[] += $nip;
-    // }
 
     //generate nomor surat
     public function generateNomor(Request $request){

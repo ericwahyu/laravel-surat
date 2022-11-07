@@ -92,6 +92,24 @@
                 </div>
             </div>
             <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="formFile" class="form-label" style="font-size: 16px">Upload File Surat</label>
+                            <input class="form-control @error('file') is-invalid @enderror" type="file" id="formFile" name="file" value="{{ old('file') }}">
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                Upload file surat jika sudah tercetak dan terdapat tanda tangan, dengan format .doc/.docx/.pdf !!
+                            </small>
+                            @error('file')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
                 <div class="card-header">
                     <h4>Content Surat</h4>
                 </div>

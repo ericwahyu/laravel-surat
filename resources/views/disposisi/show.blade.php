@@ -66,21 +66,28 @@
                                     @switch($surat->jenis->kategori->id)
                                         @case(1)
                                             @if ($user->isAdmin() || $user->isPimpinan())
-                                                <a class="dropdown-item" href="{{ route('read.surat.masuk', $disposisi) }}"><i class="far fa-eye"></i> Read</a>
+                                                <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
+                                                    <button type="submit" class="dropdown-item show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
+                                                </form>
+                                                <a href="{{ route('create.reply.surat.masuk', $disposisi) }}" class="dropdown-item" title="Reply"><i class="fas fa-reply"></i> Reply</a>
+                                                <form action="{{ route('continue.surat.masuk', $disposisi) }}" method="get">
+                                                    <button type="submit" class="dropdown-item show_continue" data-toggle="tooltip" title="Continue"><i class="fa fa-play"></i> Continue</button>
+                                                </form>
+                                                {{-- <a class="dropdown-item show_read" href="{{ route('read.surat.masuk', $disposisi) }}"><i class="far fa-eye"></i> Read</a>
                                                 <a class="dropdown-item" href="{{ route('create.reply.surat.masuk', $disposisi) }}"><i class="fas fa-reply"></i> Reply</a>
-                                                <a class="dropdown-item" href="{{ route('continue.surat.masuk', $disposisi) }}"><i class="fa fa-play"></i> Continue</a>
-                                            @elseif ($user->isDosen())
-                                                <a class="dropdown-item" href="{{ route('read.surat.masuk', $disposisi) }}"><i class="far fa-eye"></i> Read</a>
+                                                <a class="dropdown-item show_continue" href="{{ route('continue.surat.masuk', $disposisi) }}"><i class="fa fa-play"></i> Continue</a> --}}
+                                            @else
+                                                <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
+                                                    <button type="submit" class="dropdown-item show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
+                                                </form>
                                             @endif
                                             @break
                                         @case(2)
-                                            @if ($user->isAdmin()|| $user->isPimpinan())
-                                                <a class="dropdown-item" href="{{ route('ttd.surat.keluar', $disposisi) }}"><i class="fa fa-check"></i> Tanda Tangan</a>
-                                                {{-- <div class="col-md-2">
-                                                    <form action="{{ route('ttd.surat.keluar', $disposisi) }}" method="get">
-                                                        <button type="submit" class="btn btn-primary mr-2 show_ttd" data-toggle="tooltip" title="Tanda Tangan"><i class="fa fa-check"></i> Tanda Tangan</button>
-                                                    </form>
-                                                </div> --}}
+                                            @if ($user->isAdmin() || $user->isPimpinan())
+                                                {{-- <a class="dropdown-item show_ttd" href="{{ route('ttd.surat.keluar', $disposisi) }}"><i class="fa fa-check"></i> Tanda Tangan</a> --}}
+                                                <form action="{{ route('ttd.surat.keluar', $disposisi) }}" method="get">
+                                                    <button type="submit" class="dropdown-item show_ttd" data-toggle="tooltip" title="Tanda Tangan"><i class="fa fa-check"></i> Tanda Tangan</button>
+                                                </form>
                                             @endif
                                             @break
                                         @default
@@ -128,7 +135,7 @@
                 <div class="col-12 col-md-5">
                     <table class="table">
                         <tbody>
-                            @foreach (DisposisiController::get_status_dosen($disposisi->id) as $sta_dos)
+                            @foreach (DisposisiController::get_dosen($disposisi->id, null) as $sta_dos)
                                 <tr>
                                     <td>{{ $sta_dos->nama }}</td>
                                     <td>:</td>
@@ -155,7 +162,7 @@
                                     @endswitch
                                 </tr>
                             @endforeach
-                            @foreach (DisposisiController::get_status_mahasiswa($disposisi->id) as $sta_maha)
+                            @foreach (DisposisiController::get_mahasiswa($disposisi->id, null) as $sta_maha)
                                 <tr>
                                     <td>{{ $sta_maha->nama }}</td>
                                     <td>:</td>
