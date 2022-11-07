@@ -39,7 +39,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout.login')
 
 
 Route::group(['middleware' => ['auth']], function(){
-    Route::post('/generateNomor', [GenerateController::class, 'generateNomor'])->name('generateNomor');
+    // Route::post('/generateNomor', [GenerateController::class, 'generateNomor'])->name('generateNomor');
 
     Route::get('/dashboard', function(){
         $countUser = User::count();
@@ -108,6 +108,9 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/update/{surat}', [GenerateController::class, 'update'])->name('update.surat.keluar');
         Route::delete('/destroy/{surat}', [GenerateController::class, 'destroy'])->name('destroy.surat.keluar');
         Route::get('/download/{surat}', [GenerateController::class, 'download_file'])->name('download.surat.keluar');
+
+        //generate nomor sarat
+        Route::post('/generateNomor', [GenerateController::class, 'generateNomor'])->name('generateNomor');
     });
 
     Route::prefix('/search/')->group(function(){
