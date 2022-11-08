@@ -54,24 +54,41 @@
                     <h4>Content Template</h4>
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <label style="font-size: 16px">Isi Body Template</label>
-                        <textarea class="summernote" name="isi_body" id="summernote" cols="30" rows="10" required>{{ $template->isi_body }}</textarea>
-                        @error('isi_body')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    @if ($template->isi_footer != null)
-                        <div class="form-group">
-                            <label style="font-size: 16px">Isi Footer Template</label>
-                            <textarea class="summernote2" name="isi_footer" id="summernote2" cols="30" rows="10" required>{{ $template->isi_footer }}</textarea>
-                            @error('isi_footer')
+                    <div class="row">
+                        <div class="form-group col-sm-11">
+                            <label style="font-size: 16px">Body Template</label>
+                            <textarea class="summernote" name="isi_body" id="summernote" cols="30" rows="10" required>{{ $template->isi_body }}</textarea>
+                            @error('isi_body')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
+                        </div>
+                        <div class="form-group col-sm-1">
+                            <a data-toggle="tooltip" title="Langkah Penulisan Content :
+                                                            1. Untuk nomor surat di inputkan variable ${nomor_surat}.
+                                                            2. Jika muncul peringatan terjadi kesalahan menulis maka edit ulang isi content, karena ada beberapa tag html yang tidak terbaca oleh PHPWORD." >
+                            <i class="fas fa-exclamation-circle"></i><b> info</b></a>
+                        </div>
+                    </div>
+                    @if ($template->isi_footer != null)
+                        <div class="row">
+                            <div class="form-group col-sm-11">
+                                <label style="font-size: 16px">Footer Template</label>
+                                <textarea class="summernote2" name="isi_footer" id="summernote2" cols="30" rows="10" required>{{ $template->isi_footer }}</textarea>
+                                @error('isi_footer')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-sm-1">
+                                <a data-toggle="tooltip" title="Footer adalah paragraf yang terletak di bawah tandatangan,
+                                                            Langkah Penulisan footer:
+                                                            1. Penulisan seperti paragraf biasa.
+                                                            2. Jika muncul peringatan terjadi kesalahan menulis maka edit ulang isi content, karena ada beberapa tag html yang tidak terbaca oleh PHPWORD." >
+                            <i class="fas fa-exclamation-circle"></i><b> info</b></a>
+                            </div>
                         </div>
                     @endif
                     <div class="form-group">
