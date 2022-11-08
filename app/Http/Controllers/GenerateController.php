@@ -147,6 +147,7 @@ class GenerateController extends Controller
         $generate->surat_id = $surat->id;
         $generate->keperluan_id = $request->keperluan_id;
         $generate->content = $request->isi_body;
+        $generate->footer_content = $request->isi_footer;
         $generate->tempat = $request->tempat_surat;
         $generate->save();
 

@@ -108,14 +108,15 @@
                         @enderror
                     </div>
                     <div class="form-group col-sm-1" style="margin-top: 10px">
-                        <a data-toggle="tooltip" title="Langkah Penulisan Content Surat :
-                                                        1. Untuk nomor surat di inputkan variable ${nomor_surat}
-                                                        2. Jika muncul peringatan terjadi kesalahan menulis maka edit ulang isi content, karena ada beberapa tag html yang tidak terbaca oleh PHPWORD" >
+                        <a data-toggle="tooltip" title="Langkah Penulisan Content :
+                                                        1. Untuk nomor surat di inputkan variable ${nomor_surat}.
+                                                        2. Jika muncul peringatan terjadi kesalahan menulis maka edit ulang isi content, karena ada beberapa tag html yang tidak terbaca oleh PHPWORD." >
                         <i class="fas fa-exclamation-circle"></i><b> info</b></a>
                     </div>
                 </div>
                 @if ($template->isi_footer != null)
-                    <div class="form-group">
+                <div class="row">
+                    <div class="form-group col-sm-11">
                         <label style="font-size: 16px">Isi Footer Template</label>
                         <textarea class="summernote2" name="isi_footer" id="summernote2" cols="30" rows="10" required>{{ $template->isi_footer }}</textarea>
                         @error('isi_footer')
@@ -124,7 +125,19 @@
                             </div>
                         @enderror
                     </div>
+                    <div class="form-group col-sm-1" style="margin-top: 10px">
+                        <a data-toggle="tooltip" title="Footer adalah paragraf yang terletak di bawah tandatangan,
+                                                        Langkah Penulisan footer:
+                                                        1. Penulisan seperti paragraf biasa.
+                                                        2. Jika muncul peringatan terjadi kesalahan menulis maka edit ulang isi content, karena ada beberapa tag html yang tidak terbaca oleh PHPWORD." >
+                        <i class="fas fa-exclamation-circle"></i><b> info</b></a>
+                    </div>
+                </div>
                 @endif
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
                 <div class="row mt-md-3">
                     <label style="font-size: 16px">Tanda Tangan</label>
                     @for ($ttd = 1; $ttd <= $template->jumlah_ttd; $ttd++)

@@ -5,7 +5,7 @@
     <div class="section-header-back">
         <a href="{{ route('index.surat.keluar') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <h1>Detail Surat Masuk <b>{{ $surat->judul }}</b></h1>
+    <h1>Detail Surat Keluar <b>{{ $surat->judul }}</b></h1>
 </div>
 
 <div class="section-body">
