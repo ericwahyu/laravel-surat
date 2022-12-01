@@ -19,6 +19,20 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
+                            <label style="font-size: 16px" class="form-label">Format Surat</label>
+                            <select class="form-control @error('format_id') is-invalid @enderror" name="format_id">
+                                <option disabled selected>-- Format Surat--</option>
+                                @foreach ($format as $format)
+                                    <option value="{{ $format->id }}" {{ (old("format_id") == $format->id ? "selected":"") }}>{{ $format->nama }}</option>
+                                @endforeach
+                            </select>
+                            @error('format_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label style="font-size: 16px">Nama Keperluan Surat</label>
                             <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" placeholder="Nama" value="{{ old('nama') }}">
                             @error('nama')

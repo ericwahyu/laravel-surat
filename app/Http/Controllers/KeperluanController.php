@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Keperluan;
+use App\Models\Format;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\Auth;
 
@@ -36,8 +37,9 @@ class KeperluanController extends Controller
         $nav = 'umum';
         $menu = 'keperluan';
         $user = Auth::user();
+        $format = Format::all();
 
-        return view('keperluan.insert', compact('nav', 'menu', 'user'));
+        return view('keperluan.insert', compact('nav', 'menu', 'user', 'format'));
     }
 
     /**
@@ -50,12 +52,15 @@ class KeperluanController extends Controller
     {
         //
         $request->validate([
-            'nama' => 'required|max:100'
+            'format_id' => 'required',
+            'nama' => 'required|max:100',
+            'kode' => 'required'
         ]);
 
         $keperluan = new Keperluan();
+        $keperluan->format_id = $request->format_id;
         $keperluan->nama = $request->nama;
-        $keperluan->kode = strtoupper($request->kode);
+        $keperluan->kode = $request->kode;
         $keperluan->save();
 
         return redirect()->route('index.keperluan')->with('success', 'Berhasil tambah data !!');
@@ -85,8 +90,9 @@ class KeperluanController extends Controller
         $nav = 'umum';
         $menu = 'keperluan';
         $user = Auth::user();
+        $format = Format::all();
 
-        return view('keperluan.update', compact('nav', 'menu', 'user', 'keperluan'));
+        return view('keperluan.update', compact('nav', 'menu', 'user', 'keperluan', 'format'));
     }
 
     /**
@@ -100,12 +106,14 @@ class KeperluanController extends Controller
     {
         //
         $request->validate([
+            'format_id' => 'required',
             'nama' => 'required|max:100',
             'kode' => 'required|max:100'
         ]);
 
+        $keperluan->format_id = $request->format_id;
         $keperluan->nama = $request->nama;
-        $keperluan->kode = strtoupper($request->kode);
+        $keperluan->kode = $request->kode;
         $keperluan->save();
 
         return redirect()->route('index.keperluan')->with('success', 'Data berhasil di Update !!');

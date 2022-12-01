@@ -21,10 +21,10 @@
                         <div class="form-group">
                             <label style="font-size: 16px">Kategori Jenis Surat</label>
                             <select class="form-control @error('kategori_id') is-invalid @enderror" name="kategori_id">
-                                <option selected value="{{ $jenis->kategori_id }}">{{ $jenis->kategori->nama_kategori }}</option>
+                                <option selected value="{{ $jenis->kategori_id }}">{{ $jenis->kategori->nama }}</option>
                                 @foreach ($kategori as $kategori)
                                     @if ($kategori->id != $jenis->kategori_id)
-                                        <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
+                                        <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="form-group">
                             <label style="font-size: 16px">Nama Jenis Surat</label>
-                            <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" placeholder="" value="{{ $jenis->nama_jenis }}">
+                            <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" placeholder="" value="{{ $jenis->nama }}">
                             @error('nama')
                                 <div class="invalid-feedback">
                                     {{ $message }}

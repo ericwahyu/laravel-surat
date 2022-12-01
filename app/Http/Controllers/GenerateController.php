@@ -12,6 +12,7 @@ use App\Models\Mahasiswa;
 use App\Models\Dosen;
 use App\Models\Keperluan;
 use App\Models\PihakTTD;
+use App\Models\Format;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
@@ -105,8 +106,8 @@ class GenerateController extends Controller
         $dosen = Dosen::all();
         $mahasiswa = Mahasiswa::all();
         $keperluan = Keperluan::all();
-        // dd($keperluan);
-        return view('surat keluar.insert', compact('nav', 'menu', 'template','keperluan', 'jenis', 'dosen', 'mahasiswa'));
+        $format = Format::all();
+        return view('surat keluar.insert', compact('nav', 'menu', 'template','keperluan', 'jenis', 'dosen', 'mahasiswa', 'format'));
     }
 
     /**
@@ -429,7 +430,7 @@ class GenerateController extends Controller
                 }
 
             } catch (\Throwable $th) {
-                return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template, Silahkan Ubah !!');
+                return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi content atau footer content, Silahkan Ubah !!');
             }
 
             $fileSurat = now()->timestamp . '_' . $request->judul . '.docx';
@@ -477,23 +478,40 @@ class GenerateController extends Controller
         }
     }
 
+    //form generate nomor surat
+    public function getKeperluan(Request $request){
+        $format_id = $request->get('id');
+        $data['keperluan'] = Keperluan::where('format_id', $format_id)->get();
+        return response()->json($data);
+    }
+
     //generate nomor surat
     public function generateNomor(Request $request){
-        $request->validate([
-            'keperluan_id' => 'required',
-        ]);
-        $keperluan = Keperluan::find($request->input('keperluan_id'))->first();
-        $data = $request->input('surat');
+
+        $keperluan = Keperluan::find($request->input('keperluan_id'));
 
         // karna array dimulai dari 0 maka kita tambah di awal data kosong
+        $noUrutAkhir = Generate::where('keperluan_id', $keperluan->id)->count();
+
         // bisa juga mulai dari "1"=>"I"
         $bulanRomawi = array("", "I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
-        $noUrutAkhir = Generate::where('keperluan_id', $keperluan->id)->count();
-        if($noUrutAkhir) {
-           $nomor = sprintf("%03s", abs($noUrutAkhir + 1)) .'/'. $keperluan->kode .'/'. 'ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
-        }
-        else {
-          $nomor = sprintf("%03s", 1) .'/'. $keperluan->kode .'/'. 'ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
+        switch($request->input('format')){
+            case 1 :
+                if($noUrutAkhir) {
+                   $nomor = sprintf("%02s", abs($noUrutAkhir + 1)) .'.'. $request->input('huruf') .'/'. $keperluan->kode .'/'. 'FTETI-ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
+                }
+                else {
+                  $nomor = sprintf("%02s", 1) .'.'. $request->input('huruf') .'/'. $keperluan->kode .'/'. 'FTETI-ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
+                }
+                break;
+            case 2 :
+                if($noUrutAkhir) {
+                   $nomor = sprintf("%03s", abs($noUrutAkhir + 1)) .'/'. $keperluan->kode .'/'. 'ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
+                }
+                else {
+                  $nomor = sprintf("%03s", 1) .'/'. $keperluan->kode .'/'. 'ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
+                }
+                break;
         }
         return response()->json([
             'nomor' => $nomor,

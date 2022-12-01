@@ -22,6 +22,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
+                                    <th>Format Surat</th>
                                     <th>Nama Keperluan Surat</th>
                                     <th>Kode Keperluan Surat</th>
                                     <th>Action</th>
@@ -35,6 +36,7 @@
                                             <i class="fas fa-th"></i>
                                             </div>
                                         </td>
+                                        <td>{{ $data->format->nama }}</td>
                                         <td>{{ $data->nama }}</td>
                                         <td>{{ $data->kode }}</td>
                                         <td>

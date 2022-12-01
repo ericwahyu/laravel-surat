@@ -7,7 +7,8 @@
         <title>@yield('title')</title>
 
         <!-- General CSS Files -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+        {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"> --}}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/fontawesome/css/all.min.css') }}">
 
@@ -21,9 +22,9 @@
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/modules/ionicons/css/ionicons.min.css') }}">
 
         {{-- Summernote --}}
-        {{-- <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet"> --}}
         <link rel="stylesheet" href="{{ asset('assets/modules/summernote/summernote-bs4.css') }}">
 
 
@@ -32,7 +33,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
 
         <!-- Start GA -->
-        {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
         <script async src="{{ asset('https://www.googletagmanager.com/gtag/js?id=UA-94034622-3') }}"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -51,135 +52,9 @@
                     <form class="form-inline mr-auto">
                         <ul class="navbar-nav mr-3">
                             <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="fas fa-bars"></i></a></li>
-                            <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="fas fa-search"></i></a></li>
                         </ul>
                     </form>
-                    <ul class="navbar-nav navbar-right position-absolute top-45 end-0">
-                        {{-- <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown" class="nav-link nav-link-lg message-toggle beep"><i class="far fa-envelope"></i></a>
-                            <div class="dropdown-menu dropdown-list dropdown-menu-right">
-                                <div class="dropdown-header">Messages
-                                    <div class="float-right">
-                                        <a href="#">Mark All As Read</a>
-                                    </div>
-                                </div>
-                                <div class="dropdown-list-content dropdown-list-message">
-                                    <a href="#" class="dropdown-item dropdown-item-unread">
-                                        <div class="dropdown-item-avatar">
-                                            <img alt="image" src="assets/img/avatar/avatar-1.png" class="rounded-circle">
-                                            <div class="is-online"></div>
-                                        </div>
-                                        <div class="dropdown-item-desc">
-                                            <b>Kusnaedi</b>
-                                            <p>Hello, Bro!</p>
-                                            <div class="time">10 Hours Ago</div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="dropdown-item dropdown-item-unread">
-                                        <div class="dropdown-item-avatar">
-                                            <img alt="image" src="assets/img/avatar/avatar-2.png" class="rounded-circle">
-                                        </div>
-                                        <div class="dropdown-item-desc">
-                                            <b>Dedik Sugiharto</b>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                                            <div class="time">12 Hours Ago</div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="dropdown-item dropdown-item-unread">
-                                        <div class="dropdown-item-avatar">
-                                            <img alt="image" src="assets/img/avatar/avatar-3.png" class="rounded-circle">
-                                            <div class="is-online"></div>
-                                        </div>
-                                        <div class="dropdown-item-desc">
-                                            <b>Agung Ardiansyah</b>
-                                            <p>Sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                            <div class="time">12 Hours Ago</div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <div class="dropdown-item-avatar">
-                                            <img alt="image" src="assets/img/avatar/avatar-4.png" class="rounded-circle">
-                                        </div>
-                                        <div class="dropdown-item-desc">
-                                            <b>Ardian Rahardiansyah</b>
-                                            <p>Duis aute irure dolor in reprehenderit in voluptate velit ess</p>
-                                            <div class="time">16 Hours Ago</div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <div class="dropdown-item-avatar">
-                                            <img alt="image" src="assets/img/avatar/avatar-5.png" class="rounded-circle">
-                                        </div>
-                                        <div class="dropdown-item-desc">
-                                            <b>Alfa Zulkarnain</b>
-                                            <p>Exercitation ullamco laboris nisi ut aliquip ex ea commodo</p>
-                                            <div class="time">Yesterday</div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="dropdown-footer text-center">
-                                    <a href="#">View All <i class="fas fa-chevron-right"></i></a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg beep"><i class="far fa-bell"></i></a>
-                            <div class="dropdown-menu dropdown-list dropdown-menu-right">
-                                <div class="dropdown-header">Notifications
-                                    <div class="float-right">
-                                    <a href="#">Mark All As Read</a>
-                                    </div>
-                                </div>
-                                <div class="dropdown-list-content dropdown-list-icons">
-                                    <a href="#" class="dropdown-item dropdown-item-unread">
-                                        <div class="dropdown-item-icon bg-primary text-white">
-                                            <i class="fas fa-code"></i>
-                                        </div>
-                                        <div class="dropdown-item-desc">
-                                            Template update is available now!
-                                            <div class="time text-primary">2 Min Ago</div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <div class="dropdown-item-icon bg-info text-white">
-                                            <i class="far fa-user"></i>
-                                        </div>
-                                        <div class="dropdown-item-desc">
-                                            <b>You</b> and <b>Dedik Sugiharto</b> are now friends
-                                            <div class="time">10 Hours Ago</div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <div class="dropdown-item-icon bg-success text-white">
-                                            <i class="fas fa-check"></i>
-                                        </div>
-                                        <div class="dropdown-item-desc">
-                                            <b>Kusnaedi</b> has moved task <b>Fix bug header</b> to <b>Done</b>
-                                            <div class="time">12 Hours Ago</div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <div class="dropdown-item-icon bg-danger text-white">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </div>
-                                        <div class="dropdown-item-desc">
-                                            Low disk space. Let's clean it!
-                                            <div class="time">17 Hours Ago</div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <div class="dropdown-item-icon bg-info text-white">
-                                            <i class="fas fa-bell"></i>
-                                        </div>
-                                        <div class="dropdown-item-desc">
-                                            Welcome to Stisla template!
-                                            <div class="time">Yesterday</div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="dropdown-footer text-center">
-                                    <a href="#">View All <i class="fas fa-chevron-right"></i></a>
-                                </div>
-                            </div>
-                        </li> --}}
+                    <ul class="navbar-nav navbar-right">
                         <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                             @foreach (Auth::user()->mahasiswa as $user_mahasiswa)
                                 <div class="d-sm-none d-lg-inline-block">{{ $user_mahasiswa->nama }}</div></a>
@@ -217,12 +92,7 @@
                         </div>
                         <ul class="sidebar-menu">
                             <li class="menu-header">Dashboard</li>
-                            <li class="dropdown {{ ($nav == 'dashboard') ? 'active' : '' }}">
-                                <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Dashboard</span></a>
-                                <ul class="dropdown-menu">
-                                    <li class="{{ ($menu == 'dashboard') ? 'active' : '' }}"><a class="nav-link" href="{{ route('dashboard') }}">General Dashboard</a></li>
-                                </ul>
-                            </li>
+                            <li class="{{ ($menu == 'dashboard') ? 'active' : '' }}"><a class="nav-link" href="{{ route('dashboard') }}"><i class="ion-ios-home"></i> <span> Dashboard</span></a></li>
                             <li class="menu-header">Master Surat</li>
                             <li class="dropdown {{ ($nav == 'umum') ? 'active' : '' }}">
                                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Umum</span></a>
@@ -287,8 +157,8 @@
 
         <!-- JS Libraies -->
         <script src="{{ asset('assets/modules/prism/prism.js') }}"></script>
-        <script src="{{ asset('assets/modules/cleave-js/dist/cleave.min.js') }}"></script>
-        <script src="{{ asset('assets/modules/cleave-js/dist/addons/cleave-phone.us.js') }}"></script>
+        {{-- <script src="{{ asset('assets/modules/cleave-js/dist/cleave.min.js') }}"></script>
+        <script src="{{ asset('assets/modules/cleave-js/dist/addons/cleave-phone.us.js') }}"></script> --}}
         <script src="{{ asset('assets/modules/jquery-pwstrength/jquery.pwstrength.min.js') }}"></script>
         <script src="{{ asset('assets/modules/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
         <script src="{{ asset('assets/modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}"></script>
@@ -302,7 +172,7 @@
         <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
 
         <!-- Page Specific JS File -->
-        <script src="{{ asset('assets/js/page/forms-advanced-forms.js') }}"></script>
+        {{-- <script src="{{ asset('assets/js/page/forms-advanced-forms.js') }}"></script> --}}
         <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-ion-icons.js') }}"></script>
         <script src="{{ asset('assets/js/page/bootstrap-modal.js') }}"></script>

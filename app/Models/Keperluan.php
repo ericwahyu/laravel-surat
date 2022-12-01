@@ -15,4 +15,8 @@ class Keperluan extends Model
     public function generate(){
         return $this->hasMany(Generate::class);
     }
+
+    public function format(){
+        return $this->belongsTo(Format::class);
+    }
 }

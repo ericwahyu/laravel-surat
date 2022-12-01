@@ -251,7 +251,7 @@ class TemplateController extends Controller
                 }
 
             } catch (\Throwable $th) {
-                return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template, Silahkan Ubah !!');
+                return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template atau footer template, Silahkan Ubah !!');
             }
 
                 $file_name = now()->timestamp . '_' . 'Testing Template'. '.docx';

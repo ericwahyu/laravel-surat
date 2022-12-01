@@ -14,7 +14,7 @@
         <input type="hidden" name="template_id" value="{{ $template->id }}">
         <div class="card">
             <div class="card-header">
-                <h4>Testing Template</h4>
+                <h4>Data Template</h4>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -33,6 +33,13 @@
                         <input type="date" class="form-control @error('tanggal_surat') is-invalid @enderror" name="tanggal_surat" value="{{ old('tanggal_surat') }}" required>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h4>Content Template</h4>
+            </div>
+            <div class="card-body">
                 <div class="row">
                     <div class="form-group col-sm-11">
                         <label style="font-size: 16px">Body Template</label>

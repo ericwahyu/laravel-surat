@@ -11,65 +11,63 @@
 <div class="section-body">
     <form action="{{ route('store.surat.keluar') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <div class="row">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Data Surat</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <label style="font-size: 16px">Jenis Surat</label>
-                            <select class="form-control @error('jenis_id') is-invalid @enderror" name="jenis_id">
-                                <option disabled selected>-- Jenis Surat--</option>
-                                @foreach ($jenis as $jenis)
-                                    <option value="{{ $jenis->id }}" {{ (old("jenis_id") == $jenis->id ? "selected":"") }}>{{ $jenis->nama }}</option>
-                                @endforeach
-                            </select>
-                            @error('jenis_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label style="font-size: 16px">Keterangan Surat</label>
-                            <input type="text" class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" value="{{ old('keterangan') }}">
-                            @error('keterangan')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <label style="font-size: 16px">Judul Surat</label>
-                            <input type="text" class="form-control @error('judul') is-invalid @enderror" name="judul" value="{{ $template->nama }}">
-                            @error('judul')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label style="font-size: 16px">Catatan</label>
-                            <input type="text" class="form-control @error('catatan') is-invalid @enderror" name="catatan" value="{{ old('catatan') }}">
-                            <small id="passwordHelpBlock" class="form-text text-muted">
-                                Masukkan catatan jika ada perlu !!
-                            </small>
-                            @error('keterangan')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-                {{-- hidden input --}}
-                    <input type="hidden" name="template_id" value="{{ $template->id }}">
-                    <input type="hidden" name="keperluan_id" id="keperluanId">
+        <div class="card">
+            <div class="card-header">
+                <h4>Data Surat</h4>
             </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label style="font-size: 16px">Jenis Surat</label>
+                        <select class="form-control @error('jenis_id') is-invalid @enderror" name="jenis_id">
+                            <option disabled selected>-- Jenis Surat--</option>
+                            @foreach ($jenis as $jenis)
+                                <option value="{{ $jenis->id }}" {{ (old("jenis_id") == $jenis->id ? "selected":"") }}>{{ $jenis->nama }}</option>
+                            @endforeach
+                        </select>
+                        @error('jenis_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label style="font-size: 16px">Keterangan Surat</label>
+                        <input type="text" class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" value="{{ old('keterangan') }}">
+                        @error('keterangan')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label style="font-size: 16px">Judul Surat</label>
+                        <input type="text" class="form-control @error('judul') is-invalid @enderror" name="judul" value="{{ $template->nama }}">
+                        @error('judul')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label style="font-size: 16px">Catatan</label>
+                        <input type="text" class="form-control @error('catatan') is-invalid @enderror" name="catatan" value="{{ old('catatan') }}">
+                        <small id="passwordHelpBlock" class="form-text text-muted">
+                            Masukkan catatan jika ada perlu !!
+                        </small>
+                        @error('keterangan')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            {{-- hidden input --}}
+                <input type="hidden" name="template_id" value="{{ $template->id }}">
+                <input type="hidden" name="keperluan_id" id="keperluanId">
         </div>
         <div class="card">
             <div class="card-header">
@@ -83,8 +81,7 @@
                     </div>
                     <div class="form-group col-md-6" style="margin-top: 32px">
                         <!-- Button trigger modal -->
-                        {{-- <a class="btn btn-primary" id="btn-Modal" onclick="modal()">Generate Nomor</a> --}}
-                        <button class="btn btn-primary" id="btn-Modal" onclick="modal()">Generate Nomor</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">Generate Nomor</button>
                     </div>
                 </div>
                 <div class="row">
@@ -119,14 +116,9 @@
                     <div class="form-group col-sm-11">
                         <label style="font-size: 16px">Isi Footer Template</label>
                         <textarea class="summernote2" name="isi_footer" id="summernote2" cols="30" rows="10" required>{{ $template->isi_footer }}</textarea>
-                        @error('isi_footer')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
                     </div>
                     <div class="form-group col-sm-1" style="margin-top: 10px">
-                        <a data-toggle="tooltip" title="Footer adalah paragraf yang terletak di bawah tandatangan,
+                        <a data-toggle="tooltip" title="Footer adalah paragraf yang terletak di bawah tandatangan, jika tidak ada footer maka kosongi
                                                         Langkah Penulisan footer:
                                                         1. Penulisan seperti paragraf biasa.
                                                         2. Jika muncul peringatan terjadi kesalahan menulis maka edit ulang isi content, karena ada beberapa tag html yang tidak terbaca oleh PHPWORD." >
@@ -166,48 +158,73 @@
 </div>
 @endsection
 @section('modal')
-    <!-- Modal -->
-    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+<!-- Modal -->
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Generate Nomor Surat</h1>
-                {{-- <a href="" type="button" class="btn-close" data-dismiss="modal" aria-hidden="true"></a> --}}
-                <button type="button" class="btn-close" data-dismiss="modal" aria-hidden="true"></button>
+                <h5 class="modal-title" id="exampleModalLabel">Generate Nomor Surat</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="form-generate">
                     @csrf
                     <div class="form-group">
-                        <label style="font-size: 16px">Keperluan Surat</label>
-                        <select class="form-control @error('keperluan_id') is-invalid @enderror" name="keperluan_id">
-                            <option disabled selected>-- Keperluan Surat--</option>
-                            @foreach ($keperluan as $keperluan)
-                                <option value="{{ $keperluan->id }}" {{ (old("keperluan_id") == $keperluan->id ? "selected":"") }}>{{ $keperluan->nama }} -- {{ $keperluan->kode }}</option>
+                        <label style="font-size: 16px">Format Nomor Surat</label>
+                        <select class="form-control" name="format" id="format">
+                            <option disabled selected>-- Format Nomor Surat--</option>
+                            @foreach ($format as $format)
+                                <option value="{{ $format->id }}" {{ (old("format_id") == $format->id ? "selected":"") }}>{{ $format->nama }}</option>
                             @endforeach
+                            {{-- <option value="1">FTETI</option> --}}
+                            {{-- <option value="2">Jurusan Informatika</option> --}}
                         </select>
-                        @error('keperluan_id')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Generate</button>
-                </div>
-            </form>
-        </div>
+                    <div class="form-group">
+                        <label style="font-size: 16px">Keperluan Surat</label>
+                        <select class="form-control keperluan" name="keperluan_id" id="keperluan">
+                            {{-- <option disabled selected>-- Keperluan Surat --</option> --}}
+                            {{-- @foreach ($keperluan as $keperluan)
+                                <option value="{{ $keperluan->id }}" {{ (old("keperluan_id") == $keperluan->id ? "selected":"") }}>{{ $keperluan->nama }} -- {{ $keperluan->kode }}</option>
+                            @endforeach --}}
+                        </select>
+                    </div>
+                    <div class="form-group" id="huruf">
+                        <label style="font-size: 16px">Kode Huruf</label>
+                        <input type="text" class="form-control huruf" name="huruf">
+                    </div>
+            </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Generate</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+  </div>
 @endsection
 @section('script')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     $('document').ready(function(){
+        //format nomor
+        // $('.huruf').attr("required", false);
+        $('#huruf').hide();
+        $('#format').change(function() {
+            $('#huruf').hide();
+            $('.huruf').removeAttr('required');
+            let format_id = $(this).val();
+            // console.log(format_id)
+            if(format_id == 1){
+                $('#huruf').show();
+                $('.huruf').attr("required", true);
+            }
+        });
+
+        //generate nomor
         $('#form-generate').on('submit', function(e){
             e.preventDefault();
-
             $.ajax({
                 type : "POST",
                 url : "{{ route('generateNomor') }}",
@@ -224,11 +241,32 @@
                 }
             });
         });
+
+        $('#format').change(function(){
+            let formatID = $(this).val();
+            if(formatID){
+                $.ajax({
+                    type:"GET",
+                    url:"{{ route('getKeperluan') }}",
+                    data: {'id': formatID},
+                    dataType: 'JSON',
+                    success:function(response){
+                        console.log(response);
+                        if(response){
+                            $("#keperluan").empty();
+                            $("#keperluan").append('<option>---Pilih keperluan surat---</option>');
+                            $.each(response.keperluan,function(key, value){
+                                $("#keperluan").append('<option value="'+value.id+'">'+value.nama+' -- '+value.kode+'</option>');
+                            });
+                        }else{
+                            $("#keperluan").empty();
+                        }
+                    }
+                });
+            }else{
+                $("#keperluan").empty();
+            }
+        });
     });
-
-    function modal(){
-        $('#modal').modal('show'); //modal tampil
-    }
-
 </script>
 @endsection

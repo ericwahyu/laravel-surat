@@ -112,6 +112,7 @@ Route::group(['middleware' => ['auth']], function(){
         //generate nomor sarat
         Route::post('/generateNomor', [GenerateController::class, 'generateNomor'])->name('generateNomor');
     });
+    Route::get('/getKeperluan', [GenerateController::class, 'getKeperluan'])->name('getKeperluan');
 
     Route::prefix('/search/')->group(function(){
         Route::get('/', [SearchController::class, 'index'])->name('index.search');
