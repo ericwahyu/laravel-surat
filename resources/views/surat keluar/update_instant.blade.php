@@ -34,9 +34,9 @@
                         @enderror
                     </div>
                     <div class="form-group col-md-6">
-                        <label style="font-size: 16px">Tanggal Surat</label>
-                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ $surat->tanggal }}">
-                        @error('tanggal')
+                        <label style="font-size: 16px">Tempat Surat</label>
+                        <input type="text" class="form-control @error('tempat_surat') is-invalid @enderror" name="tempat_surat" value="{{ $generate->tempat }}">
+                        @error('tempat_surat')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
@@ -46,8 +46,8 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label style="font-size: 16px">Nomor Surat</label>
-                        <input type="text" class="form-control @error('nomor') is-invalid @enderror" name="nomor_surat" readonly="" value="{{ $surat->nosurat }}" >
-                        @error('nomor')
+                        <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" name="nomor_surat" value="{{ $surat->nosurat }}" >
+                        @error('nomor_surat')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -75,7 +75,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label style="font-size: 16px">Catatan</label>
-                        <input type="text" class="form-control @error('catatan') is-invalid @enderror" name="catatan" value="">
+                        <input type="text" class="form-control @error('catatan') is-invalid @enderror" name="catatan" value="{{ old('catatan') }}">
                         <small id="passwordHelpBlock" class="form-text text-muted">
                             Masukkan catatan jika ada perlu !!
                         </small>
@@ -85,8 +85,29 @@
                             </div>
                         @enderror
                     </div>
-                    <input type="hidden" name="generate_id" value="{{ $generate->id }}">
-                    <input type="hidden" name="template_id" value="{{ $generate->template->id }}">
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label style="font-size: 16px">Tanggal Surat</label>
+                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ $surat->tanggal }}">
+                        @error('tanggal')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="formFile" class="form-label" style="font-size: 16px">Upload File Surat</label>
+                        <input class="form-control @error('file') is-invalid @enderror" type="file" id="formFile" name="file" value="{{ old('file') }}">
+                        <small id="passwordHelpBlock" class="form-text text-muted">
+                            Upload file surat jika sudah tercetak dan terdapat tanda tangan, dengan format .doc/.docx/.pdf !!
+                        </small>
+                        @error('file')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                 </div>
                 <div class="row">
                     @if ($user->isAdmin())
@@ -109,16 +130,21 @@
                         </div>
                     @endif
                 </div>
+                {{-- <input type="hidden" name="template_id" value="{{ $generate->template->id }}"> --}}
+                <input type="hidden" name="generate_id" value="{{ $generate->id }}">
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Simpan Data</button>
             </div>
         </div>
-        <div class="card">
+        {{-- <div class="card">
             <div class="card-body">
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="formFile" class="form-label" style="font-size: 16px">Upload File Surat</label>
-                        <input class="form-control @error('file') is-invalid @enderror" type="file" name="file" value="{{ old('file') }}">
+                        <input class="form-control @error('file') is-invalid @enderror" type="file" id="formFile" name="file" value="{{ old('file') }}">
                         <small id="passwordHelpBlock" class="form-text text-muted">
-                            Upload file surat jika sudah memperbaiki format penulisan atau file surat yang sudah terdapat tandatangan, dengan format .doc/.docx/.pdf !!
+                            Upload file surat jika sudah tercetak dan terdapat tanda tangan, dengan format .doc/.docx/.pdf !!
                         </small>
                         @error('file')
                             <div class="invalid-feedback">
@@ -128,8 +154,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card">
+        </div> --}}
+        {{-- <div class="card">
             <div class="card-header">
                 <h4>Content Surat</h4>
             </div>
@@ -182,8 +208,8 @@
                 </div>
                 @endif
             </div>
-        </div>
-        <div class="card">
+        </div> --}}
+        {{-- <div class="card">
             <div class="card-body">
                 <div class="row mt-md-3">
                     <label style="font-size: 16px">Tanda Tangan</label>
@@ -201,18 +227,13 @@
                                     @endif
                                         <option value="{{ $dosens->id }}" {{ (old("tertanda_1") == $dosens->user_id ? "selected":"") }}>{{ $dosens->nama }}</option>
                                 @endforeach
-                                {{-- @foreach ($mahasiswa as $mahasiswas)
-                                    <option value="{{ $mahasiswas->user_id }}" {{ (old("tertanda_1") == $mahasiswas->user_id ? "selected":"") }}>{{ $mahasiswas->nama }}</option>
-                                @endforeach --}}
                             </select>
                         </div>
                     @endfor
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Simpan Data</button>
-                </div>
             </div>
-        </div>
+        </div> --}}
+
     </form>
 </div>
 @endsection

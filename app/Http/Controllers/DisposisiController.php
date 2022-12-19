@@ -35,7 +35,7 @@ class DisposisiController extends Controller
         }
         $nav = 'transaksi';
         $user = Auth::user();
-        if($user->isAdmin() == 1){
+        if($user->isAdmin()){
             $data = Disposisi::join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
                         ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                         ->where('surat_id', $surat->id)

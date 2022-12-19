@@ -53,6 +53,18 @@
                                     </div>
                                 @enderror
                             </div>
+                            <div class="form-group">
+                                <label style="font-size: 16px">Format Penomoran Surat</label>
+                                <input type="text" class="form-control @error('penomoran') is-invalid @enderror" name="penomoran" placeholder="" value="{{ $keperluan->penomoran }}">
+                                <small id="passwordHelpBlock" class="form-text text-muted">
+                                    Jika format nomor 021/JTC/ITATS/XI/2022, maka masukkan dengan {nomor_urut}/{kode}/ITATS/{bulan}/{tahun}
+                                </small>
+                                @error('penomoran')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Simpan Data</button>
                             </div>

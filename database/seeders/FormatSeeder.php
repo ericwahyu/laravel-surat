@@ -17,12 +17,22 @@ class FormatSeeder extends Seeder
         //
         $format =[
             [
-                'nama' => 'FTETI',
+                'nama' => 'Fakultas Teknologi Elekro dan Teknologi Informasi',
                 'created_at' => null,
                 'updated_at' => null,
             ],
             [
-                'nama' => 'Jurusan Informatika',
+                'nama' => 'Jurusan Teknik Informatika',
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            [
+                'nama' => 'Jurusan Sistem Informasi',
+                'created_at' => null,
+                'updated_at' => null,
+            ],
+            [
+                'nama' => 'Jurusan Teknik Elektro',
                 'created_at' => null,
                 'updated_at' => null,
             ],

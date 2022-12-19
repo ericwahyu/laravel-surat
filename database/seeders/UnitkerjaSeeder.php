@@ -31,12 +31,6 @@ class UnitkerjaSeeder extends Seeder
                 'created_at' => null,
                 'updated_at' => null,
             ],
-            [
-                'nama' => 'Dosen',
-                'created_at' => null,
-                'updated_at' => null,
-            ],
-
         ];
 
         DB::table('unit_kerja')->insert($unitKerja);

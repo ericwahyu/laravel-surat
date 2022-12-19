@@ -71,7 +71,7 @@
                             <i class="fas fa-exclamation-circle"></i><b> info</b></a>
                         </div>
                     </div>
-                    @if ($template->isi_footer != null)
+                    {{-- @if ($template->isi_footer != null) --}}
                         <div class="row">
                             <div class="form-group col-sm-11">
                                 <label style="font-size: 16px">Footer Template</label>
@@ -90,7 +90,7 @@
                             <i class="fas fa-exclamation-circle"></i><b> info</b></a>
                             </div>
                         </div>
-                    @endif
+                    {{-- @endif --}}
                     <div class="form-group">
                         <label style="font-size: 16px">Jumlah Tanda Tangan</label>
                         <input type="number" class="form-control @error('jumlah_ttd') is-invalid @enderror" name="jumlah_ttd" id="" value="{{ $template->jumlah_ttd }}">

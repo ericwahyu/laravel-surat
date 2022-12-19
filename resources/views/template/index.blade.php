@@ -24,9 +24,7 @@
                                     <th>Nama Template</th>
                                     <th>Nama File</th>
                                     <th>Keterangan</th>
-                                    @if ($user->isAdmin() == 1 || $user->isPengelola() == 3)
-                                        <th>Action</th>
-                                    @endif
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -39,17 +37,17 @@
                                         <td>{{ $data->nama }}</td>
                                         <td>{{ $data->file }}</td>
                                         <td>{{ $data->keterangan }}</td>
-                                        @if ($user->isAdmin() == 1 || $user->isPengelola() == 3)
-                                            <td>
-                                                <form action="{{ route('destroy.template', $data) }}" method="post">
-                                                    @csrf
-                                                    @method('DELETE')
+                                        <td>
+                                            <form action="{{ route('destroy.template', $data) }}" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <a href="{{ route('formtesting.template', $data) }}" class="btn btn-info" title="Testing Template"><i class="fa fa-quote-left"></i> Testing</a>
+                                                @if ($user->isAdmin()|| $user->isPengelola())
                                                     <a href="{{ route('edit.template', $data) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i> Update</a>
-                                                    <a href="{{ route('formtesting.template', $data) }}" class="btn btn-info" title="Testing Template"><i class="fa fa-quote-left"></i> Testing</a>
                                                     <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i> Delete</button>
+                                                @endif
                                                 </form>
                                             </td>
-                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

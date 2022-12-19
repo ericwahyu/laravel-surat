@@ -46,16 +46,19 @@
                         </tbody>
                     </table>
                     <div class="row">
-                        <div class="col-md-2">
-                            <a href="{{ route('edit.disposisi', $disposisi) }}" class="btn btn-warning" title="Update"><i class="far fa-edit"></i> Update</a>
-                        </div>
-                        <div class="col-md-2">
-                            <form action="{{ route('destroy.disposisi', $disposisi) }}" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"></i> Delete</button>
-                            </form>
-                        </div>
+                        @if ($user->isAdmin() || $user->isPengelola())
+                            <div class="col-md-2">
+                                <a href="{{ route('edit.disposisi', $disposisi) }}" class="btn btn-warning" title="Update"><i class="far fa-edit"></i> Update</a>
+                            </div>
+                        @elseif($user->isAdmin() || $user->isPengelola() || $user->isPimpinan())
+                            <div class="col-md-2">
+                                <form action="{{ route('destroy.disposisi', $disposisi) }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"></i> Delete</button>
+                                </form>
+                            </div>
+                        @endif
                         <div class="col-md-2">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary">Beri Tanggapan</button>
@@ -73,9 +76,6 @@
                                                 <form action="{{ route('continue.surat.masuk', $disposisi) }}" method="get">
                                                     <button type="submit" class="dropdown-item show_continue" data-toggle="tooltip" title="Continue"><i class="fa fa-play"></i> Continue</button>
                                                 </form>
-                                                {{-- <a class="dropdown-item show_read" href="{{ route('read.surat.masuk', $disposisi) }}"><i class="far fa-eye"></i> Read</a>
-                                                <a class="dropdown-item" href="{{ route('create.reply.surat.masuk', $disposisi) }}"><i class="fas fa-reply"></i> Reply</a>
-                                                <a class="dropdown-item show_continue" href="{{ route('continue.surat.masuk', $disposisi) }}"><i class="fa fa-play"></i> Continue</a> --}}
                                             @else
                                                 <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
                                                     <button type="submit" class="dropdown-item show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
@@ -84,9 +84,12 @@
                                             @break
                                         @case(2)
                                             @if ($user->isAdmin() || $user->isPimpinan())
-                                                {{-- <a class="dropdown-item show_ttd" href="{{ route('ttd.surat.keluar', $disposisi) }}"><i class="fa fa-check"></i> Tanda Tangan</a> --}}
                                                 <form action="{{ route('ttd.surat.keluar', $disposisi) }}" method="get">
                                                     <button type="submit" class="dropdown-item show_ttd" data-toggle="tooltip" title="Tanda Tangan"><i class="fa fa-check"></i> Tanda Tangan</button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
+                                                    <button type="submit" class="dropdown-item show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
                                                 </form>
                                             @endif
                                             @break

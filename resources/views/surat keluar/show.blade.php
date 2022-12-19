@@ -46,18 +46,29 @@
                         </tbody>
                     </table>
                     <div class="row">
-                        <div class="col-sm-2">
-                            <a href="{{ route('edit.surat.keluar', $surat) }}" class="btn btn-warning" title="Update"><i class="far fa-edit"></i> Update</a>
-                        </div>
-                        <div class="col-sm-2">
-                            <form action="{{ route('destroy.surat.keluar', $surat) }}" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"></i> Delete</button>
-                            </form>
-                        </div>
-                        <div class="col-sm-2">
-                            <a href="{{ route('download.surat.keluar', $surat) }}" class="btn btn-success" title="Download"><i class="fa fa-download"></i> View File</a>
+                        @if ($user->isAdmin() || $user->isPengelola() || $user->isPimpinan())
+                            <div class="col-sm-2">
+                                <a href="{{ route('edit.surat.keluar', $surat) }}" class="btn btn-warning" title="Update"><i class="far fa-edit"></i> Update</a>
+                            </div>
+                            <div class="col-sm-2">
+                                <form action="{{ route('destroy.surat.keluar', $surat) }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"></i> Delete</button>
+                                </form>
+                            </div>
+                        @endif
+                        <div class="col-md-2">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary">Download View</button>
+                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{{ route('download.surat.keluar', ['surat' => $surat, 'kode' => 1]) }}"><i class="fa fa-download"></i> Download file mentahan / file awal upload</a>
+                                    <a class="dropdown-item" href="{{ route('download.surat.keluar', ['surat' => $surat, 'kode' => 2]) }}"><i class="fa fa-download"></i> Download file upload terbaru</a>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-sm-2 offset-md-3">
                             <a href="{{ route('index.disposisi', $surat) }}" class="btn btn-info" title="Lihat Detail Disposisi dan beri tanggapan"><i class="fas fa-file"></i> Lihat Disposisi</a>

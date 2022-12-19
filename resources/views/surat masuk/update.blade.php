@@ -99,6 +99,25 @@
                         </div>
                         @enderror
                     </div>
+                    @if ($user->isAdmin())
+                        <div class="form-group col-md-6">
+                            <label style="font-size: 16px">Status Surat</label>
+                            <select class="form-control" name="status">
+                                @if ($surat->status === 1)
+                                    <option selected value="1">Aktif</option>
+                                    <option value="0">Non Aktif</option>
+                                @elseif ($surat->status === 0)
+                                    <option selected value="0">Non Aktif</option>
+                                    <option value="1">Aktif</option>
+                                @endif
+                            </select>
+                            @error('jenis_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    @endif
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Simpan Data</button>

@@ -11,7 +11,7 @@
     </div>
     <h1>Disposisi Surat Dari <b>{{ $surat->judul }}</b></h1>
     <div class="section-header-button">
-        @if ($user->isAdmin() == 1 || $user->isPengelola() == 3)
+        @if ($user->isAdmin()|| $user->isPengelola())
             <a href="{{ route('create.disposisi', $surat) }}" class="btn btn-primary" title="Tambah Disposisi Surat">Tambah Baru</a>
         @endif
     </div>

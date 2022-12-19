@@ -25,10 +25,9 @@ class SuratController extends Controller
         //
         $user = Auth::user();
         if($request->input('tahun')){
-            if($user->isAdmin() == 1){
+            if($user->isAdmin()){
                 $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                        ->where('surat.status', '!=', 0)
                         ->where('kategori_id', 1)
                         ->whereYear('surat.tanggal', $request->tahun)
                         ->select('surat.*')
@@ -47,10 +46,9 @@ class SuratController extends Controller
                         ->distinct()->latest()->get();
             }
         }else{
-            if($user->isAdmin() == 1){
+            if($user->isAdmin()){
                 $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                        ->where('surat.status', '!=', 0)
                         ->where('kategori_id', 1)
                         ->select('surat.*')
                         ->distinct()->latest()->get();
@@ -169,8 +167,9 @@ class SuratController extends Controller
         //
         $nav = 'transaksi';
         $menu = 'masuk';
+        $user = Auth::user();
         $jenis = Jenis::where('kategori_id', 1)->get();
-        return view('surat masuk.update', compact('nav', 'menu', 'jenis', 'surat'));
+        return view('surat masuk.update', compact('nav', 'menu', 'jenis', 'surat', 'user'));
     }
 
     /**
@@ -183,6 +182,7 @@ class SuratController extends Controller
     public function update(Request $request,Surat $surat)
     {
         //
+        // dd($request->status);
         $request->validate([
             'jenis_id' => 'required',
             'nomor' => 'required',
@@ -204,6 +204,11 @@ class SuratController extends Controller
             $file->move('surat/masuk',$file_name);
             $surat->file = $file_name;
         }
+        //perubahan status hanya dilakukan oleh admin
+        if($request->status != null){
+            $surat->status = $request->status;
+        }
+
         if($surat){
             $surat->save();
 

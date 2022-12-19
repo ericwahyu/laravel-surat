@@ -43,8 +43,10 @@
                                             <form id="delete" action="{{ route('destroy.jenis', $data) }}" method="post">
                                                 @csrf
                                                 @method('DELETE')
-                                                <a href="{{ route('edit.jenis', $data) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i> Update</a>
-                                                @if ($user->isAdmin() == 1 || $user->isPengelola() == 3)
+                                                @if ($user->isAdmin() || $user->isPengelola() || $user->isPimpinan())
+                                                    <a href="{{ route('edit.jenis', $data) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i> Update</a>
+                                                @endif
+                                                @if ($user->isAdmin() || $user->isPengelola())
                                                     <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i> Delete</button>
                                                 @endif
                                             </form>

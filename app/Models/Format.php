@@ -11,7 +11,7 @@ class Format extends Model
     protected $table = 'format';
     protected $primarykey = 'id';
     protected $fillable = [];
-    public $incrementing = false;
+    // public $incrementing = false;
 
     public function keperluan(){
         return $this->hasMany(Keperluan::class);

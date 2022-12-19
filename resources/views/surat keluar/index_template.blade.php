@@ -6,6 +6,11 @@
         <a href="{{ route('index.surat.keluar') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
     <h1>Pilih Template</h1>
+    <div class="section-header-button">
+        @if ($user->isAdmin() || $user->isPengelola())
+            <a href="{{ route('create.keluar.instant') }}" class="btn btn-primary" title="Tambah Surat Tanpa Template">Tambah Surat Tanpa Template</a>
+        @endif
+    </div>
 </div>
 
 <div class="section-body">

@@ -46,16 +46,18 @@
                         </tbody>
                     </table>
                     <div class="row">
-                        <div class="col-sm-2">
-                            <a href="{{ route('edit.surat.masuk', $surat) }}" class="btn btn-warning" title="Update"><i class="far fa-edit"></i> Update</a>
-                        </div>
-                        <div class="col-sm-2">
-                            <form action="{{ route('destroy.surat.masuk', $surat) }}" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"></i> Delete</button>
-                            </form>
-                        </div>
+                        @if ($user->isAdmin() || $user->isPengelola() || $user->isPimpinan())
+                            <div class="col-sm-2">
+                                <a href="{{ route('edit.surat.masuk', $surat) }}" class="btn btn-warning" title="Update"><i class="far fa-edit"></i> Update</a>
+                            </div>
+                            <div class="col-sm-2">
+                                <form action="{{ route('destroy.surat.masuk', $surat) }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"></i> Delete</button>
+                                </form>
+                            </div>
+                        @endif
                         <div class="col-sm-2">
                             <a href="{{ route('download.surat.masuk', $surat) }}" class="btn btn-success" title="Download"><i class="fa fa-download"></i> View File</a>
                         </div>

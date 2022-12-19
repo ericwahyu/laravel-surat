@@ -108,6 +108,7 @@
                                     <li class="{{ ($menu == 'masuk') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.masuk') }}"><i class="far fa-envelope"></i>Surat Masuk</a></li>
                                     <li class="{{ ($menu == 'keluar') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.keluar') }}"><i class="far fa-envelope-open"></i>Surat Keluar</a></li>
                                     <li class="{{ ($menu == 'search') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.search') }}"><i class="fas fa-search"></i>Pencarian Surat</a></li>
+                                    <li class="{{ ($menu == 'file') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.file') }}"><i class="fas fa-file"></i>File Surat</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown {{ ($nav == 'agenda') ? 'active' : '' }}">
@@ -191,7 +192,7 @@
                     // ['table', ['table']]
                 ],
             });
-            $('#summernote').summernote('fontName', 'Times New Roman');
+            // $('#summernote').summernote('fontName', 'Times New Roman');
 
             $('#summernote2').summernote({
                 height: 200,
@@ -203,7 +204,7 @@
                     ['height', ['height']],
                 ],
             });
-            $('#summernote2').summernote('fontName', 'Times New Roman');
+            // $('#summernote2').summernote('fontName', 'Times New Roman');
         </script>
 
         <!-- Template JS File -->

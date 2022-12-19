@@ -18,6 +18,7 @@ class CreateKeperluanTable extends Migration
             $table->unsignedBigInteger('format_id');
             $table->string('nama');
             $table->string('kode');
+            $table->string('penomoran');
             $table->timestamps();
 
             $table->foreign('format_id')->references('id')->on('format')->onDelete('cascade');

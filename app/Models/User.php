@@ -70,12 +70,17 @@ class User extends Authenticatable
         if($mahasiswa->isNotEmpty()){
             foreach($mahasiswa as $id_maha){
                 $unit_kerja[] = $id_maha->unit_kerja->nama;
+                // $unit_kerja = array("User");
             }
         }elseif($dosen->isNotEmpty()){
             foreach($dosen as $id_dos){
                 $unit_dosen = Dosenunit::where('dosen_id', $id_dos->id)->get();
-                foreach($unit_dosen as $unit){
-                    $unit_kerja[] = $unit->unit_kerja->nama;
+                if($unit_dosen->isEmpty()){
+                     $unit_kerja = array("User");
+                }else{
+                    foreach($unit_dosen as $unit){
+                        $unit_kerja[] = $unit->unit_kerja->nama;
+                    }
                 }
             }
         }
@@ -87,7 +92,7 @@ class User extends Authenticatable
         $admin = $this->isMahasiswa_or_Dosen();
         $data = count($admin);
         for($i = 0; $i < $data; $i++){
-            if($admin[$i] == 'Admin'){
+            if($admin[$i] === 'Admin'){
                 return true;
                 break;
             }
@@ -100,7 +105,7 @@ class User extends Authenticatable
         $data = count($pimpinan);
 
         for($i = 0; $i < $data; $i++){
-            if($pimpinan[$i] == 'Pimpinan'){
+            if($pimpinan[$i] === 'Pimpinan'){
                 return true;
                 break;
             }
@@ -113,34 +118,24 @@ class User extends Authenticatable
         $data = count($pengelola);
 
         for($i = 0; $i < $data; $i++){
-            if($pengelola[$i] == 'Pengelola'){
+            if($pengelola[$i] === 'Pengelola'){
                 return true;
                 break;
             }
         }
+        return false;
     }
 
-    public function isDosen(){
-        $dosen = $this->isMahasiswa_or_Dosen();
-        $data = count($dosen);
+    public function isUser(){
+        $user = $this->isMahasiswa_or_Dosen();
+        $data = count($user);
 
         for($i = 0; $i < $data; $i++){
-            if($dosen[$i] == 'Dosen'){
+            if($user[$i] === 'User'){
                 return true;
                 break;
             }
         }
-    }
-
-    public function isMahasiswa(){
-        $mahsiswa = $this->isMahasiswa_or_Dosen();
-        $data = count($mahsiswa);
-
-        for($i = 0; $i < $data; $i++){
-            if($mahsiswa[$i] == 'Mahasiswa'){
-                return true;
-                break;
-            }
-        }
+        return false;
     }
 }

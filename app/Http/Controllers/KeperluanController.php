@@ -21,8 +21,9 @@ class KeperluanController extends Controller
         $menu = 'keperluan';
 
         $keperluan = Keperluan::all();
+        // $tahun = date('Y',strtotime($keperluan->created_at));
         $user = Auth::user();
-
+        // dd($tahun);
         return view('keperluan.index', compact('nav', 'menu', 'keperluan', 'user'));
     }
 
@@ -54,13 +55,15 @@ class KeperluanController extends Controller
         $request->validate([
             'format_id' => 'required',
             'nama' => 'required|max:100',
-            'kode' => 'required'
+            'kode' => 'required',
+            'penomoran' => 'required',
         ]);
 
         $keperluan = new Keperluan();
         $keperluan->format_id = $request->format_id;
         $keperluan->nama = $request->nama;
         $keperluan->kode = $request->kode;
+        $keperluan->penomoran = $request->penomoran;
         $keperluan->save();
 
         return redirect()->route('index.keperluan')->with('success', 'Berhasil tambah data !!');
@@ -108,12 +111,14 @@ class KeperluanController extends Controller
         $request->validate([
             'format_id' => 'required',
             'nama' => 'required|max:100',
-            'kode' => 'required|max:100'
+            'kode' => 'required|max:100',
+            'penomoran' => 'required|max:100',
         ]);
 
         $keperluan->format_id = $request->format_id;
         $keperluan->nama = $request->nama;
         $keperluan->kode = $request->kode;
+        $keperluan->penomoran = $request->penomoran;
         $keperluan->save();
 
         return redirect()->route('index.keperluan')->with('success', 'Data berhasil di Update !!');

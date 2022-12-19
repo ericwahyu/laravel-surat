@@ -4,7 +4,7 @@
 <div class="section-header">
     <h1>Surat Keluar</h1>
     <div class="section-header-button">
-        @if ($user->isAdmin() == 1 || $user->isPengelola() == 3)
+        @if ($user->isAdmin() || $user->isPengelola())
             <a href="{{ route('index.keluar.template') }}" class="btn btn-primary" title="Tambah Surat Masuk">Tambah Baru</a>
         @endif
     </div>
@@ -34,7 +34,6 @@
                                 <th>Judul Surat</th>
                                 <th>Tanggal Surat</th>
                                 <th>Keterangan Surat</th>
-                                <th>Keperluan Surat</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -51,9 +50,6 @@
                                     <td>{{ $data->judul }}</td>
                                     <td>{{ IdDateFormatter::format($data->tanggal, IdDateFormatter::COMPLETE) }}</td>
                                     <td>{{ $data->keterangan }}</td>
-                                    @foreach (GenerateController::getGenerate($data->id) as $getGenerate)
-                                        <td>{{ $getGenerate->keperluan->nama }}</td>
-                                    @endforeach
                                     <td>
                                         <a href="{{ route('show.surat.keluar', $data) }}" class="btn btn-info" title="Lihat detail"><i class="fa fa-eye"></i> Detail</a>
                                     </td>

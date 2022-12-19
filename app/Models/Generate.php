@@ -24,6 +24,9 @@ class Generate extends Model
         return $this->belongsTo(Keperluan::class);
     }
 
+    public function files(){
+        return $this->hasMany(Files::class);
+    }
 
 }
 

@@ -77,7 +77,7 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label style="font-size: 16px">Generate Nomor Surat</label>
-                        <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" id="nomorSurat" name="nomor_surat" value="{{ old('nomor_surat') }}" required readonly>
+                        <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" id="nomorSurat" name="nomor_surat" value="{{ old('nomor_surat') }}" required>
                     </div>
                     <div class="form-group col-md-6" style="margin-top: 32px">
                         <!-- Button trigger modal -->
@@ -189,11 +189,10 @@
                             @endforeach --}}
                         </select>
                     </div>
-                    <div class="form-group" id="huruf">
+                    {{-- <div class="form-group" id="huruf">
                         <label style="font-size: 16px">Kode Huruf</label>
                         <input type="text" class="form-control huruf" name="huruf">
-                    </div>
-            </div>
+                    </div> --}}
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Generate</button>
@@ -202,25 +201,25 @@
             </div>
         </div>
     </div>
-  </div>
+</div>
 @endsection
 @section('script')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     $('document').ready(function(){
-        //format nomor
-        // $('.huruf').attr("required", false);
-        $('#huruf').hide();
-        $('#format').change(function() {
-            $('#huruf').hide();
-            $('.huruf').removeAttr('required');
-            let format_id = $(this).val();
-            // console.log(format_id)
-            if(format_id == 1){
-                $('#huruf').show();
-                $('.huruf').attr("required", true);
-            }
-        });
+        // //format nomor
+        // // $('.huruf').attr("required", false);
+        // $('#huruf').hide();
+        // $('#format').change(function() {
+        //     $('#huruf').hide();
+        //     $('.huruf').removeAttr('required');
+        //     let format_id = $(this).val();
+        //     // console.log(format_id)
+        //     if(format_id == 1){
+        //         $('#huruf').show();
+        //         $('.huruf').attr("required", true);
+        //     }
+        // });
 
         //generate nomor
         $('#form-generate').on('submit', function(e){
@@ -231,6 +230,7 @@
                 data : $('#form-generate').serialize(),
                 success : function(response){
                     $('#modal').modal('hide');
+                    // $('#nomorSurat').reset();
                     $('#nomorSurat').val(response.nomor);
                     $('#keperluanId').val(response.keperluan_id);
                     console.log(response);

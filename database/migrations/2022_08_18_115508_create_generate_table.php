@@ -15,13 +15,14 @@ class CreateGenerateTable extends Migration
     {
         Schema::create('generate', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('template_id');
-            $table->unsignedBigInteger('keperluan_id');
+            $table->unsignedBigInteger('template_id')->nullable();
+            $table->unsignedBigInteger('keperluan_id')->nullable();
             $table->unsignedBigInteger('surat_id');
-            $table->text('content');
+            $table->text('content')->nullable();
             $table->text('footer_content')->nullable();
             $table->string('tempat');
             $table->string('file')->nullable();
+            // $table->string('file_tertandatangan')->nullable();
             $table->timestamps();
 
             $table->foreign('template_id')->references('id')->on('template')->onDelete('cascade');

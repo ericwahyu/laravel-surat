@@ -35,7 +35,7 @@ class SearchController extends Controller
             //SEARCH SURAT MASUK
             $surat_masuk = '';
             $search = $request->get('query');
-                if($user->isAdmin() == 1){
+                if($user->isAdmin()){
                     $suratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->where('kategori_id', 1)
@@ -43,7 +43,8 @@ class SearchController extends Controller
                             $query->where('surat.judul', 'like' , '%'. $search .'%')
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
-                                ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%');
+                                ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('jenis.nama', 'LIKE','%'.$search.'%');
                             })
                         ->select('surat.*')
                         ->distinct()->latest()->get();
@@ -60,7 +61,8 @@ class SearchController extends Controller
                                 $query->where('surat.judul', 'like' , '%'. $search .'%')
                                     ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                     ->orwhereYear('surat.tanggal', $search)
-                                    ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%');
+                                    ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                    ->orwhere('jenis.nama', 'LIKE','%'.$search.'%');
                                 })
                             ->select('surat.*')
                             ->distinct()->latest()->get();
@@ -92,7 +94,6 @@ class SearchController extends Controller
             if($user->isAdmin()){
                 $suratKeluar = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->where('kategori_id', 2)
                         ->where(function($query) use($search){
@@ -101,8 +102,6 @@ class SearchController extends Controller
                                 ->orwhereYear('surat.tanggal', $search)
                                 ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.content', 'LIKE','%'.$search.'%')
-                                ->orwhere('keperluan.nama', 'LIKE','%'.$search.'%')
-                                ->orwhere('keperluan.kode', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%');
                             })
                         ->select('surat.*')
@@ -110,7 +109,6 @@ class SearchController extends Controller
             }else{
                 $suratKeluar = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
@@ -122,9 +120,8 @@ class SearchController extends Controller
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
                                 ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.content', 'LIKE','%'.$search.'%')
-                                ->orwhere('keperluan.nama', 'LIKE','%'.$search.'%')
-                                ->orwhere('keperluan.kode', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%');
                             })
                         ->where('disposisi_user.user_id', Auth::user()->id)
@@ -154,7 +151,7 @@ class SearchController extends Controller
 
             //SEARCH DISPOSISI SURAT MASUK
             $disposisi_surat_masuk = '';
-                if($user->isAdmin() == 1){
+                if($user->isAdmin()){
                     $disposisiSuratMasuk = Disposisi::join('surat', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
@@ -164,6 +161,7 @@ class SearchController extends Controller
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
                                 ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                                 ->orwhere('disposisi.perihal', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('disposisi.tanggal', $search)
                                 ->orwhere('disposisi.isi', 'LIKE','%'.$search.'%');
@@ -185,6 +183,7 @@ class SearchController extends Controller
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
                                 ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                                 ->orwhere('disposisi.perihal', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('disposisi.tanggal', $search)
                                 ->orwhere('disposisi.isi', 'LIKE','%'.$search.'%');
@@ -215,10 +214,9 @@ class SearchController extends Controller
 
             //SEARCH DISPOSISI SURAT KELUAR
             $disposisi_surat_keluar = '';
-                if($user->isAdmin() == 1){
+                if($user->isAdmin()){
                     $disposisiSuratKeluar = Disposisi::join('surat', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
                         ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->where('kategori_id', 2)
@@ -227,9 +225,8 @@ class SearchController extends Controller
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
                                 ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.content', 'LIKE','%'.$search.'%')
-                                ->orwhere('keperluan.nama', 'LIKE','%'.$search.'%')
-                                ->orwhere('keperluan.kode', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%')
                                 ->orwhere('disposisi.perihal', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('disposisi.tanggal', $search)
@@ -241,7 +238,6 @@ class SearchController extends Controller
                 }else{
                     $disposisiSuratKeluar = Disposisi::join('surat', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
                         ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
@@ -254,9 +250,8 @@ class SearchController extends Controller
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
                                 ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.content', 'LIKE','%'.$search.'%')
-                                ->orwhere('keperluan.nama', 'LIKE','%'.$search.'%')
-                                ->orwhere('keperluan.kode', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%')
                                 ->orwhere('disposisi.perihal', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('disposisi.tanggal', $search)
@@ -292,6 +287,10 @@ class SearchController extends Controller
                 'table_data_suratKeluar'  => $surat_keluar,
                 'table_data_disposisiMasuk'  => $disposisi_surat_masuk,
                 'table_data_disposisiKeluar'  => $disposisi_surat_keluar,
+                'data_suratMasuk' => $total_row_masuk,
+                'data_suratKeluar' => $total_row_keluar,
+                'data_disposisiSuratMasuk' => $total_row_disposisimasuk,
+                'data_disposisiSuratKeluar' => $total_row_disposisikeluar,
                );
             echo json_encode($data);
         }
