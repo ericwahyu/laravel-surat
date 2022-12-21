@@ -15,6 +15,7 @@ class CreateTemplateTable extends Migration
     {
         Schema::create('template', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('role_id');
             $table->string('nama');
             $table->string('file');
             $table->string('keterangan')->nullable();
@@ -22,6 +23,8 @@ class CreateTemplateTable extends Migration
             $table->text('isi_footer')->nullable();
             $table->string('jumlah_ttd');
             $table->timestamps();
+
+            $table->foreign('role_id')->references('id')->on('role')->onDelete('cascade');
         });
     }
 

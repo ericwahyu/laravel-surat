@@ -24,4 +24,8 @@ class Template extends Model
         return $this->belongsToMany(Surat::class, 'generate', 'template_id', 'surat_id')->withPivot('content');
     }
 
+    public function role(){
+        return $this->belongsTo(Role::class);
+    }
+
 }

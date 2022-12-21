@@ -43,7 +43,7 @@ class SearchController extends Controller
                             $query->where('surat.judul', 'like' , '%'. $search .'%')
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
-                                ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
                                 ->orwhere('jenis.nama', 'LIKE','%'.$search.'%');
                             })
                         ->select('surat.*')
@@ -61,7 +61,7 @@ class SearchController extends Controller
                                 $query->where('surat.judul', 'like' , '%'. $search .'%')
                                     ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                     ->orwhereYear('surat.tanggal', $search)
-                                    ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                    ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
                                     ->orwhere('jenis.nama', 'LIKE','%'.$search.'%');
                                 })
                             ->select('surat.*')
@@ -77,7 +77,7 @@ class SearchController extends Controller
                             <td>'.$row->nosurat.'</td>
                             <td>'.$row->judul.'</td>
                             <td>'.IdDateFormatter::format($row->tanggal, IdDateFormatter::COMPLETE).'</td>
-                            <td>'.$row->keterangan.'</td>
+                            <td>'.$row->keperluan.'</td>
                             <td><a href="'.route('show.surat.masuk', $row).'" class="btn btn-info" title="Lihat detail"><i class="fa fa-eye"></i> Detail</a></td>
                         </tr>';
                 }
@@ -100,7 +100,7 @@ class SearchController extends Controller
                             $query->where('surat.judul', 'like' , '%'. $search .'%')
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
-                                ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.content', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%');
                             })
@@ -119,7 +119,7 @@ class SearchController extends Controller
                             $query->where('surat.judul', 'like' , '%'. $search .'%')
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
-                                ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
                                 ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.content', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%');
@@ -138,7 +138,7 @@ class SearchController extends Controller
                             <td>'.$row->nosurat.'</td>
                             <td>'.$row->judul.'</td>
                             <td>'.IdDateFormatter::format($row->tanggal, IdDateFormatter::COMPLETE).'</td>
-                            <td>'.$row->keterangan.'</td>
+                            <td>'.$row->keperluan.'</td>
                             <td><a href="'.route('show.surat.keluar', $row).'" class="btn btn-info" title="Lihat detail"><i class="fa fa-eye"></i> Detail</a></td>
                         </tr>';
                 }
@@ -160,7 +160,7 @@ class SearchController extends Controller
                             $query->where('surat.judul', 'like' , '%'. $search .'%')
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
-                                ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
                                 ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                                 ->orwhere('disposisi.perihal', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('disposisi.tanggal', $search)
@@ -182,7 +182,7 @@ class SearchController extends Controller
                             $query->where('surat.judul', 'like' , '%'. $search .'%')
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
-                                ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
                                 ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                                 ->orwhere('disposisi.perihal', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('disposisi.tanggal', $search)
@@ -224,7 +224,7 @@ class SearchController extends Controller
                             $query->where('surat.judul', 'like' , '%'. $search .'%')
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
-                                ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
                                 ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.content', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%')
@@ -249,7 +249,7 @@ class SearchController extends Controller
                             $query->where('surat.judul', 'like' , '%'. $search .'%')
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('surat.tanggal', $search)
-                                ->orwhere('surat.keterangan', 'LIKE','%'.$search.'%')
+                                ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
                                 ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.content', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%')

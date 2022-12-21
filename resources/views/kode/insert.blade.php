@@ -1,39 +1,45 @@
 @extends('layout')
-@section('title','Tambah Keperluan Surat')
+@section('title','Tambah Kode Surat')
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
-        <a href="{{ route('index.keperluan') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+        <a href="{{ route('index.kode') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <h1>Tambah Keperluan Surat</h1>
+    <h1>Tambah Kode Surat</h1>
 </div>
 
 <div class="section-body">
     <div class="row">
         <div class="col-12">
-            <form action="{{ route('store.keperluan') }}" method="POST">
+            <form action="{{ route('store.kode') }}" method="POST">
                 @csrf
                 <div class="card">
                     <div class="card-header">
-                        <h4>Data Keperluan</h4>
+                        <h4>Data Kode Surat</h4>
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label style="font-size: 16px" class="form-label">Format Surat</label>
-                            <select class="form-control @error('format_id') is-invalid @enderror" name="format_id">
-                                <option disabled selected>-- Format Surat--</option>
-                                @foreach ($format as $format)
-                                    <option value="{{ $format->id }}" {{ (old("format_id") == $format->id ? "selected":"") }}>{{ $format->nama }}</option>
-                                @endforeach
+                            <label style="font-size: 16px" class="form-label">Role Data</label>
+                            <select class="form-control @error('role_id') is-invalid @enderror" name="role_id">
+                                <option disabled selected>-- Role Data--</option>
+                                @if ($user->isAdmin())
+                                    @foreach ($role as $role)
+                                        <option value="{{ $role->id }}" {{ (old("role_id") == $role->id ? "selected":"") }}>{{ $role->nama }}</option>
+                                    @endforeach
+                                @else
+                                    @for ($i = 0; $i < count($getRole); $i++)
+                                            <option value="{{ $getRole[$i][0] }}" {{ (old("role_id") == $getRole[$i][0] ? "selected":"") }}>{{ $getRole[$i][1] }}</option>
+                                    @endfor
+                                @endif
                             </select>
-                            @error('format_id')
+                            @error('role_id')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label style="font-size: 16px">Nama Keperluan Surat</label>
+                            <label style="font-size: 16px">Nama Kode Surat</label>
                             <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" placeholder="Nama" value="{{ old('nama') }}">
                             @error('nama')
                                 <div class="invalid-feedback">
@@ -42,7 +48,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label style="font-size: 16px">Kode Keperluan Surat</label>
+                            <label style="font-size: 16px">Kode Surat</label>
                             <input type="text" class="form-control @error('kode') is-invalid @enderror" name="kode" placeholder="Kode" value="{{ old('kode') }}">
                             @error('kode')
                                 <div class="invalid-feedback">

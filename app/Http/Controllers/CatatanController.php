@@ -33,7 +33,7 @@ class CatatanController extends Controller
                             ->whereDate('waktu', '>=', $tanggal_awal)
                             ->whereDate('waktu', '<=', $tanggal_akhir)
                             ->select('catatan.*')
-                            ->distinct()->latest()->get();
+                            ->distinct()->latest('catatan.id')->get();
             }else{
                 $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
                             ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
@@ -43,7 +43,7 @@ class CatatanController extends Controller
                             ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                             ->where('kategori_id', 1)
                             ->select('catatan.*')
-                            ->distinct()->latest()->get();
+                            ->distinct()->latest('catatan.id')->get();
             }
         }else{
             if($request->input('tanggalAwal') && $request->input('tanggalAkhir')){
@@ -62,7 +62,7 @@ class CatatanController extends Controller
                             ->whereDate('waktu', '>=', $tanggal_awal)
                             ->whereDate('waktu', '<=', $tanggal_akhir)
                             ->select('catatan.*')
-                            ->distinct()->latest()->get();
+                            ->distinct()->latest('catatan.id')->get();
             }else{
                 $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
                             ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
@@ -74,7 +74,7 @@ class CatatanController extends Controller
                             ->where('kategori_id', 1)
                             ->where('disposisi_user.user_id', Auth::user()->id)
                             ->select('catatan.*')
-                            ->distinct()->latest()->get();
+                            ->distinct()->latest('catatan.id')->get();
             }
         }
 
@@ -103,7 +103,7 @@ class CatatanController extends Controller
                             ->whereDate('waktu', '>=', $tanggal_awal)
                             ->whereDate('waktu', '<=', $tanggal_akhir)
                             ->select('catatan.*')
-                            ->distinct()->latest()->get();
+                            ->distinct()->latest('catatan.id')->get();
             }else{
                 $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
                             ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
@@ -113,7 +113,7 @@ class CatatanController extends Controller
                             ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                             ->where('kategori_id', 2)
                             ->select('catatan.*')
-                            ->distinct()->latest()->get();
+                            ->distinct()->latest('catatan.id')->get();
             }
         }else{
             if($request->input('tanggalAwal') && $request->input('tanggalAkhir')){
@@ -132,7 +132,7 @@ class CatatanController extends Controller
                             ->whereDate('waktu', '>=', $tanggal_awal)
                             ->whereDate('waktu', '<=', $tanggal_akhir)
                             ->select('catatan.*')
-                            ->distinct()->latest()->get();
+                            ->distinct()->latest('catatan.id')->get();
             }else{
                 $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
                             ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
@@ -144,7 +144,7 @@ class CatatanController extends Controller
                             ->where('kategori_id', 2)
                             ->where('disposisi_user.user_id', Auth::user()->id)
                             ->select('catatan.*')
-                            ->distinct()->latest()->get();
+                            ->distinct()->latest('catatan.id')->get();
             }
         }
 

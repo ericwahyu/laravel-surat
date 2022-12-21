@@ -1,11 +1,11 @@
 @extends('layout')
-@section('title','Keperluan Surat')
+@section('title','Kode Surat')
 @section('section')
 <div class="section-header">
-    <h1>Keperluan Surat</h1>
+    <h1>Kode Surat</h1>
     <div class="section-header-button">
         @if ($user->isAdmin() || $user->isPengelola())
-            <a href="{{ route('create.keperluan') }}" class="btn btn-primary" title="Tambah Keperluan Surat">Tambah Baru</a>
+            <a href="{{ route('create.kode') }}" class="btn btn-primary" title="Tambah Kode Surat">Tambah Baru</a>
         @endif
     </div>
 </div>
@@ -22,15 +22,15 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
-                                    <th>Format Surat</th>
-                                    <th>Nama Keperluan Surat</th>
-                                    <th>Kode Keperluan Surat</th>
+                                    <th>Role Kode Surat</th>
+                                    <th>Nama Kode Surat</th>
+                                    <th>Kode Kode Surat</th>
                                     <th>Format Penomoran Surat</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($keperluan as $data)
+                                @foreach ($kode as $data)
                                     <tr>
                                         <td>
                                             <div class="sort-handler ui-sortable-handle text-center">
@@ -38,16 +38,16 @@
                                             </div>
                                         </td>
 
-                                        <td>{{ $data->format->nama }}</td>
+                                        <td>{{ $data->role->nama }}</td>
                                         <td>{{ $data->nama }}</td>
                                         <td>{{ $data->kode }}</td>
                                         <td>{{ $data->penomoran }}</td>
                                         <td>
-                                            <form id="delete" action="{{ route('destroy.keperluan', $data) }}" method="post">
+                                            <form id="delete" action="{{ route('destroy.kode', $data) }}" method="post">
                                                 @csrf
                                                 @method('DELETE')
                                                 @if ($user->isAdmin() || $user->isPengelola() || $user->isPimpinan())
-                                                    <a href="{{ route('edit.keperluan', $data) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i> Update</a>
+                                                    <a href="{{ route('edit.kode', $data) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i> Update</a>
                                                 @endif
                                                 @if ($user->isAdmin()|| $user->isPengelola())
                                                     <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i> Delete</button>

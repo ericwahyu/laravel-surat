@@ -11,7 +11,7 @@ use App\Models\User;
 use App\Models\Catatan;
 use App\Models\Mahasiswa;
 use App\Models\Dosen;
-use App\Models\Keperluan;
+use App\Models\Kode;
 use App\Models\PihakTTD;
 use App\Models\Format;
 use App\Models\Files;
@@ -36,11 +36,11 @@ class FileController extends Controller
         //
         $nav = 'transaksi';
         $menu = 'file';
-        $keperluan = Keperluan::all();
+        // $kode = Kode::all();
         $jenissm = Jenis::where('kategori_id', 1)->get();
         $jenissk = Jenis::where('kategori_id', 2)->get();
 
-        return view('file.index', compact('nav', 'menu', 'keperluan', 'jenissm', 'jenissk'));
+        return view('file.index', compact('nav', 'menu', 'jenissm', 'jenissk'));
     }
 
     /**
@@ -55,7 +55,7 @@ class FileController extends Controller
         if($request->ajax()){
 
             $jenis = $request->get('jenis_id');
-            $keperluan = $request->get('keperluan_id');
+            // $keperluan = $request->get('keperluan_id');
             //SEARCH SURAT MASUK
             $surat_masuk = '';
                 if($user->isAdmin()){
@@ -110,26 +110,16 @@ class FileController extends Controller
             if($user->isAdmin()){
                 $suratKeluar = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        // ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                        // ->where(function($query2) use($keperluan){
-                        //     $query2
-                        //     // ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
-                        //     // ->where('keperluan.id', $keperluan);
-
-                        //         // -orwhere('jenis.id', $jenis);
-                        //     })
                         ->where('kategori_id', 2)
                         ->where(function($query) use($jenis){
                             $query->where('jenis.id', $jenis);
-                                // ->where('generate.keperluan_id', $keperluan);
                             })
                         ->select('surat.*')
                         ->distinct()->latest()->get();
             }else{
                 $suratKeluar = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
@@ -138,11 +128,6 @@ class FileController extends Controller
                         ->where('kategori_id', 2)
                         ->where(function($query) use($jenis){
                             $query->orwhere('jenis.id', $jenis);
-                                // ->where('generate.keperluan_id', $keperluan);
-                            })
-                        ->where(function($query2) use($keperluan){
-                            $query2->orwhere('generate.keperluan_id', $keperluan);
-
                             })
                         ->where('users.id', Auth::user()->id)
                         ->select('surat.*')

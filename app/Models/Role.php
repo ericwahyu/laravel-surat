@@ -5,15 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Format extends Model
+class Role extends Model
 {
     use HasFactory;
-    protected $table = 'format';
+    protected $table = 'role';
     protected $primarykey = 'id';
     protected $fillable = [];
-    // public $incrementing = false;
 
-    public function keperluan(){
-        return $this->hasMany(Keperluan::class);
+    public function kode(){
+        return $this->hasMany(Kode::class);
+    }
+
+    public function template(){
+        return $this->hasMany(Template::class);
     }
 }

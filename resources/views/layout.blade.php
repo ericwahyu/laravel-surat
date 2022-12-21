@@ -98,7 +98,7 @@
                                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Umum</span></a>
                                 <ul class="dropdown-menu">
                                     <li class="{{ ($menu == 'jenis') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.jenis') }}"><i class="far fa-folder-open"></i> Jenis Surat</a></li>
-                                    <li class="{{ ($menu == 'keperluan') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.keperluan') }}"><i class="far fa-folder-open"></i> Keperluan Surat</a></li>
+                                    <li class="{{ ($menu == 'kode') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.kode') }}"><i class="far fa-folder-open"></i> Kode Surat</a></li>
                                     <li class="{{ ($menu == 'template') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.template') }}"><i class="far fa-folder-open"></i> Template Surat</a></li>
                                 </ul>
                             </li>

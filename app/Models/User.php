@@ -63,7 +63,7 @@ class User extends Authenticatable
         return $this->hasMany(Riwayat::class);
     }
 
-    public function isMahasiswa_or_Dosen(){
+    public function isUnitKerja(){
         $mahasiswa = Mahasiswa::where('user_id', $this->id)->get();
         $dosen = Dosen::where('user_id', $this->id)->get();
 
@@ -89,7 +89,7 @@ class User extends Authenticatable
     }
 
     public function isAdmin(){
-        $admin = $this->isMahasiswa_or_Dosen();
+        $admin = $this->isUnitKerja();
         $data = count($admin);
         for($i = 0; $i < $data; $i++){
             if($admin[$i] === 'Admin'){
@@ -101,7 +101,7 @@ class User extends Authenticatable
     }
 
     public function isPimpinan(){
-        $pimpinan = $this->isMahasiswa_or_Dosen();
+        $pimpinan = $this->isUnitKerja();
         $data = count($pimpinan);
 
         for($i = 0; $i < $data; $i++){
@@ -114,7 +114,7 @@ class User extends Authenticatable
     }
 
     public function isPengelola(){
-        $pengelola = $this->isMahasiswa_or_Dosen();
+        $pengelola = $this->isUnitKerja();
         $data = count($pengelola);
 
         for($i = 0; $i < $data; $i++){
@@ -127,11 +127,63 @@ class User extends Authenticatable
     }
 
     public function isUser(){
-        $user = $this->isMahasiswa_or_Dosen();
+        $user = $this->isUnitKerja();
         $data = count($user);
 
         for($i = 0; $i < $data; $i++){
             if($user[$i] === 'User'){
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+
+    public function isFakultas(){
+        $user = $this->isUnitKerja();
+        $data = count($user);
+
+        for($i = 0; $i < $data; $i++){
+            if($user[$i] === 'Fakultas Teknik Elektro dan Teknologi Informasi'){
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+
+    public function isInformatika(){
+        $user = $this->isUnitKerja();
+        $data = count($user);
+
+        for($i = 0; $i < $data; $i++){
+            if($user[$i] === 'Jurusan Teknik Informatika'){
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+
+    public function isInformasi(){
+        $user = $this->isUnitKerja();
+        $data = count($user);
+
+        for($i = 0; $i < $data; $i++){
+            if($user[$i] === 'Jurusan Sistem Informasi'){
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+
+    public function isElektro(){
+        $user = $this->isUnitKerja();
+        $data = count($user);
+
+        for($i = 0; $i < $data; $i++){
+            if($user[$i] === 'Jurusan Teknik Elektro'){
                 return true;
                 break;
             }

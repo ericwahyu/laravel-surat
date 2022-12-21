@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class FormatSeeder extends Seeder
+class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,7 +15,7 @@ class FormatSeeder extends Seeder
     public function run()
     {
         //
-        $format =[
+        $role =[
             [
                 'nama' => 'Fakultas Teknologi Elekro dan Teknologi Informasi',
                 'created_at' => null,
@@ -38,6 +38,6 @@ class FormatSeeder extends Seeder
             ],
         ];
 
-        DB::table('format')->insert($format);
+        DB::table('role')->insert($role);
     }
 }

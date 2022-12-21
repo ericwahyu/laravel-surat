@@ -21,35 +21,59 @@
                 <h4>Data Template</h4>
             </div>
             <div class="card-body">
-                <div class="form-group">
-                    <label style="font-size: 16px">Nama Template</label>
-                    <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" placeholder="Surat template" value="{{ old('nama') }}">
-                    @error('nama')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label style="font-size: 16px" class="form-label">Role Data</label>
+                        <select class="form-control @error('role_id') is-invalid @enderror" name="role_id">
+                            <option disabled selected>-- Role Data--</option>
+                            @if ($user->isAdmin())
+                                @foreach ($role as $role)
+                                    <option value="{{ $role->id }}" {{ (old("role_id") == $role->id ? "selected":"") }}>{{ $role->nama }}</option>
+                                @endforeach
+                            @else
+                                @for ($i = 0; $i < count($getRole); $i++)
+                                    <option value="{{ $getRole[$i][0] }}" {{ (old("role_id") == $getRole[$i][0] ? "selected":"") }}>{{ $getRole[$i][1] }}</option>
+                                @endfor
+                            @endif
+                        </select>
+                        @error('role_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="formFile" class="form-label" style="font-size: 16px">Nama File</label>
+                        <input class="form-control @error('file') is-invalid @enderror" type="file" id="formFile" name="file" value="{{ old('file') }}">
+                        <small id="passwordHelpBlock" class="form-text text-muted">
+                            Masukkan file dengan format .doc/.docx !!
+                        </small>
+                        @error('file')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="formFile" class="form-label" style="font-size: 16px">Nama File</label>
-                    <input class="form-control @error('file') is-invalid @enderror" type="file" id="formFile" name="file" value="{{ old('file') }}">
-                    <small id="passwordHelpBlock" class="form-text text-muted">
-                        Masukkan file dengan format .doc/.docx !!
-                    </small>
-                    @error('file')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label style="font-size: 16px">Keterangan</label>
-                    <textarea class="form-control @error('keterangan') is-invalid @enderror" name="keterangan">Jabatan yang bersangkutan :</textarea>
-                    @error('keterangan')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label style="font-size: 16px">Nama Template</label>
+                        <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" placeholder="Surat template" value="{{ old('nama') }}">
+                        @error('nama')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label style="font-size: 16px">Keterangan</label>
+                        <textarea class="form-control @error('keterangan') is-invalid @enderror" name="keterangan">Jabatan yang bersangkutan :</textarea>
+                        @error('keterangan')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                 </div>
             </div>
         </div>
@@ -61,7 +85,7 @@
                 <div class="row">
                     <div class="form-group col-sm-11">
                         <label style="font-size: 16px">Body Template</label>
-                        <textarea class="summernote" name="isi_body" id="summernote" cols="30" rows="10" required>{{ old('isi_body') }}</textarea>
+                        <textarea class="summernote @error('isi_body') is-invalid @enderror" name="isi_body" id="summernote" cols="30" rows="10">{{ old('isi_body') }}</textarea>
                         @error('isi_body')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -162,7 +186,7 @@
                                 </p>
                             </div>
                             <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
-                              
+
                             </div>
                             <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
                               In quis non esse eiusmod sunt fugiat magna pariatur officia anim ex officia nostrud amet nisi pariatur eu est id ut exercitation ex ad reprehenderit dolore nostrud sit ut culpa consequat magna ad labore proident ad qui et tempor exercitation in aute veniam et velit dolore irure qui ex magna ex culpa enim anim ea mollit consequat ullamco exercitation in.

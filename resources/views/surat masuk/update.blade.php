@@ -34,9 +34,9 @@
                         @enderror
                     </div>
                     <div class="form-group col-md-6">
-                        <label style="font-size: 16px">Keterangan Surat</label>
-                        <input type="text" class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" value="{{ $surat->keterangan }}">
-                        @error('keterangan')
+                        <label style="font-size: 16px">Keperluan Surat</label>
+                        <input type="text" class="form-control @error('keperluan') is-invalid @enderror" name="keperluan" value="{{ $surat->keperluan }}">
+                        @error('keperluan')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>

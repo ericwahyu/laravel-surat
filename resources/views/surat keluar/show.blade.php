@@ -39,9 +39,9 @@
                                 <td>{{ IdDateFormatter::format($surat->tanggal, IdDateFormatter::COMPLETE) }}</td>
                             </tr>
                             <tr>
-                                <td>Keterangan Surat</td>
+                                <td>Keperluan Surat</td>
                                 <td>:</td>
-                                <td>{{ $surat->keterangan }}</td>
+                                <td>{{ $surat->keperluan }}</td>
                             </tr>
                         </tbody>
                     </table>

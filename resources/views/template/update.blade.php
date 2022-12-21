@@ -17,35 +17,68 @@
                     <h4>Data Template</h4>
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <label style="font-size: 16px">Nama Template</label>
-                        <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" placeholder="Surat permohonan cuti" value="{{ $template->nama }}">
-                        @error('nama')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label style="font-size: 16px" class="form-label">Role Data</label>
+                            <select class="form-control @error('role_id') is-invalid @enderror" name="role_id" >
+                                <option disabled selected>-- Role Data--</option>
+                                @if ($user->isAdmin())
+                                    <option selected value="{{ $template->role->id }}">{{ $template->role->nama }}</option>
+                                    @foreach ($role as $role)
+                                        @if($template->role->id === $role->id)
+                                            @continue
+                                        @else
+                                            <option value="{{ $role->id }}" {{ (old("role_id") == $role->id ? "selected":"") }}>{{ $role->nama }}</option>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    @for ($i = 0; $i < count($getRole); $i++)
+                                        @if ($getRole[$i][0] == $template->role->id)
+                                            <option selected value="{{ $template->role->id }}">{{ $template->role->nama }}</option>
+                                        @else
+                                            <option value="{{ $getRole[$i][0] }}" {{ (old("role_id") == $getRole[$i][0] ? "selected":"") }}>{{ $getRole[$i][1] }}</option>
+                                        @endif
+                                    @endfor
+                                @endif
+                            </select>
+                            @error('role_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="formFile" class="form-label" style="font-size: 16px">Nama File</label>
+                            <input class="form-control @error('file') is-invalid @enderror" type="file" id="formFile" name="file" value="{{ old('file') }}">
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+                               File template sudah ada. Apakah yakin akan di rubah ??
+                            </small>
+                            @error('file')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="formFile" class="form-label" style="font-size: 16px">Nama File</label>
-                        <input class="form-control @error('file') is-invalid @enderror" type="file" id="formFile" name="file" value="{{ old('file') }}">
-                        <small id="passwordHelpBlock" class="form-text text-muted">
-                           File template sudah ada. Apakah yakin akan di rubah ??
-                        </small>
-                        @error('file')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size: 16px">Keterangan</label>
-                        <textarea class="form-control @error('keterangan') is-invalid @enderror" name="keterangan">{{ $template->keterangan }}</textarea>
-                        @error('keterangan')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label style="font-size: 16px">Nama Template</label>
+                            <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" value="{{ $template->nama }}">
+                            @error('nama')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label style="font-size: 16px">Keterangan</label>
+                            <textarea class="form-control @error('keterangan') is-invalid @enderror" name="keterangan">{{ $template->keterangan }}</textarea>
+                            @error('keterangan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                     </div>
                 </div>
             </div>

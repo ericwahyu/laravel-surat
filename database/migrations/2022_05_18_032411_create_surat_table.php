@@ -21,7 +21,7 @@ class CreateSuratTable extends Migration
             $table->string('file')->nullable();
             $table->date('tanggal')->nullable();
             $table->boolean('status')->nullable();
-            $table->string('keterangan')->nullable();
+            $table->string('keperluan')->nullable();
             $table->timestamps();
 
             $table->foreign('jenis_id')->references('id')->on('jenis')->onDelete('cascade');

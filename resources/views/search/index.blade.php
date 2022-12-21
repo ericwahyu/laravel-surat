@@ -45,7 +45,7 @@
                                     <th>Nomor Surat</th>
                                     <th>Judul Surat</th>
                                     <th>Tanggal Surat</th>
-                                    <th>Ketengan Surat</th>
+                                    <th>Keperluan Surat</th>
                                     <th>Action</th>
                                 </tr>
                                 <tbody id="dataSuratMasuk"></tbody>
@@ -61,7 +61,7 @@
                                     <th>Nomor Surat</th>
                                     <th>Judul Surat</th>
                                     <th>Tanggal Surat</th>
-                                    <th>Ketengan Surat</th>
+                                    <th>Keperluan Surat</th>
                                     <th>Action</th>
                                 </tr>
                                 <tbody id="dataSuratKeluar"></tbody>

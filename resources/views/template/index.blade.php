@@ -21,8 +21,9 @@
                                     <th class="text-center">
                                     #
                                     </th>
+                                    <th>Role Template</th>
                                     <th>Nama Template</th>
-                                    <th>Nama File</th>
+                                    {{-- <th>Nama File</th> --}}
                                     <th>Keterangan</th>
                                     <th>Action</th>
                                 </tr>
@@ -34,8 +35,9 @@
                                             <div class="sort-handler ui-sortable-handle text-center">
                                             <i class="fas fa-th"></i>
                                             </div>
+                                        <td>{{ $data->role->nama }}</td>
                                         <td>{{ $data->nama }}</td>
-                                        <td>{{ $data->file }}</td>
+                                        {{-- <td>{{ $data->file }}</td> --}}
                                         <td>{{ $data->keterangan }}</td>
                                         <td>
                                             <form action="{{ route('destroy.template', $data) }}" method="post">

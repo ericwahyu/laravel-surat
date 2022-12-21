@@ -16,7 +16,7 @@ class CreateGenerateTable extends Migration
         Schema::create('generate', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('template_id')->nullable();
-            $table->unsignedBigInteger('keperluan_id')->nullable();
+            $table->unsignedBigInteger('kode_id')->nullable();
             $table->unsignedBigInteger('surat_id');
             $table->text('content')->nullable();
             $table->text('footer_content')->nullable();
@@ -26,7 +26,7 @@ class CreateGenerateTable extends Migration
             $table->timestamps();
 
             $table->foreign('template_id')->references('id')->on('template')->onDelete('cascade');
-            $table->foreign('keperluan_id')->references('id')->on('keperluan')->onDelete('cascade');
+            $table->foreign('kode_id')->references('id')->on('kode')->onDelete('cascade');
             $table->foreign('surat_id')->references('id')->on('surat')->onDelete('cascade');
         });
     }

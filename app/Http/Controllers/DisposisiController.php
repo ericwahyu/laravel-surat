@@ -81,15 +81,17 @@ class DisposisiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,Surat $surat)
+    public function store(Request $request, $surat_id)
     {
         //
+        // dd($request);
         $request->validate([
             'perihal' => 'required',
             'tanggal' => 'required|date',
             'isi' => 'required'
         ]);
 
+        $surat = Surat::find($surat_id);
         $disposisi = new Disposisi();
         $disposisi->surat_id = $surat->id;
         $disposisi->perihal = $request->perihal;
@@ -100,7 +102,7 @@ class DisposisiController extends Controller
         //input data pembuat
         $disposisi_pembuat = new Disposisiuser();
         $disposisi_pembuat->disposisi_id = $disposisi->id;
-        $disposisi_pembuat->user_id = $request->pembuat;
+        $disposisi_pembuat->user_id = Auth::user()->id;
         $disposisi_pembuat->status = 1;
         $disposisi_pembuat->save();
 
@@ -119,17 +121,17 @@ class DisposisiController extends Controller
         $catatan->user_id = Auth::user()->id;
         switch($surat->jenis->kategori_id){
             case(1):
-                if($request->catatan == null){
+                if($request->catatan_disposisi == null){
                     $catatan->catatan = 'Menambah disposisi pada surat masuk, dengan nomor surat '.$surat->nosurat;
                 }else{
-                    $catatan->catatan = 'Menambah disposisi pada surat masuk, dengan nomor surat ' .$surat->nosurat. ', (catatan : '.$request->catatan.').';
+                    $catatan->catatan = 'Menambah disposisi pada surat masuk, dengan nomor surat ' .$surat->nosurat. ', (catatan : '.$request->catatan_disposisi.').';
                 }
                 break;
             case(2):
-                if($request->catatan == null){
+                if($request->catatan_disposisi == null){
                     $catatan->catatan = 'Menambah disposisi pada surat keluar, dengan nomor surat '.$surat->nosurat;
                 }else{
-                    $catatan->catatan = 'Menambah disposisi pada surat keluar, dengan nomor surat ' . $surat->nosurat . ', (catatan : '.$request->catatan.').';
+                    $catatan->catatan = 'Menambah disposisi pada surat keluar, dengan nomor surat ' . $surat->nosurat . ', (catatan : '.$request->catatan_disposisi.').';
                 }
             break;
         }

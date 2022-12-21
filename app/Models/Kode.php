@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Keperluan extends Model
+class Kode extends Model
 {
     use HasFactory;
-    protected $table = 'keperluan';
+    protected $table = 'kode';
     protected $primarykey = 'id';
     protected $fillable = [];
 
@@ -16,7 +16,7 @@ class Keperluan extends Model
         return $this->hasMany(Generate::class);
     }
 
-    public function format(){
-        return $this->belongsTo(Format::class);
+    public function role(){
+        return $this->belongsTo(Role::class);
     }
 }

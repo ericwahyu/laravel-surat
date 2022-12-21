@@ -33,7 +33,7 @@
                                 <th>No Surat</th>
                                 <th>Judul Surat</th>
                                 <th>Tanggal Surat</th>
-                                <th>Keterangan Surat</th>
+                                <th>Keperluan Surat</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -49,7 +49,7 @@
                                     <td>{{ $data->nosurat }}</td>
                                     <td>{{ $data->judul }}</td>
                                     <td>{{ IdDateFormatter::format($data->tanggal, IdDateFormatter::COMPLETE) }}</td>
-                                    <td>{{ $data->keterangan }}</td>
+                                    <td>{{ $data->keperluan }}</td>
                                     <td>
                                         <a href="{{ route('show.surat.keluar', $data) }}" class="btn btn-info" title="Lihat detail"><i class="fa fa-eye"></i> Detail</a>
                                     </td>

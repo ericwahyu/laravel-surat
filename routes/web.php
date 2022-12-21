@@ -10,6 +10,7 @@ use App\Http\Controllers\CatatanController;
 use App\Http\Controllers\GenerateController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KeperluanController;
+use App\Http\Controllers\KodeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FileController;
 use App\Models\Generate;
@@ -107,13 +108,13 @@ Route::group(['middleware' => ['auth']], function(){
             Route::post('/update/{jenis}', [JenisController::class, 'update'])->name('update.jenis')->middleware('checkRole:Admin,Pimpinan,Pengelola');
             Route::delete('/destroy/{jenis}', [JenisController::class, 'destroy'])->name('destroy.jenis')->middleware('checkRole:Admin,Pengelola');
         });
-        Route::prefix('/keperluan')->group(function(){
-            Route::get('/', [KeperluanController::class, 'index'])->name('index.keperluan');
-            Route::get('/create', [KeperluanController::class, 'create'])->name('create.keperluan')->middleware('checkRole:Admin,Pengelola');
-            Route::post('/store', [KeperluanController::class, 'store'])->name('store.keperluan')->middleware('checkRole:Admin,Pengelola');
-            Route::get('/edit/{keperluan}', [KeperluanController::class, 'edit'])->name('edit.keperluan')->middleware('checkRole:Admin,Pimpinan,Pengelola');
-            Route::post('/update/{keperluan}', [KeperluanController::class, 'update'])->name('update.keperluan')->middleware('checkRole:Admin,Pimpinan,Pengelola');
-            Route::delete('/destroy/{keperluan}', [KeperluanController::class, 'destroy'])->name('destroy.keperluan')->middleware('checkRole:Admin,Pengelola');
+        Route::prefix('/kode')->group(function(){
+            Route::get('/', [KodeController::class, 'index'])->name('index.kode');
+            Route::get('/create', [KodeController::class, 'create'])->name('create.kode')->middleware('checkRole:Admin,Pengelola');
+            Route::post('/store', [KodeController::class, 'store'])->name('store.kode')->middleware('checkRole:Admin,Pengelola');
+            Route::get('/edit/{kode}', [KodeController::class, 'edit'])->name('edit.kode')->middleware('checkRole:Admin,Pimpinan,Pengelola');
+            Route::post('/update/{kode}', [KodeController::class, 'update'])->name('update.kode')->middleware('checkRole:Admin,Pimpinan,Pengelola');
+            Route::delete('/destroy/{kode}', [KodeController::class, 'destroy'])->name('destroy.kode')->middleware('checkRole:Admin,Pengelola');
         });
         Route::prefix('/template')->group(function(){
             Route::get('/', [TemplateController::class, 'index'])->name('index.template');
@@ -151,7 +152,7 @@ Route::group(['middleware' => ['auth']], function(){
         //generate nomor sarat
         Route::post('/generateNomor', [GenerateController::class, 'generateNomor'])->name('generateNomor');
     });
-    Route::get('/getKeperluan', [GenerateController::class, 'getKeperluan'])->name('getKeperluan');
+    Route::get('/getKode', [GenerateController::class, 'getKode'])->name('getKode');
 
     Route::prefix('/search/')->group(function(){
         Route::get('/', [SearchController::class, 'index'])->name('index.search');

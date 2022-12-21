@@ -7,6 +7,7 @@ use App\Models\Template;
 use App\Models\Kategori;
 use App\Models\Mahasiswa;
 use App\Models\Dosen;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -47,8 +48,31 @@ class TemplateController extends Controller
         //
         $nav = 'umum';
         $menu = 'template';
+        $role = Role::all();
+        $user = Auth::user();
+        $unit = $user->isUnitkerja();
+        foreach($unit as $units){
+            if ($units == 'Fakultas Teknik Elektro dan Teknologi Informasi') {
+                $getRole[] = array(1, 'Fakultas Teknik Elektro dan Teknologi Informasi');
 
-        return view('template.insert', compact('nav', 'menu'));
+            } elseif($units == 'Jurusan Teknik Informatika'){
+                $getRole[] = array(2, 'Jurusan Teknik Informatika');
+
+            } elseif($units == 'Jurusan Sistem Informasi'){
+                $getRole[] = array(3, 'Jurusan Sistem Informasi');
+
+            } elseif($units == 'Jurusan Teknik Elektro'){
+                $getRole[] = array(4, 'Jurusan Teknik Elektro');
+
+            }elseif($user->isAdmin()){
+                $getRole[] = '';
+
+            }elseif(!$user->isAdmin() && $user->isPimpinan() || $user->isPengelola()){
+                break;
+            }
+        }
+        // dd($getRole);
+        return view('template.insert', compact('nav', 'menu', 'role', 'getRole', 'user'));
     }
 
     /**
@@ -62,14 +86,17 @@ class TemplateController extends Controller
         //
         // dd($request);
         $request->validate([
+            'role_id' => 'required',
             'nama' => 'required',
             'file' => 'required|mimes:docx,doc',
             'keterangan' => 'nullable',
             'isi_body' => 'required',
             'jumlah_ttd' => 'required',
         ]);
+
         // dd($request);
         $template = new Template();
+        $template->role_id = $request->role_id;
         $template->nama = $request->nama;
         if($request->hasFile('file')){
             $file = $request->file('file');
@@ -115,8 +142,31 @@ class TemplateController extends Controller
         //
         $nav = 'umum';
         $menu = 'template';
+        $role = Role::all();
+        $user = Auth::user();
+        $unit = $user->isUnitkerja();
+        foreach($unit as $units){
+            if ($units == 'Fakultas Teknik Elektro dan Teknologi Informasi') {
+                $getRole[] = array(1, 'Fakultas Teknik Elektro dan Teknologi Informasi');
 
-        return view('template.update', compact('nav', 'menu', 'template'));
+            } elseif($units == 'Jurusan Teknik Informatika'){
+                $getRole[] = array(2, 'Jurusan Teknik Informatika');
+
+            } elseif($units == 'Jurusan Sistem Informasi'){
+                $getRole[] = array(3, 'Jurusan Sistem Informasi');
+
+            } elseif($units == 'Jurusan Teknik Elektro'){
+                $getRole[] = array(4, 'Jurusan Teknik Elektro');
+
+            }elseif($user->isAdmin()){
+                $getRole[] = '';
+
+            }elseif(!$user->isAdmin() && $user->isPimpinan() || $user->isPengelola()){
+                break;
+            }
+        }
+
+        return view('template.update', compact('nav', 'menu', 'template', 'role', 'user', 'getRole'));
     }
 
     /**

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormatTable extends Migration
+class CreateKodeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,15 @@ class CreateFormatTable extends Migration
      */
     public function up()
     {
-        Schema::create('format', function (Blueprint $table) {
+        Schema::create('kode', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('role_id');
             $table->string('nama');
+            $table->string('kode');
+            $table->string('penomoran');
             $table->timestamps();
+
+            $table->foreign('role_id')->references('id')->on('role')->onDelete('cascade');
         });
     }
 
@@ -27,6 +32,6 @@ class CreateFormatTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('format');
+        Schema::dropIfExists('keperluan');
     }
 }

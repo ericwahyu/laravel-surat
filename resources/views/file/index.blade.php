@@ -10,9 +10,6 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                    {{-- <div class="form-group col-md-6">
-                        <input type="text" class="form-control " name="search" id="search" placeholder="Search...">
-                    </div> --}}
                     <div class="form-group">
                         <ul class="nav nav-pills" id="myTab3" role="tablist">
                             <li class="nav-item">
@@ -106,7 +103,7 @@
     $(document).ready(function(){
         $('#jenissm').change(function(){
             let jenis_id = $(this).val();
-            console.log(jenis_id);
+            // console.log(jenis_id);
             if(jenis_id){
                 $.ajax({
                     url: "{{ route('filter.file') }}",
@@ -128,8 +125,9 @@
         $('#jenissk').change(function(){
             let jenis_id = $('#jenissk').val();
             // let keperluan_id = $('#keperluan').val();
-            console.log(jenis_id);
-            $.ajax({
+            // console.log(jenis_id);
+            if(jenis_id){
+                $.ajax({
                 url: "{{ route('filter.file') }}",
                 method: 'GET',
                 data: {'jenis_id': jenis_id},
@@ -142,10 +140,11 @@
                     $('.SK').html(data.data_suratKeluar);
                 }
             });
+            }else{
+                $('#dataSuratKeluar').empty();
+            }
         });
-
     });
-
 </script>
 @endsection
 

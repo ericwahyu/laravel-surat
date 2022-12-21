@@ -7,11 +7,14 @@ use App\Models\Kategori;
 use App\Models\Disposisi;
 use App\Models\Jenis;
 use App\Models\Catatan;
+use App\Models\Dosen;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Carbon;
 use \Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\DisposisiController;
 
 class SuratController extends Controller
 {
@@ -83,7 +86,9 @@ class SuratController extends Controller
         $nav = 'transaksi';
         $menu = 'masuk';
         $jenis = Jenis::where('kategori_id', 1)->get();
-        return view('surat masuk.insert', compact('nav', 'menu', 'jenis'));
+        $user_dosen = Dosen::join('users', 'dosen.user_id', '=', 'users.id' )->get();
+        $user_mahasiswa = Mahasiswa::join('users', 'mahasiswa.user_id', '=', 'users.id' )->get();
+        return view('surat masuk.insert', compact('nav', 'menu', 'jenis', 'user_dosen', 'user_mahasiswa'));
     }
 
     /**
@@ -95,13 +100,14 @@ class SuratController extends Controller
     public function store(Request $request)
     {
         //
+        // dd($request);
         $request->validate([
             'jenis_id' => 'required',
             'nomor' => 'required',
             'judul' => 'required',
             'tanggal' => 'required|date',
             'file' => 'required|file',
-            'keterangan' => 'required',
+            'keperluan' => 'required',
             'catatan' => 'nullable',
         ]);
         $suratSM = new Surat();
@@ -110,7 +116,7 @@ class SuratController extends Controller
         $suratSM->judul = $request->judul;
         $suratSM->tanggal = $request->tanggal;
         $suratSM->status = 1;
-        $suratSM->keterangan = $request->keterangan;
+        $suratSM->keperluan = $request->keperluan;
         if($request->hasFile('file')){
             $file = $request->file('file');
             $file_name = now()->timestamp . '_' . $request->judul.'.'.$file->getClientOriginalExtension();
@@ -125,17 +131,20 @@ class SuratController extends Controller
             if($request->catatan == null){
                 $catatan->catatan = 'Menambah data surat masuk, dengan nomor surat '. $request->nomor;
             }else{
-                $catatan->catatan = 'Menambah data surat masuk, dengan nomor surat '. $request->nomor. ', (catatan : '. $request->catatan. ').';
+                $catatan->catatan = 'Menambah data surat masuk, dengan nomor surat '. $request->nomor. ', (catatan : '. $request->catatan_surat. ').';
             }
             $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
             $catatan->save();
         }
 
-        if($catatan){
-            return redirect()->route('index.disposisi', $suratSM->id)->with('success', 'Data berhasil di tambah !!');
-        }else{
-            return back()->with('error', 'Data gagal di tambah !!');
-        }
+        return app('App\Http\Controllers\DisposisiController')->store($request, $suratSM->id);
+        // $toDisposisi = (new DisposisiController)->store($request, $suratSM->id);
+        // return $toDisposisi;
+        // if($catatan){
+        //     return redirect()->route('index.disposisi', $suratSM->id)->with('success', 'Data berhasil di tambah !!');
+        // }else{
+        //     return back()->with('error', 'Data gagal di tambah !!');
+        // }
 
     }
 
@@ -188,14 +197,14 @@ class SuratController extends Controller
             'nomor' => 'required',
             'judul' => 'required',
             'tanggal' => 'required|date',
-            'keterangan' => 'required',
+            'keperluan' => 'required',
             'catatan' => 'nullable',
         ]);
         $surat->jenis_id = $request->jenis_id;
         $surat->nosurat = $request->nomor;
         $surat->judul = $request->judul;
         $surat->tanggal = $request->tanggal;
-        $surat->keterangan = $request->keterangan;
+        $surat->keperluan = $request->keperluan;
         if($request->hasFile('file')){
             $filelama = public_path('surat/masuk/'.$surat->file);
             File::delete($filelama);

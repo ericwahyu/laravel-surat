@@ -11,7 +11,7 @@
 <div class="section-body">
     <form action="{{ route('store.disposisi', $surat) }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="pembuat" value="{{ Auth::user()->id }}">
+        {{-- <input type="hidden" name="pembuat" value="{{ Auth::user()->id }}"> --}}
         <div class="card">
             <div class="card-header">
                 <h4>Data Disposisi</h4>
