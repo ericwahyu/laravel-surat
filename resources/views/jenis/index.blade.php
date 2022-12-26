@@ -21,10 +21,7 @@
                         <table class="table table-striped" id="table-1">
                             <thead>
                                 <tr>
-                                    <th class="text-center">
-                                    #
-                                    </th>
-                                    <th>Kategori Surat</th>
+                                    <th class="text-center">#</th>
                                     <th>Jenis Surat</th>
                                     <th>Action</th>
                                 </tr>
@@ -37,7 +34,6 @@
                                             <i class="fas fa-th"></i>
                                             </div>
                                         </td>
-                                        <td>{{ $data->kategori->nama }}</td>
                                         <td>{{ $data->nama }}</td>
                                         <td>
                                             <form id="delete" action="{{ route('destroy.jenis', $data) }}" method="post">

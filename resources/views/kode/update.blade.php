@@ -19,29 +19,29 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group">
-                                <label style="font-size: 16px" class="form-label">Role Data</label>
-                                <select class="form-control @error('role_id') is-invalid @enderror" name="role_id" >
-                                    <option disabled selected>-- Role Data--</option>
+                                <label style="font-size: 16px" class="form-label">Unit Data</label>
+                                <select class="form-control @error('unit_id') is-invalid @enderror" name="unit_id" >
+                                    <option disabled selected>-- Unit Data--</option>
                                     @if ($user->isAdmin())
-                                        <option selected value="{{ $kode->role->id }}">{{ $kode->role->nama }}</option>
-                                        @foreach ($role as $role)
-                                            @if($kode->role->id === $role->id)
+                                        <option selected value="{{ $kode->unitKerja->id }}">{{ $kode->unitKerja->nama }}</option>
+                                        @foreach ($unitKerja as $unitKerja)
+                                            @if($kode->unitKerja->id === $unitKerja->id)
                                                 @continue
                                             @else
-                                                <option value="{{ $role->id }}" {{ (old("role_id") == $role->id ? "selected":"") }}>{{ $role->nama }}</option>
+                                                <option value="{{ $unitKerja->id }}" {{ (old("unit_id") == $unitKerja->id ? "selected":"") }}>{{ $unitKerja->nama }}</option>
                                             @endif
                                         @endforeach
                                     @else
-                                        @for ($i = 0; $i < count($getRole); $i++)
-                                            @if ($getRole[$i][0] == $kode->role->id)
-                                                <option selected value="{{ $kode->role->id }}">{{ $kode->role->nama }}</option>
+                                        @for ($i = 0; $i < count($getUnit); $i++)
+                                            @if ($getUnit[$i][0] == $kode->unitKerja->id)
+                                                <option selected value="{{ $kode->unitKerja->id }}">{{ $kode->unitKerja->nama }}</option>
                                             @else
-                                                <option value="{{ $getRole[$i][0] }}" {{ (old("role_id") == $getRole[$i][0] ? "selected":"") }}>{{ $getRole[$i][1] }}</option>
+                                                <option value="{{ $getUnit[$i][0] }}" {{ (old("unit_id") == $getUnit[$i][0] ? "selected":"") }}>{{ $getUnit[$i][1] }}</option>
                                             @endif
                                         @endfor
                                     @endif
                                 </select>
-                                @error('role_id')
+                                @error('unit_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -76,6 +76,22 @@
                                         {{ $message }}
                                     </div>
                                 @enderror
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label style="font-size: 16px">Increment Penomoran Surat</label>
+                                        <input type="number" class="form-control @error('increment') is-invalid @enderror" name="increment" placeholder="" value="{{ $kode->increment }}" min="1">
+                                        @error('increment')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <label style="font-size: 16px; margin-top: 40px">Auto Increment</label>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Simpan Data</button>

@@ -24,26 +24,26 @@ class CatatanController extends Controller
                 $tanggal_akhir = date('Y-m-d',strtotime($request->tanggalAkhir));
 
                 $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
-                            ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                            ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                            ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                            ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                            ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                            ->where('kategori_id', 1)
-                            ->whereDate('waktu', '>=', $tanggal_awal)
-                            ->whereDate('waktu', '<=', $tanggal_akhir)
-                            ->select('catatan.*')
-                            ->distinct()->latest('catatan.id')->get();
+                    ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    ->where('disposisi_user.kategori_id', 1)
+                    ->where('users.id', Auth::user()->id)
+                    ->whereDate('waktu', '>=', $tanggal_awal)
+                    ->whereDate('waktu', '<=', $tanggal_akhir)
+                    ->select('catatan.*')
+                    ->distinct()->latest('catatan.id')->get();
             }else{
                 $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
-                            ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                            ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                            ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                            ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                            ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                            ->where('kategori_id', 1)
-                            ->select('catatan.*')
-                            ->distinct()->latest('catatan.id')->get();
+                    ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    ->where('disposisi_user.kategori_id', 1)
+                    ->where('users.id', Auth::user()->id)
+                    ->select('catatan.*')
+                    ->distinct()->latest('catatan.id')->get();
             }
         }else{
             if($request->input('tanggalAwal') && $request->input('tanggalAkhir')){
@@ -51,35 +51,34 @@ class CatatanController extends Controller
                 $tanggal_akhir = date('Y-m-d',strtotime($request->tanggalAkhir));
 
                 $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
-                            ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                            ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                            ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                            ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                            ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                            ->where('surat.status', '!=', 0)
-                            ->where('kategori_id', 1)
-                            ->where('disposisi_user.user_id', Auth::user()->id)
-                            ->whereDate('waktu', '>=', $tanggal_awal)
-                            ->whereDate('waktu', '<=', $tanggal_akhir)
-                            ->select('catatan.*')
-                            ->distinct()->latest('catatan.id')->get();
+                    ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('disposisi_user.kategori_id', 1)
+                    ->where('users.id', Auth::user()->id)
+                    // ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->whereDate('waktu', '>=', $tanggal_awal)
+                    ->whereDate('waktu', '<=', $tanggal_akhir)
+                    ->select('catatan.*')
+                    ->distinct()->latest('catatan.id')->get();
             }else{
                 $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
-                            ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                            ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                            ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                            ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                            ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                            ->where('surat.status', '!=', 0)
-                            ->where('kategori_id', 1)
-                            ->where('disposisi_user.user_id', Auth::user()->id)
-                            ->select('catatan.*')
-                            ->distinct()->latest('catatan.id')->get();
+                    ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('disposisi_user.kategori_id', 1)
+                    ->where('users.id', Auth::user()->id)
+                    ->select('catatan.*')
+                    ->distinct()->latest('catatan.id')->get();
             }
         }
 
         $nav = 'agenda';
-        $menu = 'masuk';
+        $menu = 'masuk_catatan';
         $user = Auth::user();
         return view('catatan SM.index', compact('nav', 'menu', 'catatan', 'user', 'request'));
     }
@@ -94,26 +93,26 @@ class CatatanController extends Controller
                 $tanggal_akhir = date('Y-m-d',strtotime($request->tanggalAkhir));
 
                 $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
-                            ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                            ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                            ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                            ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                            ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                            ->where('kategori_id', 2)
-                            ->whereDate('waktu', '>=', $tanggal_awal)
-                            ->whereDate('waktu', '<=', $tanggal_akhir)
-                            ->select('catatan.*')
-                            ->distinct()->latest('catatan.id')->get();
+                    ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    ->where('disposisi_user.kategori_id', 2)
+                    ->where('users.id', Auth::user()->id)
+                    ->whereDate('waktu', '>=', $tanggal_awal)
+                    ->whereDate('waktu', '<=', $tanggal_akhir)
+                    ->select('catatan.*')
+                    ->distinct()->latest('catatan.id')->get();
             }else{
                 $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
-                            ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                            ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                            ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                            ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                            ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                            ->where('kategori_id', 2)
-                            ->select('catatan.*')
-                            ->distinct()->latest('catatan.id')->get();
+                    ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    ->where('disposisi_user.kategori_id', 2)
+                    ->where('users.id', Auth::user()->id)
+                    ->select('catatan.*')
+                    ->distinct()->latest('catatan.id')->get();
             }
         }else{
             if($request->input('tanggalAwal') && $request->input('tanggalAkhir')){
@@ -121,35 +120,34 @@ class CatatanController extends Controller
                 $tanggal_akhir = date('Y-m-d',strtotime($request->tanggalAkhir));
 
                 $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
-                            ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                            ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                            ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                            ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                            ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                            ->where('surat.status', '!=', 0)
-                            ->where('kategori_id', 2)
-                            ->where('disposisi_user.user_id', Auth::user()->id)
-                            ->whereDate('waktu', '>=', $tanggal_awal)
-                            ->whereDate('waktu', '<=', $tanggal_akhir)
-                            ->select('catatan.*')
-                            ->distinct()->latest('catatan.id')->get();
+                    ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('disposisi_user.kategori_id', 2)
+                    ->where('users.id', Auth::user()->id)
+                    ->whereDate('waktu', '>=', $tanggal_awal)
+                    ->whereDate('waktu', '<=', $tanggal_akhir)
+                    ->select('catatan.*')
+                    ->distinct()->latest('catatan.id')->get();
             }else{
                 $catatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
-                            ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                            ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                            ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                            ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                            ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                            ->where('surat.status', '!=', 0)
-                            ->where('kategori_id', 2)
-                            ->where('disposisi_user.user_id', Auth::user()->id)
-                            ->select('catatan.*')
-                            ->distinct()->latest('catatan.id')->get();
+                    ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('disposisi_user.kategori_id', 2)
+                    ->where('users.id', Auth::user()->id)
+                    ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->select('catatan.*')
+                    ->distinct()->latest('catatan.id')->get();
             }
         }
 
         $nav = 'agenda';
-        $menu = 'keluar';
+        $menu = 'keluar_catatan';
         $user = Auth::user();
         return view('catatan SK.index', compact('nav', 'menu', 'catatan', 'request'));
     }

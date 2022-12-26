@@ -38,10 +38,10 @@
                                     <tr>
                                         <th>Jenis Surat</th>
                                         <th>Nomor Surat</th>
-                                        <th>Judul Surat</th>
+                                        <th>Judul</th>
                                         <th>Tanggal Surat</th>
+                                        <th>Keperluan Surat</th>
                                         <th>File Surat</th>
-                                        <th>Action</th>
                                     </tr>
                                     <tbody id="dataSuratMasuk"></tbody>
                                 </table>
@@ -57,17 +57,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                {{-- <div class="form-group col-md-3">
-                                    <select class="form-control @error('') is-invalid @enderror" name="" id="keperluan">
-                                        <option selected disabled>-- Pilih kelompok surat --</option>
-                                        @foreach ($keperluan as $keperluan)
-                                            <option value="{{ $keperluan->id }}">{{ $keperluan->nama }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-3 mt-1">
-                                    <button type="button" class="btn btn-primary" id="filter">Filter</button>
-                                </div> --}}
                             </div>
                             <h2 class="section-title">Surat Keluar</h2>
                             <div class="table-responsive">
@@ -75,10 +64,10 @@
                                     <tr>
                                         <th>Jenis Surat</th>
                                         <th>Nomor Surat</th>
-                                        <th>Judul Surat</th>
+                                        <th>Judul</th>
                                         <th>Tanggal Surat</th>
+                                        <th>Keperluan Surat</th>
                                         <th>File Surat</th>
-                                        <th>Action</th>
                                     </tr>
                                     <tbody id="dataSuratKeluar"></tbody>
                                 </table>
@@ -88,13 +77,6 @@
                 </div>
             </div>
         </div>
-    <div class="row">
-        <div class="card">
-            <div class="card-body">
-
-            </div>
-        </div>
-    </div>
 </div>
 @endsection
 @section('script')
@@ -133,10 +115,7 @@
                 data: {'jenis_id': jenis_id},
                 dataType: 'JSON',
                 success: function(data) {
-                    // console.log(data);
-                    // $('#dataSuratMasuk').html(data.table_data_suratMasuk);
                     $('#dataSuratKeluar').html(data.table_data_suratKeluar);
-                    // $('.SM').html(data.data_suratMasuk);
                     $('.SK').html(data.data_suratKeluar);
                 }
             });

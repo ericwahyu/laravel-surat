@@ -37,8 +37,29 @@ class SearchController extends Controller
             $search = $request->get('query');
                 if($user->isAdmin()){
                     $suratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                        ->where('kategori_id', 1)
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    // ->where('surat.status', '!=', 0)
+                    ->where('disposisi_user.kategori_id', 1)
+                    ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->where(function($query) use($search){
+                        $query->where('surat.judul', 'like' , '%'. $search .'%')
+                            ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
+                            ->orwhereYear('surat.tanggal', $search)
+                            ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
+                            ->orwhere('jenis.nama', 'LIKE','%'.$search.'%');
+                        })
+                    ->select('surat.*')
+                    ->distinct()->latest()->get();
+                }else{
+                    $suratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                        ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                        ->where('surat.status', '!=', 0)
+                        ->where('disposisi_user.kategori_id', 1)
+                        ->where('disposisi_user.user_id', Auth::user()->id)
                         ->where(function($query) use($search){
                             $query->where('surat.judul', 'like' , '%'. $search .'%')
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
@@ -48,24 +69,6 @@ class SearchController extends Controller
                             })
                         ->select('surat.*')
                         ->distinct()->latest()->get();
-                }else{
-                    $suratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                            ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                            ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                            ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                            ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                            ->where('surat.status', '!=', 0)
-                            ->where('kategori_id', 1)
-                            ->where('disposisi_user.user_id', Auth::user()->id)
-                            ->where(function($query) use($search){
-                                $query->where('surat.judul', 'like' , '%'. $search .'%')
-                                    ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
-                                    ->orwhereYear('surat.tanggal', $search)
-                                    ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
-                                    ->orwhere('jenis.nama', 'LIKE','%'.$search.'%');
-                                })
-                            ->select('surat.*')
-                            ->distinct()->latest()->get();
                 }
 
             $total_row_masuk = $suratMasuk->count();
@@ -93,40 +96,43 @@ class SearchController extends Controller
             // $search = $request->get('query');
             if($user->isAdmin()){
                 $suratKeluar = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                        ->where('kategori_id', 2)
-                        ->where(function($query) use($search){
-                            $query->where('surat.judul', 'like' , '%'. $search .'%')
-                                ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
-                                ->orwhereYear('surat.tanggal', $search)
-                                ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
-                                ->orwhere('generate.content', 'LIKE','%'.$search.'%')
-                                ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%');
-                            })
-                        ->select('surat.*')
-                        ->distinct()->latest()->get();
+                    ->join('generate', 'surat.id', '=', 'generate.surat_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    // ->where('surat.status', '!=', 0)
+                    ->where('disposisi_user.kategori_id', 2)
+                    ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->where(function($query) use($search){
+                        $query->where('surat.judul', 'like' , '%'. $search .'%')
+                            ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
+                            ->orwhereYear('surat.tanggal', $search)
+                            ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
+                            ->orwhere('generate.content', 'LIKE','%'.$search.'%')
+                            ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%');
+                        })
+                    ->select('surat.*')
+                    ->distinct()->latest()->get();
             }else{
                 $suratKeluar = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                        ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                        ->where('surat.status', '!=', 0)
-                        ->where('kategori_id', 2)
-                        ->where(function($query) use($search){
-                            $query->where('surat.judul', 'like' , '%'. $search .'%')
-                                ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
-                                ->orwhereYear('surat.tanggal', $search)
-                                ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
-                                ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
-                                ->orwhere('generate.content', 'LIKE','%'.$search.'%')
-                                ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%');
-                            })
-                        ->where('disposisi_user.user_id', Auth::user()->id)
-                        ->select('surat.*')
-                        ->distinct()->latest()->get();
+                    ->join('generate', 'surat.id', '=', 'generate.surat_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('disposisi_user.kategori_id', 2)
+                    ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->where(function($query) use($search){
+                        $query->where('surat.judul', 'like' , '%'. $search .'%')
+                            ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
+                            ->orwhereYear('surat.tanggal', $search)
+                            ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
+                            ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
+                            ->orwhere('generate.content', 'LIKE','%'.$search.'%')
+                            ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%');
+                        })
+                    ->select('surat.*')
+                    ->distinct()->latest()->get();
             }
 
             $total_row_keluar = $suratKeluar->count();
@@ -154,8 +160,11 @@ class SearchController extends Controller
                 if($user->isAdmin()){
                     $disposisiSuratMasuk = Disposisi::join('surat', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                        ->where('kategori_id', 1)
+                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                        // ->where('surat.status', '!=', 0)
+                        ->where('disposisi_user.kategori_id', 1)
+                        ->where('disposisi_user.user_id', Auth::user()->id)
                         ->where(function($query) use($search){
                             $query->where('surat.judul', 'like' , '%'. $search .'%')
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
@@ -172,11 +181,10 @@ class SearchController extends Controller
                 }else{
                     $disposisiSuratMasuk = Disposisi::join('surat', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
                         ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                         ->where('surat.status', '!=', 0)
-                        ->where('kategori_id', 1)
+                        ->where('disposisi_user.kategori_id', 1)
                         ->where('disposisi_user.user_id', Auth::user()->id)
                         ->where(function($query) use($search){
                             $query->where('surat.judul', 'like' , '%'. $search .'%')
@@ -218,8 +226,11 @@ class SearchController extends Controller
                     $disposisiSuratKeluar = Disposisi::join('surat', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
                         ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                        ->where('kategori_id', 2)
+                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                        // ->where('surat.status', '!=', 0)
+                        ->where('disposisi_user.kategori_id', 2)
+                        ->where('disposisi_user.user_id', Auth::user()->id)
                         ->where(function($query) use($search){
                             $query->where('surat.judul', 'like' , '%'. $search .'%')
                                 ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
@@ -239,11 +250,10 @@ class SearchController extends Controller
                     $disposisiSuratKeluar = Disposisi::join('surat', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
                         ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
                         ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                         ->where('surat.status', '!=', 0)
-                        ->where('kategori_id', 2)
+                        ->where('disposisi_user.kategori_id', 2)
                         ->where('disposisi_user.user_id', Auth::user()->id)
                         ->where(function($query) use($search){
                             $query->where('surat.judul', 'like' , '%'. $search .'%')

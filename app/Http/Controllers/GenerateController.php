@@ -13,6 +13,8 @@ use App\Models\Dosen;
 use App\Models\Kode;
 use App\Models\PihakTTD;
 use App\Models\Role;
+use App\Models\UnitKerja;
+use App\Models\Response;
 use App\Models\Files;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\DB;
@@ -39,22 +41,23 @@ class GenerateController extends Controller
             if($user->isAdmin()){
                 $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        // ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                        ->where('kategori_id', 2)
+                        ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                        // ->where('surat.status', '!=', 0)
+                        ->where('disposisi_user.kategori_id', 2)
+                        ->where('disposisi_user.user_id', Auth::user()->id)
                         ->whereYear('surat.tanggal', $request->tahun)
                         ->select('surat.*')
                         ->distinct()->latest()->get();
             }else{
                 $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        // ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
                         ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                         ->where('surat.status', '!=', 0)
-                        ->where('kategori_id', 2)
+                        ->where('disposisi_user.kategori_id', 2)
                         ->where('disposisi_user.user_id', Auth::user()->id)
                         ->whereYear('surat.tanggal', $request->tahun)
                         ->select('surat.*')
@@ -64,21 +67,22 @@ class GenerateController extends Controller
             if($user->isAdmin()){
                 $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        // ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                        ->where('kategori_id', 2)
+                        ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                        // ->where('surat.status', '!=', 0)
+                        ->where('disposisi_user.kategori_id', 2)
+                        ->where('disposisi_user.user_id', Auth::user()->id)
                         ->select('surat.*')
                         ->distinct()->latest()->get();
             }else{
                 $generate = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        // ->join('keperluan', 'keperluan.id', '=', 'generate.keperluan_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
                         ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                         ->where('surat.status', '!=', 0)
-                        ->where('kategori_id', 2)
+                        ->where('disposisi_user.kategori_id', 2)
                         ->where('disposisi_user.user_id', Auth::user()->id)
                         ->select('surat.*')
                         ->distinct()->latest()->get();
@@ -100,38 +104,40 @@ class GenerateController extends Controller
     {
         //
         $nav = 'transaksi';
-        $menu = 'keluar';
-        $jenis = Jenis::where('kategori_id', 2)->get();
+        $menu = 'buat';
+        $jenis = Jenis::all();
         $dosen = Dosen::all();
         $mahasiswa = Mahasiswa::all();
         $user = Auth::user();
         $user_dosen = Dosen::join('users', 'dosen.user_id', '=', 'users.id' )->get();
         $user_mahasiswa = Mahasiswa::join('users', 'mahasiswa.user_id', '=', 'users.id' )->get();
-
-        $role = Role::all();
+        $response = Response::all();
         $kode = Kode::all();
-        $unit = $user->isUnitkerja();
-        foreach($unit as $units){
-            if ($units == 'Fakultas Teknik Elektro dan Teknologi Informasi') {
-                $getRole[] = array(1, 'Fakultas Teknik Elektro dan Teknologi Informasi');
+        $unitKerja = UnitKerja::orwhere('nama', 'like', '%Fakultas Teknik Elektro dan Teknologi Informasi%')
+            ->orwhere('nama', 'like', '%Jurusan Teknik Informatika%')
+            ->orwhere('nama', 'like', '%Jurusan Sistem Informasi%')
+            ->orwhere('nama', 'like', '%Jurusan Teknik Elektro%')
+            ->get();
+        $unit = Auth::user()->isUnitkerja();
+        for($i = 0; $i < count($unit); $i++){
+            if($user->isAdmin()){
+                $getUnit[] = '';
 
-            } elseif($units == 'Jurusan Teknik Informatika'){
-                $getRole[] = array(2, 'Jurusan Teknik Informatika');
+            }elseif($unit[$i][1] === 'Fakultas Teknik Elektro dan Teknologi Informasi'){
+                $getUnit[] = array($unit[$i][0], 'Fakultas Teknik Elektro dan Teknologi Informasi');
 
-            } elseif($units == 'Jurusan Sistem Informasi'){
-                $getRole[] = array(3, 'Jurusan Sistem Informasi');
+            } elseif($unit[$i][1] === 'Jurusan Teknik Informatika'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Informatika');
 
-            } elseif($units == 'Jurusan Teknik Elektro'){
-                $getRole[] = array(4, 'Jurusan Teknik Elektro');
+            } elseif($unit[$i][1] === 'Jurusan Sistem Informasi'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Sistem Informasi');
 
-            } elseif($user->isAdmin()){
-                $getRole[] = '';
+            } elseif($unit[$i][1] === 'Jurusan Teknik Elektro'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Elektro');
 
-            }elseif(!$user->isAdmin() && $user->isPimpinan() || $user->isPengelola()){
-                break;
             }
         }
-        return view('surat keluar.insert', compact('nav', 'menu', 'template','kode', 'jenis', 'dosen', 'mahasiswa', 'user', 'user_dosen', 'user_mahasiswa', 'role', 'getRole'));
+        return view('surat keluar.insert', compact('nav', 'menu', 'template','kode', 'jenis', 'dosen', 'mahasiswa', 'user', 'user_dosen', 'user_mahasiswa', 'unitKerja', 'getUnit', 'response'));
     }
 
     /**
@@ -143,14 +149,18 @@ class GenerateController extends Controller
     public function store(Request $request)
     {
         //
-        // return $this->generateSurat($request);
-        // dd($request);
         $request->validate([
             'jenis_id' => 'required',
             'judul' => 'required',
             'keperluan' => 'required',
-            'catatan' => 'nullable',
+            'nomor_surat' => 'required',
+            'tempat_surat' => 'required',
+            'perihal' => 'required',
+            'isi' => 'required',
+            'response' => 'required',
+            'radiobox' => 'required',
         ]);
+        // dd($request);
 
         if($request->isi_body == null){
             if($request->hasFile('file')){
@@ -160,20 +170,25 @@ class GenerateController extends Controller
                     $extension = $file->getClientOriginalExtension();
                     $check=in_array($extension,$allowedfileExtension);
                     if($check){
-                        $file_name = now()->timestamp . '_' .$filename.'.'.$file->getClientOriginalExtension();
-                        $file->move('surat/keluar',$file_name);
+                        $file_name = now()->timestamp . '_' .$request->judul.'_file1'.'.'.$file->getClientOriginalExtension();
+                        $file->move('surat/file surat',$file_name);
                     }else{
                         return redirect()->back()->withInput()->with('warning', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
                     }
                 $surat = new Surat();
                 $surat->jenis_id = $request->jenis_id;
                 $surat->judul = $request->judul;
-                $surat->file= $file_name;
+                // $surat->file= $file_name;
                 $surat->nosurat = $request->nomor_surat;
                 $surat->tanggal = $request->tanggal_surat;
                 $surat->status = 1;
                 $surat->keperluan = $request->keperluan;
                 $surat->save();
+
+                $file = new Files();
+                $file->surat_id = $surat->id;
+                $file->file =  $file_name;
+                $file->save();
 
                 $generate = new Generate();
                 $generate->surat_id = $surat->id;
@@ -191,12 +206,17 @@ class GenerateController extends Controller
             $surat = new Surat();
             $surat->jenis_id = $request->jenis_id;
             $surat->judul = $request->judul;
-            $surat->file= $file_name;
+            // $surat->file= $file_name;
             $surat->nosurat = $request->nomor_surat;
             $surat->tanggal = $request->tanggal_surat;
             $surat->status = 1;
             $surat->keperluan = $request->keperluan;
             $surat->save();
+
+            $file = new Files();
+            $file->surat_id = $surat->id;
+            $file->file =  $file_name;
+            $file->save();
 
             $generate = new Generate();
             $generate->template_id = $request->template_id;
@@ -216,15 +236,24 @@ class GenerateController extends Controller
                 $pihak_ttd->nip = $pihak[$i][1];
                 $pihak_ttd->save();
             }
+
+            $kode = Kode::find($request->kode_id);
+            $update_increment = DB::table('kode')
+                ->where('id', $request->kode_id)
+                ->update([
+                    'increment' => $kode->increment+1,
+                ]);
+
+
         }
 
         $catatan = new Catatan();
         $catatan->surat_id = $surat->id;
         $catatan->user_id = Auth::user()->id;
         if($request->catatan_surat == null){
-            $catatan->catatan = 'Menambah data surat keluar, dengan nomor surat '. $request->nomor_surat;
+            $catatan->catatan = 'Menambah data surat pada nomor surat '. $request->nomor_surat;
         }else{
-            $catatan->catatan = 'Menambah data surat keluar, dengan nomor surat '. $request->nomor_surat. ', (catatan : '. $request->catatan_surat. ').';
+            $catatan->catatan = 'Menambah data surat pada nomor surat '. $request->nomor_surat. ', (catatan : '. $request->catatan_surat. ').';
         }
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         $catatan->save();
@@ -264,15 +293,15 @@ class GenerateController extends Controller
         //
         $nav = 'transaksi';
         $menu = 'keluar';
-        $jenis = Jenis::where('kategori_id', 2)->get();
+        $jenis = Jenis::all();
         $user = Auth::user();
-        // $generate
+        $file = Files::where('surat_id', $surat->id)->get();
         $generate = Generate::where('surat_id', $surat->id)
                     ->select('generate.*')
                     ->first();
                     // dd($generate);
         if($generate->content == null){
-            return view('surat keluar.update_instant', compact('nav', 'menu', 'jenis', 'surat', 'generate', 'user'));
+            return view('surat keluar.update_instant', compact('nav', 'menu', 'jenis' ,'surat', 'generate', 'user', 'file'));
 
         }else{
             $generate = Generate::join('template', 'template.id', '=', 'generate.template_id')
@@ -282,7 +311,7 @@ class GenerateController extends Controller
             $pihak_ttd = PihakTTD::where('generate_id', $generate->id)->get();
             $dosen = Dosen::all();
             $mahasiswa = Mahasiswa::all();
-            return view('surat keluar.update', compact('nav', 'menu', 'jenis', 'surat', 'generate', 'pihak_ttd', 'dosen', 'mahasiswa', 'user'));
+            return view('surat keluar.update', compact('nav', 'menu', 'jenis', 'surat', 'generate', 'pihak_ttd', 'dosen', 'mahasiswa', 'user', 'file'));
         }
 
     }
@@ -311,28 +340,6 @@ class GenerateController extends Controller
 
         $generate = Generate::find($request->generate_id);
         if($generate->content == null){
-            if($request->hasFile('file')){
-                $allowedfileExtension = ['pdf','doc', 'docx'];
-                    $file = $request->file('file');
-                    $filename = $file->getClientOriginalName();
-                    $extension = $file->getClientOriginalExtension();
-                    $check=in_array($extension,$allowedfileExtension);
-                    if($check){
-                        //delete file lama
-                        $filelama = public_path('surat/keluar/generate/'.$generate->file);
-                        File::delete($filelama);
-
-                        $file_name = now()->timestamp . '_'. $request->judul .$file->getClientOriginalName();
-                        $file->move('surat/keluar/generate',$file_name);
-                        $generate->file = $file_name;
-
-                          //hapus file generate
-
-                    }else{
-                        return redirect()->back()->withInput()->with('warning', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
-                    }
-            }
-
             //perubahan status hanya dilakukan oleh admin
                 if($request->status != null){
                     $surat->status = $request->status;
@@ -354,11 +361,15 @@ class GenerateController extends Controller
         }else{
 
             //hapus surat lama
-            $filelamaSurat = $surat->file;
-            $hapusfile = public_path('surat/keluar/'.$surat->file);
+            $filelamaSurat = Files::where('surat_id', $surat->id)->first();
+            $hapusfile = public_path('surat/file surat/'.$surat->file);
             File::delete($hapusfile);
 
             list($file_name, $pihak) = $this->generateSurat($request);
+
+            $files = Files::find($filelamaSurat->id);
+            $files->file = $file_name;
+            $files->save();
 
             //perubahan status hanya dilakukan oleh admin
             if($request->status != null){
@@ -367,7 +378,6 @@ class GenerateController extends Controller
 
             $surat->jenis_id = $request->jenis_id;
             // $surat->nosurat = $request->nomor;
-            $surat->file= $file_name;
             $surat->judul = $request->judul;
             $surat->tanggal = $request->tanggal;
             $surat->keperluan = $request->keperluan;
@@ -375,17 +385,6 @@ class GenerateController extends Controller
 
             $generate = Generate::find($request->generate_id);
             $generate->tempat = $request->tempat_surat;
-            // $generate->file = $request->file;
-            if($request->hasFile('file')){
-                //delete file lama
-                $filelama = public_path('surat/keluar/generate/'.$generate->file);
-                File::delete($filelama);
-
-                $file = $request->file('file');
-                $file_name = now()->timestamp . '_' .$file->getClientOriginalName();
-                $file->move('surat/keluar/generate',$file_name);
-                $generate->file = $file_name;
-            }
             $generate->content = $request->isi_body;
             $generate->footer_content = $request->isi_footer;
             $generate->save();
@@ -415,9 +414,9 @@ class GenerateController extends Controller
             $catatan->user_id = Auth::user()->id;
             $catatan->surat_id = $surat->id;
             if($request->catatan == null){
-                $catatan->catatan = 'Mengubah data surat keluar, dengan nomor surat '. $request->nomor_surat;
+                $catatan->catatan = 'Mengubah data surat pada nomor surat '. $request->nomor_surat;
             }else{
-                $catatan->catatan = 'Mengubah data surat keluar, dengan nomor surat '. $request->nomor_surat. ', (catatan : '. $request->catatan. ').';
+                $catatan->catatan = 'Mengubah data surat pada nomor surat '. $request->nomor_surat. ', (catatan : '. $request->catatan. ').';
             }
             $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         }
@@ -446,7 +445,7 @@ class GenerateController extends Controller
         $catatan = new Catatan();
         $catatan->user_id = Auth::user()->id;
         $catatan->surat_id = $surat->id;
-        $catatan->catatan = 'Menghapus data surat keluar, dengan nomor surat '. $surat->nosurat;
+        $catatan->catatan = 'Menghapus data surat pada nomor surat '. $surat->nosurat;
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
 
         $catatan->save();
@@ -466,24 +465,24 @@ class GenerateController extends Controller
         return $getGenerate;
     }
 
-    public function download_file(Surat $surat, Request $request){
-        $getGenerate = $this->getGenerate($surat->id);
-        foreach($getGenerate as $generate){
-            $file = $generate->file;
+    public function downloadFile(Surat $surat){
 
-        }
-        try {
-            if($request->kode == 1 && file_exists(public_path('surat/keluar/'.$surat->file))){
-                return response()->download('surat/keluar/'.$surat->file);
-            }elseif($request->kode == 2 && file_exists(public_path('surat/keluar/generate/'.$file))){
-                return response()->download('surat/keluar/generate/'.$file);
-            }else{
-                return back()->with('warning', 'File tidak ditemukan !!');
+        $files = Files::where('surat_id', $surat->id)->get();
+        // dd($files);
+        $zip      = new \ZipArchive;
+        $fileName = 'Downloads'. $surat->judul. '.zip';
+
+        if ($zip->open(public_path($fileName), \ZipArchive::CREATE) === TRUE) {
+            foreach ($files as $file){
+                // dd($file);
+               $path =  public_path('surat/file surat/'.$file->file);
+                $relativeName = basename($path);
+                $zip->addFile($path, $relativeName);
             }
-        } catch (\Throwable $th) {
-            //throw $th;
-            return back()->with('warning', 'File tidak ditemukan !!');
+            $zip->close();
         }
+
+        return response()->download(public_path($fileName));
     }
 
     public function index_template(){
@@ -496,13 +495,14 @@ class GenerateController extends Controller
 
     //function generate surat tanpa template
     public function createInstant(){
+        // dd('sini');
         $nav = 'transaksi';
-        $menu = 'keluar';
-        $jenis = Jenis::where('kategori_id', 2)->get();
+        $menu = 'buat';
+        $jenis = Jenis::all();
         $user_dosen = Dosen::join('users', 'dosen.user_id', '=', 'users.id' )->get();
         $user_mahasiswa = Mahasiswa::join('users', 'mahasiswa.user_id', '=', 'users.id' )->get();
-        // dd($jenis);
-        return view('surat keluar.insert_instant', compact('nav', 'menu', 'jenis', 'user_dosen', 'user_mahasiswa'));
+        $response = Response::all();
+        return view('surat keluar.insert_instant', compact('nav', 'menu', 'jenis', 'user_dosen', 'user_mahasiswa', 'response'));
     }
 
     public function generateSurat($request){
@@ -566,11 +566,11 @@ class GenerateController extends Controller
                 return redirect()->back()->withInput()->with('warning', 'Terjadi kesalahan dalam penulisan isi content atau footer content, Silahkan Ubah !!');
             }
 
-            $fileSurat = now()->timestamp . '_' . $request->judul . '.docx';
+            $fileSurat = now()->timestamp . '_'  .$request->judul.'.docx';
             $templateProcessor->saveAs($fileSurat);
 
             // Pindah file
-            File::move(public_path() . '/' . $fileSurat, public_path('surat/keluar/'.$fileSurat));
+            File::move(public_path() . '/' . $fileSurat, public_path('surat/file surat/'.$fileSurat));
 
             return $this->setNomor($request, $fileSurat, $pihak);
 
@@ -581,19 +581,19 @@ class GenerateController extends Controller
 
     //set nomor dan mengubah surat
     public function setNomor($request, $suratFile, $pihak){
-        $suratLama = public_path('surat/keluar/').$suratFile;
+        $suratLama = public_path('surat/file surat/').$suratFile;
         if (file_exists($suratLama)) {
             //generate surat
             $templateProcessor = new TemplateProcessor($suratLama);
             $templateProcessor->setValue('nomor_surat', $request->nomor_surat);
 
-            $file_name = now()->timestamp . '_' .$request->judul. '.docx';
+            $file_name = now()->timestamp . '_'  .$request->judul.'_file1'. '.docx';
             $templateProcessor->saveAs($file_name);
             //hapus surat lama
             File::delete($suratLama);
 
             // Pindah file surat Baru
-            File::move(public_path() . '/' .$file_name, public_path('surat/keluar/').$file_name);
+            File::move(public_path() . '/' .$file_name, public_path('surat/file surat/').$file_name);
 
             // return $file_name and $pihak;
             return [$file_name, $pihak];
@@ -615,7 +615,7 @@ class GenerateController extends Controller
     //form generate nomor surat
     public function getKode(Request $request){
         $id = $request->get('id');
-        $data['kode'] = kode::where('role_id', $id)->get();
+        $data['kode'] = kode::where('unit_kerja_id', $id)->get();
         return response()->json($data);
     }
 
@@ -623,6 +623,7 @@ class GenerateController extends Controller
     public function generateNomor(Request $request){
 
         $kode = Kode::find($request->input('kode_id'));
+        $formatSisipan = $request->input('sisipan');
 
         // karna array dimulai dari 0 maka kita tambah di awal data kosong
         $noUrutAkhir = Generate::where('kode_id', $kode->id)->count();
@@ -630,43 +631,53 @@ class GenerateController extends Controller
         // bisa juga mulai dari "1"=>"I"
         $bulanRomawi = array("", "I","II","III", "IV", "V","VI","VII","VIII","IX","X", "XI","XII");
 
-        if($noUrutAkhir) {
-            //pengecekkan reset nomor
-            $suratLast = Generate::select('created_at')->groupBy('created_at')->latest()->first();
-            $tahun = date('Y',strtotime($suratLast->created_at));
+        // if(!$noUrutAkhir && $request->input('sisipan') == 'true'){
+        //     $data = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+        //             ->join('generate', 'surat.id', '=', 'generate.surat_id')
+        //             ->join('kode', 'kode.id', '=', 'generate.kode_id')
+        //             ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
+        //             ->where('kategori_id', 2)
+        //             ->where('surat.nosurat', 'like', '%'.$kode->kode.'%')
+        //             ->whereDate('surat.tanggal', '<=', $request->input('tanggal'))
+        //             ->count();
 
-            if(date('Y') > (int) $tahun){
-                //     // $nomor = 'baru';
-                    $nomor = str_replace('{nomor_urut}',sprintf("%03s", 1),$kode->penomoran);
-                    $nomor = str_replace('{kode}',$kode->kode,$nomor);
-                    $nomor = str_replace('{bulan}',$bulanRomawi[date('n')],$nomor);
-                    $nomor = str_replace('{tahun}',date('Y'),$nomor);
-                }else{
-                    // $nomor = 'lanjut';
-                    $nomor = str_replace('{nomor_urut}',sprintf("%03s", abs($noUrutAkhir + 1)),$kode->penomoran);
-                    $nomor = str_replace('{kode}',$kode->kode,$nomor);
-                    $nomor = str_replace('{bulan}',$bulanRomawi[date('n')],$nomor);
-                    $nomor = str_replace('{tahun}',date('Y'),$nomor);
-                    // $nomor = sprintf("%03s", abs($noUrutAkhir + 1)) .'/'. $kode->kode .'/'. 'ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
-                }
-
-        }else {
-            $nomor = str_replace('{nomor_urut}',sprintf("%03s", 1),$kode->penomoran);
-            $nomor = str_replace('{kode}',$kode->kode,$nomor);
-            $nomor = str_replace('{bulan}',$bulanRomawi[date('n')],$nomor);
-            $nomor = str_replace('{tahun}',date('Y'),$nomor);
-            // $nomor = sprintf("%03s", 1) .'/'. $kode->kode .'/'. 'ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
-        }
-        // if(date('Y') > (int) $tahun){
-        //     // $nomor = 'baru';
-        //     $nomor = str_replace('{nomor_urut}',sprintf("%03s", 1),$kode->penomoran);
+        //     $nomor = str_replace('{nomor_urut}',sprintf("%0".$request->input('digit')."s", $data),$kode->penomoran);
         //     $nomor = str_replace('{kode}',$kode->kode,$nomor);
         //     $nomor = str_replace('{bulan}',$bulanRomawi[date('n')],$nomor);
         //     $nomor = str_replace('{tahun}',date('Y'),$nomor);
-        // }else{
-        //     // $nomor = 'lanjut';
 
+        // }elseif($noUrutAkhir && $request->input('sisipan') != 'true') {
+        //     //pengecekkan reset nomor
+        //     $suratLast = Generate::select('created_at')->groupBy('created_at')->latest()->first();
+        //     $tahun = date('Y',strtotime($suratLast->created_at));
+
+        //     if($request->input('sisipan') != 'true' && date('Y') > (int) $tahun){
+        //             $nomor = str_replace('{nomor_urut}',sprintf("%0".$request->input('digit')."s", 1),$kode->penomoran);
+        //             $nomor = str_replace('{kode}',$kode->kode,$nomor);
+        //             $nomor = str_replace('{bulan}',$bulanRomawi[date('n')],$nomor);
+        //             $nomor = str_replace('{tahun}',date('Y'),$nomor);
+        //     }else{
+        //         // $nomor = 'lanjut';
+        //         $nomor = str_replace('{nomor_urut}',sprintf("%0".$request->input('digit')."s", abs($noUrutAkhir + 1)),$kode->penomoran);
+        //         $nomor = str_replace('{kode}',$kode->kode,$nomor);
+        //         $nomor = str_replace('{bulan}',$bulanRomawi[date('n')],$nomor);
+        //         $nomor = str_replace('{tahun}',date('Y'),$nomor);
+        //         // $nomor = sprintf("%03s", abs($noUrutAkhir + 1)) .'/'. $kode->kode .'/'. 'ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
+        //     }
+
+        // }else {
+        //     $nomor = str_replace('{nomor_urut}',sprintf("%0".$request->input('digit')."s", 1),$kode->penomoran);
+        //     $nomor = str_replace('{kode}',$kode->kode,$nomor);
+        //     $nomor = str_replace('{bulan}',$bulanRomawi[date('n')],$nomor);
+        //     $nomor = str_replace('{tahun}',date('Y'),$nomor);
+        //     // $nomor = sprintf("%03s", 1) .'/'. $kode->kode .'/'. 'ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
         // }
+
+        $nomor = str_replace('{nomor_urut}',sprintf("%0".$request->input('digit')."s", $kode->increment),$kode->penomoran);
+        $nomor = str_replace('{kode}',$kode->kode,$nomor);
+        $nomor = str_replace('{bulan}',$bulanRomawi[date('n')],$nomor);
+        $nomor = str_replace('{tahun}',date('Y'),$nomor);
+
         return response()->json([
             'nomor' => $nomor,
             'kode_id' => $kode->id

@@ -21,8 +21,8 @@
                                     <th class="text-center">
                                     #
                                     </th>
-                                    <th>Role Template</th>
-                                    <th>Nama Template</th>
+                                    <th>Unit</th>
+                                    <th>Nama</th>
                                     {{-- <th>Nama File</th> --}}
                                     <th>Keterangan</th>
                                     <th>Action</th>
@@ -35,7 +35,7 @@
                                             <div class="sort-handler ui-sortable-handle text-center">
                                             <i class="fas fa-th"></i>
                                             </div>
-                                        <td>{{ $data->role->nama }}</td>
+                                        <td>{{ $data->unitKerja->nama }}</td>
                                         <td>{{ $data->nama }}</td>
                                         {{-- <td>{{ $data->file }}</td> --}}
                                         <td>{{ $data->keterangan }}</td>

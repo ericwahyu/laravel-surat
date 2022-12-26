@@ -21,7 +21,14 @@ class UnitKerja extends Model
     }
 
     public function dosenunit(){
-        return $this->hasMany(Mahasiswa::class);
+        return $this->hasMany(Dosen::class);
     }
 
+    public function template(){
+        return $this->hasMany(Template::class);
+    }
+
+    public function kode(){
+        return $this->hasMany(Kode::class);
+    }
 }

@@ -18,7 +18,7 @@
                         <h4>Data Jenis Surat</h4>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label style="font-size: 16px">Kategori Jenis Surat</label>
                             <select class="form-control @error('kategori_id') is-invalid @enderror" name="kategori_id">
                                 <option selected value="{{ $jenis->kategori_id }}">{{ $jenis->kategori->nama }}</option>
@@ -33,7 +33,7 @@
                                     {{ $message }}
                                 </div>
                             @enderror
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label style="font-size: 16px">Nama Jenis Surat</label>
                             <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" placeholder="" value="{{ $jenis->nama }}">

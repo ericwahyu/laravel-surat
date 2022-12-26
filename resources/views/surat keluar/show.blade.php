@@ -59,16 +59,7 @@
                             </div>
                         @endif
                         <div class="col-md-2">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary">Download View</button>
-                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{{ route('download.surat.keluar', ['surat' => $surat, 'kode' => 1]) }}"><i class="fa fa-download"></i> Download file mentahan / file awal upload</a>
-                                    <a class="dropdown-item" href="{{ route('download.surat.keluar', ['surat' => $surat, 'kode' => 2]) }}"><i class="fa fa-download"></i> Download file upload terbaru</a>
-                                </div>
-                            </div>
+                            <a class="btn btn-dark" href="{{ route('download.surat', $surat->id) }}"><i class="fa fa-download"></i> Download file</a>
                         </div>
                         <div class="col-sm-2 offset-md-3">
                             <a href="{{ route('index.disposisi', $surat) }}" class="btn btn-info" title="Lihat Detail Disposisi dan beri tanggapan"><i class="fas fa-file"></i> Lihat Disposisi</a>

@@ -84,7 +84,7 @@
                                         <label style="font-size: 16px">Generate Nomor Surat</label>
                                         <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" id="nomorSurat" name="nomor_surat" value="{{ old('nomor_surat') }}" required>
                                     </div>
-                                    <div class="form-group col-md-6" style="margin-top: 32px">
+                                    <div class="form-group col-md-6" style="margin-top: 39px">
                                         <!-- Button trigger modal -->
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">Generate Nomor</button>
                                     </div>
@@ -174,7 +174,7 @@
                                     </div>
                                 @enderror
                             </div>
-                            <div class="form-group col-md-6">
+                            {{-- <div class="form-group col-md-6">
                                 <label style="font-size: 16px">Tanggal Disposisi</label>
                                 <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ old('tanggal') }}">
                                 @error('tanggal')
@@ -182,18 +182,7 @@
                                     {{ $message }}
                                 </div>
                                 @enderror
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Isi Disposisi</label>
-                                <textarea name="isi" class="form-control @error('isi') is-invalid @enderror" cols="30" rows="10">{{ old('isi') }}</textarea>
-                                @error('isi')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
+                            </div> --}}
                             <div class="form-group col-md-6">
                                 <label style="font-size: 16px">Catatan Disposisi</label>
                                 <textarea name="catatan_disposisi" class="form-control @error('catatan_disposisi') is-invalid @enderror" cols="30" rows="10">{{ old('catatan_disposisi') }}</textarea>
@@ -207,7 +196,67 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label style="font-size: 16px">Isi Disposisi</label>
+                                <textarea name="isi" class="form-control @error('isi') is-invalid @enderror" cols="30" rows="10">{{ old('isi') }}</textarea>
+                                @error('isi')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="form-group">
+                            <label style="font-size: 16px">Pilih Response</label>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <div class="sort-handler ui-sortable-handle text-center">
+                                                    <input class="form-check-input" type="checkbox" id="checkAll">
+                                                    <label class="form-check-label" for="checkAll"></label>
+                                                </div>
+                                            </th>
+                                            {{-- <th>Response </th> --}}
+                                            <th>Response </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($response as $response)
+                                                <tr>
+                                                    <td>
+                                                        <div class="sort-handler ui-sortable-handle text-center">
+                                                            <input class="form-check-input checkboxClass" type="checkbox" id="inlineCheckbox1" name="response[]" value={{ $response->id }}>
+                                                            <label class="form-check-label" for="inlineCheckbox1"></label>
+                                                        </div>
+                                                    </td>
+                                                    {{-- <td>{{ $response->id}}</td> --}}
+                                                    <td>{{ $response->nama }}</td>
+                                                </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="section-title">Memilih tujuan disposisi</div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="fakultas" name="radiobox" class="custom-control-input @error('radiobox') is-invalid @enderror" value="1">
+                                <label class="custom-control-label" for="fakultas">Lingkup Fakultas</label>
+                            </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="luar-fakultas" name="radiobox" class="custom-control-input @error('radiobox') is-invalid @enderror" value="2">
+                                <label class="custom-control-label" for="luar-fakultas"><b>Diluar</b> Lingkup Fakultas</label>
+                            </div>
+                            @error('radiobox')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                        </div>
+                        <div class="form-group fakultas">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-md">
                                     <thead>
@@ -219,8 +268,8 @@
                                                 </div>
                                             </th>
                                             <th>Nama </th>
-                                            <th>Username</th>
                                             <th>Email</th>
+                                            <th>Unit Kerja</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -236,8 +285,16 @@
                                                         </div>
                                                     </td>
                                                     <td>{{ $us_dos->nama }}</td>
-                                                    <td>{{ $us_dos->username }}</td>
                                                     <td>{{ $us_dos->email }}</td>
+                                                    <td>
+                                                        <table>
+                                                            @foreach (DisposisiController::getUnitKerja($us_dos->id) as $unitDosen)
+                                                                <tr>
+                                                                    <td>{{ $unitDosen }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </table>
+                                                    </td>
                                                 </tr>
                                             @endif
                                         @endforeach
@@ -253,13 +310,43 @@
                                                         </div>
                                                     </td>
                                                     <td>{{ $us_maha->nama }}</td>
-                                                    <td>{{ $us_maha->username }}</td>
                                                     <td>{{ $us_maha->email }}</td>
+                                                    <td>
+                                                        <table>
+                                                            @foreach (DisposisiController::getUnitKerja($us_maha->id) as $unitMahasiswa)
+                                                                <tr>
+                                                                    <td>{{ $unitMahasiswa }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </table>
+                                                    </td>
                                                 </tr>
                                             @endif
                                         @endforeach
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                        <div class="form-group eksternal">
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label style="font-size: 16px">Nama yang dituju</label>
+                                    <input type="text" class="form-control @error('nama_tujuan') is-invalid @enderror" name="nama_tujuan" value="{{ old('nama_tujuan') }}">
+                                    @error('nama_tujuan')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label style="font-size: 16px">Alamat Email</label>
+                                    <input type="email" class="form-control @error('alamat_email') is-invalid @enderror" name="alamat_email" value="{{ old('alamat_email') }}">
+                                    @error('alamat_email')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -285,32 +372,21 @@
             <div class="modal-body">
                 <form id="form-generate">
                     @csrf
-                    {{-- <div class="form-group">
-                        <label style="font-size: 16px">Format Nomor Surat</label>
-                        <select class="form-control" name="format" id="format">
-                            <option disabled selected>-- Format Nomor Surat--</option>
-                            @foreach ($format as $format)
-                                <option value="{{ $format->id }}" {{ (old("format_id") == $format->id ? "selected":"") }}>{{ $format->nama }}</option>
-                            @endforeach
-                            <option value="1">FTETI</option>
-                            <option value="2">Jurusan Informatika</option>
-                        </select>
-                    </div> --}}
                     <div class="form-group">
-                        <label style="font-size: 16px" class="form-label">Role Data Surat</label>
-                        <select class="form-control" name="role_id" id="role">
+                        <label style="font-size: 16px" class="form-label">UnitSurat</label>
+                        <select class="form-control" name="unit_id" id="unit" required>
                             <option disabled selected>-- Role Data--</option>
                             @if ($user->isAdmin())
-                                @foreach ($role as $role)
-                                    <option value="{{ $role->id }}" {{ (old("role_id") == $role->id ? "selected":"") }}>{{ $role->nama }}</option>
+                                @foreach ($unitKerja as $unitKerja)
+                                    <option value="{{ $unitKerja->id }}" {{ (old("unit_id") == $unitKerja->id ? "selected":"") }}>{{ $unitKerja->nama }}</option>
                                 @endforeach
                             @else
-                                @for ($i = 0; $i < count($getRole); $i++)
-                                        <option value="{{ $getRole[$i][0] }}" {{ (old("role_id") == $getRole[$i][0] ? "selected":"") }}>{{ $getRole[$i][1] }}</option>
+                                @for ($i = 0; $i < count($getUnit); $i++)
+                                        <option value="{{ $getUnit[$i][0] }}" {{ (old("unit_id") == $getUnit[$i][0] ? "selected":"") }}>{{ $getUnit[$i][1] }}</option>
                                 @endfor
                             @endif
                         </select>
-                        @error('role_id')
+                        @error('unit_id')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -318,8 +394,22 @@
                     </div>
                     <div class="form-group">
                         <label style="font-size: 16px">Kode Surat</label>
-                        <select class="form-control kode" name="kode_id" id="kode">
+                        <select class="form-control kode" name="kode_id" id="kode" required>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size: 16px">Jumlah Digit</label>
+                        <input class="form-control" type="number" name="digit" min="1" id="">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label" for="sisipan">Apakah surat ini menggunakan format nomor surat sisipan</label>
+                            <input class="form-check-input" style="margin-left: 4px" type="checkbox" id="sisipan" name="sisipan" value="true">
+                          </div>
+                    </div>
+                    <div class="form-group tanggal">
+                        <label style="font-size: 16px">Tanggal Surat</label>
+                        <input type="date" class="form-control" name="tanggal" id="tanggal">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -349,6 +439,19 @@
         //     }
         // });
 
+        //sisipan
+        // $('#form-generate')[0].reset();
+        $('.tanggal').hide();
+        $('#tanggal').attr("required", false);
+        $('#sisipan').click(function(){
+            if (this.checked) {
+                $('.tanggal').show();
+                $('#tanggal').attr("required", true);
+            }else{
+                $('.tanggal').hide();
+                $('#tanggal').attr("required", false);
+            }
+        });
         //generate nomor
         $('#form-generate').on('submit', function(e){
             e.preventDefault();
@@ -364,6 +467,8 @@
                     $('#kodeId').val(response.kode_id);
                     console.log(response);
                     $('#form-generate')[0].reset();
+                    $('.tanggal').hide();
+                    $('#tanggal').attr("required", false);
                 },
                 error : function(response){
                     console.log(response);
@@ -371,13 +476,13 @@
             });
         });
 
-        $('#role').change(function(){
-            let role_id = $(this).val();
-            if(role_id){
+        $('#unit').change(function(){
+            let unit_id = $(this).val();
+            if(unit_id){
                 $.ajax({
                     type:"GET",
                     url:"{{ route('getKode') }}",
-                    data: {'id': role_id},
+                    data: {'id': unit_id},
                     dataType: 'JSON',
                     success:function(response){
                         console.log(response);
@@ -396,17 +501,32 @@
                 $("#kode").empty();
             }
         });
+
         $('#next').click(function(){
             $('#home-tab3').removeClass("active");
             $('#home3').removeClass("active");
             $('#profile-tab3').addClass("active");
             $('#profile3').addClass("show active");
         });
+
         $('#back').click(function(){
             $('#profile-tab3').removeClass("active");
             $('#profile3').removeClass("show active");
             $('#home-tab3').addClass("active");
             $('#home3').addClass("show active");
+        });
+
+        $('.fakultas').hide();
+        $('.eksternal').hide();
+        $('.custom-control-input').change(function() {
+            if ($(this).val() === '1') {
+                console.log('fakultas');
+                $('.fakultas').show();
+                $('.eksternal').hide();
+            } else if ($(this).val() === '2') {
+                $('.fakultas').hide();
+                $('.eksternal').show();
+            }
         });
     });
 </script>

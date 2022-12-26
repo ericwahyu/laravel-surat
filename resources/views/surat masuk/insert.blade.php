@@ -168,8 +168,8 @@
                                                 </div>
                                             </th>
                                             <th>Nama </th>
-                                            <th>Username</th>
                                             <th>Email</th>
+                                            <th>Unit Kerja</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -185,8 +185,16 @@
                                                         </div>
                                                     </td>
                                                     <td>{{ $us_dos->nama }}</td>
-                                                    <td>{{ $us_dos->username }}</td>
                                                     <td>{{ $us_dos->email }}</td>
+                                                    <td>
+                                                        <table>
+                                                            @foreach (DisposisiController::getUnitKerja($us_dos->id) as $unitDosen)
+                                                                <tr>
+                                                                    <td>{{ $unitDosen }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </table>
+                                                    </td>
                                                 </tr>
                                             @endif
                                         @endforeach
@@ -202,8 +210,16 @@
                                                         </div>
                                                     </td>
                                                     <td>{{ $us_maha->nama }}</td>
-                                                    <td>{{ $us_maha->username }}</td>
                                                     <td>{{ $us_maha->email }}</td>
+                                                    <td>
+                                                        <table>
+                                                            @foreach (DisposisiController::getUnitKerja($us_maha->id) as $unitMahasiswa)
+                                                                <tr>
+                                                                    <td>{{ $unitMahasiswa }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </table>
+                                                    </td>
                                                 </tr>
                                             @endif
                                         @endforeach

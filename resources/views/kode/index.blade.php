@@ -22,10 +22,10 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
-                                    <th>Role Kode Surat</th>
-                                    <th>Nama Kode Surat</th>
-                                    <th>Kode Kode Surat</th>
-                                    <th>Format Penomoran Surat</th>
+                                    <th>Unit</th>
+                                    <th>Nama</th>
+                                    <th>Kode</th>
+                                    <th>Format Penomoran</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -38,7 +38,7 @@
                                             </div>
                                         </td>
 
-                                        <td>{{ $data->role->nama }}</td>
+                                        <td>{{ $data->unitKerja->nama }}</td>
                                         <td>{{ $data->nama }}</td>
                                         <td>{{ $data->kode }}</td>
                                         <td>{{ $data->penomoran }}</td>

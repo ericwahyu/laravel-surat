@@ -3,11 +3,11 @@
 @section('section')
 <div class="section-header">
     <h1>Surat Masuk</h1>
-    <div class="section-header-button">
+    {{-- <div class="section-header-button">
         @if ($user->isAdmin() || $user->isPengelola())
             <a href="{{ route('create.surat.masuk') }}" class="btn btn-primary" title="Tambah Surat Masuk">Tambah Baru</a>
         @endif
-    </div>
+    </div> --}}
 </div>
 <div class="section-body">
     <div class="row">
@@ -25,24 +25,24 @@
                     </div>
                 </form>
                 <div class="table-responsive">
-                    <table class="table table-striped" id="table-1">
+                    <table class="table" id="table-1">
                         <thead>
                             <tr>
                                 <th class="text-center">#</th>
                                 <th>Jenis</th>
-                                <th>No Surat</th>
-                                <th>Judul Surat</th>
+                                <th>Nomor Surat</th>
+                                <th>Judul</th>
                                 <th>Tanggal Surat</th>
-                                <th>Keperluan Surat</th>
+                                <th>Keperluan</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($surat as $data)
-                                <tr>
+                                <tr style="background-color: {{ (SuratController::getReadAt($data->id)->read_at == null) ? '#BEBBBA' : '#FFFBF9' }}">
                                     <td>
                                         <div class="sort-handler ui-sortable-handle text-center">
-                                        <i class="fas fa-th"></i>
+                                            <i class="fas fa-th"></i>
                                         </div>
                                     </td>
                                     <td>{{ $data->jenis->nama }}</td>

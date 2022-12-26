@@ -3,7 +3,7 @@
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
-        <a href="{{ route('index.disposisi', $surat) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+        <a href="{{ route('index.disposisi', $kategori->surat_id) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
     <h1>Detail Surat Disposisi</h1>
 </div>
@@ -50,7 +50,8 @@
                             <div class="col-md-2">
                                 <a href="{{ route('edit.disposisi', $disposisi) }}" class="btn btn-warning" title="Update"><i class="far fa-edit"></i> Update</a>
                             </div>
-                        @elseif($user->isAdmin() || $user->isPengelola() || $user->isPimpinan())
+                        @endif
+                        @if($user->isAdmin() || $user->isPengelola() || $user->isPimpinan())
                             <div class="col-md-2">
                                 <form action="{{ route('destroy.disposisi', $disposisi) }}" method="post">
                                     @csrf
@@ -66,137 +67,116 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu">
-                                    @switch($surat->jenis->kategori->id)
-                                        @case(1)
-                                            @if ($user->isAdmin() || $user->isPimpinan())
-                                                <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
-                                                    <button type="submit" class="dropdown-item show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
+                                    @if ($user->isAdmin() || $kategori->kategori_id == 1)
+                                        @foreach ($response as $response)
+                                            <div class="col-sm-2">
+                                                <form action="#" method="get">
+                                                    <input type="hidden" name="response" id="response" value="{{ $response->nama }}">
+                                                    {{-- <button type="submit" class="dropdown-item mr-2 show_response" title="{{ $response->nama }}" data-bs-toggle="tooltip"> {{ $response->nama }}</button> --}}
+                                                    <button type="submit" class="btn btn-primary mr-2" title="{{ $response->nama }}" data-bs-toggle="modal" data-bs-target="#response{{ $response->id }}"> {{ $response->nama }}</button>
                                                 </form>
-                                                <a href="{{ route('create.reply.surat.masuk', $disposisi) }}" class="dropdown-item" title="Reply"><i class="fas fa-reply"></i> Reply</a>
-                                                <form action="{{ route('continue.surat.masuk', $disposisi) }}" method="get">
-                                                    <button type="submit" class="dropdown-item show_continue" data-toggle="tooltip" title="Continue"><i class="fa fa-play"></i> Continue</button>
-                                                </form>
-                                            @else
-                                                <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
-                                                    <button type="submit" class="dropdown-item show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
-                                                </form>
-                                            @endif
-                                            @break
-                                        @case(2)
-                                            @if ($user->isAdmin() || $user->isPimpinan())
-                                                <form action="{{ route('ttd.surat.keluar', $disposisi) }}" method="get">
-                                                    <button type="submit" class="dropdown-item show_ttd" data-toggle="tooltip" title="Tanda Tangan"><i class="fa fa-check"></i> Tanda Tangan</button>
-                                                </form>
-                                            @else
-                                                <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
-                                                    <button type="submit" class="dropdown-item show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
-                                                </form>
-                                            @endif
-                                            @break
-                                        @default
-                                    @endswitch
+                                                {{-- <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#response">aaaaaaaaaaa</button> --}}
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
                         </div>
-                        {{-- @switch($surat->jenis->kategori->id)
-                            @case(1)
-                                @if ($user->isAdmin()|| $user->isPimpinan())
-                                    <div class="col-sm-2">
-                                        <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
-                                            <button type="submit" class="btn btn-primary mr-2 show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
-                                        </form>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <a href="{{ route('create.reply.surat.masuk', $disposisi) }}" class="btn btn-primary" title="Reply"><i class="fas fa-reply"></i> Reply</a>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <form action="{{ route('continue.surat.masuk', $disposisi) }}" method="get">
-                                            <button type="submit" class="btn btn-primary mr-2 show_continue" data-toggle="tooltip" title="Continue"><i class="fa fa-play"></i> Continue</button>
-                                        </form>
-                                    </div>
-                                @elseif ($user->isDosen())
-                                    <div class="col-sm-2">
-                                        <form action="{{ route('read.surat.masuk', $disposisi) }}" method="get">
-                                            <button type="submit" class="btn btn-primary mr-2 show_read" data-toggle="tooltip" title="Read"><i class="far fa-eye"></i> Read</button>
-                                        </form>
-                                    </div>
-                                @endif
-                                @break
-                            @case(2)
-                                @if ($user->isAdmin()|| $user->isPimpinan())
-                                    <div class="col-md-2">
-                                        <form action="{{ route('ttd.surat.keluar', $disposisi) }}" method="get">
-                                            <button type="submit" class="btn btn-primary mr-2 show_ttd" data-toggle="tooltip" title="Tanda Tangan"><i class="fa fa-check"></i> Tanda Tangan</button>
-                                        </form>
-                                    </div>
-                                @endif
-                                @break
-                            @default
-                        @endswitch --}}
                     </div>
                 </div>
                 <div class="col-12 col-md-5">
                     <table class="table">
-                        <tbody>
-                            @foreach (DisposisiController::get_dosen($disposisi->id, null) as $sta_dos)
-                                <tr>
-                                    <td>{{ $sta_dos->nama }}</td>
-                                    <td>:</td>
-                                    @switch($sta_dos->status)
-                                        @case(1)
-                                            <td><span class="badge badge-primary">Asal Surat</span></td>
-                                            @break
-                                        @case(2)
-                                            <td><span class="badge badge-secondary">Terkirim</span></td>
-                                            @break
-                                        @case(3)
-                                            <td><span class="badge badge-success">Terbaca</span></td>
-                                            @break
-                                        @case(4)
-                                            <td><span class="badge badge-success">LanjutKan Proses</span></td>
-                                            @break
-                                        @case(5)
-                                            <td><span class="badge badge-success">Balas Surat</span></td>
-                                            @break
-                                        @case(6)
-                                            <td><span class="badge badge-success">Tertanda Tangan</span></td>
-                                            @break
-                                        @default
-                                    @endswitch
-                                </tr>
-                            @endforeach
-                            @foreach (DisposisiController::get_mahasiswa($disposisi->id, null) as $sta_maha)
-                                <tr>
-                                    <td>{{ $sta_maha->nama }}</td>
-                                    <td>:</td>
-                                    @switch($sta_maha->status)
-                                        @case(1)
-                                            <td><span class="badge badge-primary">Asal Surat</span></td>
-                                            @break
-                                        @case(2)
-                                            <td><span class="badge badge-secondary">Terkirim</span></td>
-                                            @break
-                                        @case(3)
-                                            <td><span class="badge badge-success">Terbaca</span></td>
-                                            @break
-                                        @case(4)
-                                            <td><span class="badge badge-success">LanjutKan Proses</span></td>
-                                            @break
-                                        @case(5)
-                                            <td><span class="badge badge-success">Balas Surat</span></td>
-                                            @break
-                                        @case(6)
-                                            <td><span class="badge badge-success">Tertanda Tangan</span></td>
-                                            @break
-                                        @default
-                                    @endswitch
-                                </tr>
-                            @endforeach
-                        </tbody>
+                        @foreach (DisposisiController::getDosen($disposisi->id) as $disposisi_dosen)
+                            <tr>
+                                <td>{{ $disposisi_dosen->nama }}</td>
+                                @switch($disposisi_dosen->kategori_id)
+                                    @case(2)
+                                        <td><span class="badge badge-primary">Asal Surat</span></td>
+                                        @break
+                                    @case(1)
+                                        <td><span class="badge badge-secondary">Terkirim</span></td>
+                                        @break
+                                    @default
+                                @endswitch
+                                @if ($disposisi_dosen->kategori_id == 1 || $user->isAdmin())
+                                    @if (DisposisiController::getDosenResponse($disposisi->id) != null)
+                                        <td><span class="badge badge-dark">{{ DisposisiController::getDosenResponse($disposisi->id)->nama }}</span></td>
+                                    @else
+                                        <td><span class="badge badge-dark">Belom ada response</span></td>
+                                    @endif
+                                @endif
+                            </tr>
+                        @endforeach
+                        @foreach (DisposisiController::getMahasiswa($disposisi->id) as $disposisi_mahasiswa)
+                            <tr>
+                                <td>{{ $disposisi_mahasiswa->nama }}</td>
+                                @switch($disposisi_mahasiswa->kategori_id)
+                                    @case(2)
+                                        <td><span class="badge badge-primary">Asal Surat</span></td>
+                                        @break
+                                    @case(1)
+                                        <td><span class="badge badge-secondary">Terkirim</span></td>
+                                        @break
+                                @endswitch
+                                @if ($disposisi_mahasiswa->kategori_id == 1 || $user->isAdmin())
+                                    @if ( DisposisiController::getMahasiswaResponse($disposisi->id) != null)
+                                        <td><span class="badge badge-dark">{{ DisposisiController::getMahasiswaResponse($disposisi->id)->nama }}</span></td>
+                                    @else
+                                        <td><span class="badge badge-dark">Belom ada response</span></td>
+                                    @endif
+                                @endif
+                            </tr>
+                        @endforeach
+                        @foreach (DisposisiController::getUserEksternal($disposisi->id) as $disposisi_usereksternal)
+                            <tr>
+                                <td>{{ $disposisi_usereksternal->nama }}</td>
+                                @switch($disposisi_usereksternal->kategori_id)
+                                    @case(2)
+                                        <td><span class="badge badge-primary">Asal Surat</span></td>
+                                        @break
+                                    @case(1)
+                                        <td><span class="badge badge-secondary">Terkirim</span></td>
+                                        @break
+                                @endswitch
+                            </tr>
+                        @endforeach
                     </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@endsection
+@section('modal')
+    @foreach ($responseModal as $respon)
+        <div class="modal fade" id="response{{ $respon->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tanggapan Surat</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Apakah anda yakin sudah melihat surat, dan memberi tanggapan {{ $respon->nama }} !!
+                        <form action="{{ route('setResponse', $disposisi->id) }}" method="post">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Catatan :</label>
+                                <input type="text" class="form-control" id="recipient-name" name="catatan_response">
+                                <small id="passwordHelpBlock" class="form-text text-muted">
+                                    Masukkan catatan jika ada perlu !!
+                                </small>
+                            </div>
+                            <input type="hidden" name="response_id" value="{{ $respon->id }}">
+                            <input type="hidden" name="response_nama" value="{{ $respon->nama }}">
+                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Kirim Tanggapan</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
 @endsection

@@ -15,11 +15,11 @@ class CreateJenisTable extends Migration
     {
         Schema::create('jenis', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('kategori_id');
+            // $table->unsignedBigInteger('unit_kerja_id');
             $table->string('nama');
             $table->timestamps();
 
-            $table->foreign('kategori_id')->references('id')->on('kategori')->onDelete('cascade');
+            // $table->foreign('unit_kerja_id')->references('id')->on('unit_kerja')->onDelete('cascade');
         });
     }
 

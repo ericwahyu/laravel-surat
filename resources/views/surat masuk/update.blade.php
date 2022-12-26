@@ -55,11 +55,11 @@
                         </div>
                     <div class="form-group col-md-6">
                         <label style="font-size: 16px">Catatan</label>
-                        <input type="text" class="form-control @error('catatan') is-invalid @enderror" name="catatan" value="">
+                        <input type="text" class="form-control @error('catatan_surat') is-invalid @enderror" name="catatan_surat" value="">
                         <small id="passwordHelpBlock" class="form-text text-muted">
                             Masukkan catatan jika ada perlu !!
                         </small>
-                        @error('catatan')
+                        @error('catatan_surat')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jenis;
-use App\Models\Kategori;
+use App\Models\UnitKerja;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,11 +22,10 @@ class JenisController extends Controller
         $nav = 'umum';
         $menu = 'jenis';
 
-        $kategori = Kategori::all();
         $jenis = Jenis::all();
         $user = Auth::user();
 
-        return view('jenis.index', compact('nav', 'menu', 'jenis', 'kategori', 'user'));
+        return view('jenis.index', compact('nav', 'menu', 'jenis', 'user'));
     }
 
     /**
@@ -39,8 +38,8 @@ class JenisController extends Controller
         //
         $nav = 'umum';
         $menu = 'jenis';
-        $kategori = Kategori::all();
-        return view('jenis.insert', compact('nav', 'menu', 'kategori'));
+
+        return view('jenis.insert', compact('nav', 'menu'));
     }
 
     /**
@@ -52,16 +51,19 @@ class JenisController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kategori_id' => 'required',
             'nama' => 'required|max:100'
         ]);
 
-        $kategori = new Jenis();
-        $kategori->kategori_id = $request->kategori_id;
-        $kategori->nama = $request->nama;
-        $kategori->save();
+        $jenis = new Jenis();
+        // $kategori->kategori_id = $request->kategori_id;
+        $jenis->nama = $request->nama;
+        $jenis->save();
 
-        return redirect()->route('index.jenis')->with('success', 'Berhasil tambah data !!');
+        if($jenis){
+            return redirect()->route('index.jenis')->with('success', 'Data berhasil di Tambah !!');
+        }else{
+            return redirect()->route('index.jenis')->with('warning', 'Data gagal di Tambah !!');
+        }
     }
 
     /**
@@ -86,9 +88,8 @@ class JenisController extends Controller
         //
         $nav = 'umum';
         $menu = 'jenis';
-        $kategori = Kategori::all();
 
-        return view('jenis.update', compact('nav', 'menu', 'jenis', 'kategori'));
+        return view('jenis.update', compact('nav', 'menu', 'jenis'));
     }
 
     /**
@@ -102,18 +103,17 @@ class JenisController extends Controller
     {
         //
         $request->validate([
-            'kategori_id' => 'required',
             'nama' => 'required|max:100'
         ]);
 
-        $jenis->kategori_id = $request->kategori_id;
+        // $jenis->kategori_id = $request->kategori_id;
         $jenis->nama = $request->nama;
         $jenis->save();
 
         if($jenis){
             return redirect()->route('index.jenis')->with('success', 'Data berhasil di Update !!');
         }else{
-            return redirect()->route('index.jenis')->with('error', 'Data gagal di Update !!');
+            return redirect()->route('index.jenis')->with('warning', 'Data gagal di Update !!');
         }
     }
 

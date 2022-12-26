@@ -12,11 +12,7 @@ class Role extends Model
     protected $primarykey = 'id';
     protected $fillable = [];
 
-    public function kode(){
-        return $this->hasMany(Kode::class);
-    }
-
-    public function template(){
-        return $this->hasMany(Template::class);
+    public function roleMahasiswa(){
+        return $this->hasMany(RoleMahasiswa::class);
     }
 }

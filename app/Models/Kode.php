@@ -16,7 +16,7 @@ class Kode extends Model
         return $this->hasMany(Generate::class);
     }
 
-    public function role(){
-        return $this->belongsTo(Role::class);
+    public function unitKerja(){
+        return $this->belongsTo(UnitKerja::class);
     }
 }

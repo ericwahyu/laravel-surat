@@ -15,13 +15,14 @@ class CreateKodeTable extends Migration
     {
         Schema::create('kode', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('unit_kerja_id');
             $table->string('nama');
             $table->string('kode');
             $table->string('penomoran');
+            $table->integer('increment');
             $table->timestamps();
 
-            $table->foreign('role_id')->references('id')->on('role')->onDelete('cascade');
+            $table->foreign('unit_kerja_id')->references('id')->on('unit_kerja')->onDelete('cascade');
         });
     }
 

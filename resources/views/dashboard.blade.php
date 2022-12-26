@@ -30,7 +30,7 @@
                         <h4>Surat Masuk</h4>
                     </div>
                     <div class="card-body">
-                        {{ $suratmasuk }}
+                        {{-- {{ $suratmasuk }} --}}
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                         <h4>Surat Keluar</h4>
                     </div>
                     <div class="card-body">
-                        {{ $suratkeluar }}
+                        {{-- {{ $suratkeluar }} --}}
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                         <h4>Agenda Masuk dan Keluar</h4>
                     </div>
                     <div class="card-body">
-                        {{ $agenda }}
+                        {{-- {{ $agenda }} --}}
                     </div>
                 </div>
             </div>

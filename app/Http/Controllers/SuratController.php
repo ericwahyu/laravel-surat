@@ -30,19 +30,21 @@ class SuratController extends Controller
         if($request->input('tahun')){
             if($user->isAdmin()){
                 $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                        ->where('kategori_id', 1)
-                        ->whereYear('surat.tanggal', $request->tahun)
-                        ->select('surat.*')
-                        ->distinct()->latest()->get();
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    ->where('disposisi_user.kategori_id', 1)
+                    ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->whereYear('surat.tanggal', $request->tahun)
+                    ->select('surat.*')
+                    ->distinct()->latest()->get();
             }else{
                 $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
                         ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                         ->where('surat.status', '!=', 0)
-                        ->where('kategori_id', 1)
+                        ->where('disposisi_user.kategori_id', 1)
                         ->where('disposisi_user.user_id', Auth::user()->id)
                         ->whereYear('surat.tanggal', $request->tahun)
                         ->select('surat.*')
@@ -51,18 +53,21 @@ class SuratController extends Controller
         }else{
             if($user->isAdmin()){
                 $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-                        ->where('kategori_id', 1)
+                        ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                        // ->where('surat.status', '!=', 0)
+                        ->where('disposisi_user.kategori_id', 1)
+                        ->where('disposisi_user.user_id', Auth::user()->id)
                         ->select('surat.*')
                         ->distinct()->latest()->get();
             }else{
                 $surat = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
                         ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
                         ->join('users', 'disposisi_user.user_id', '=', 'users.id')
                         ->where('surat.status', '!=', 0)
-                        ->where('kategori_id', 1)
+                        ->where('disposisi_user.kategori_id', 1)
                         ->where('disposisi_user.user_id', Auth::user()->id)
                         ->select('surat.*')
                         ->distinct()->latest()->get();
@@ -71,7 +76,7 @@ class SuratController extends Controller
 
         $nav = 'transaksi';
         $menu = 'masuk';
-        // dd($surat);
+
         return view('surat masuk.index', compact('nav', 'menu', 'surat', 'user', 'request'));
     }
 
@@ -108,7 +113,7 @@ class SuratController extends Controller
             'tanggal' => 'required|date',
             'file' => 'required|file',
             'keperluan' => 'required',
-            'catatan' => 'nullable',
+            'catatan_surat' => 'nullable',
         ]);
         $suratSM = new Surat();
         $suratSM->jenis_id = $request->jenis_id;
@@ -128,10 +133,10 @@ class SuratController extends Controller
             $catatan = new Catatan();
             $catatan->user_id = Auth::user()->id;
             $catatan->surat_id = $suratSM->id;
-            if($request->catatan == null){
-                $catatan->catatan = 'Menambah data surat masuk, dengan nomor surat '. $request->nomor;
+            if($request->catatan_surat == null){
+                $catatan->catatan = 'Menambah data surat pada nomor surat '. $request->nomor;
             }else{
-                $catatan->catatan = 'Menambah data surat masuk, dengan nomor surat '. $request->nomor. ', (catatan : '. $request->catatan_surat. ').';
+                $catatan->catatan = 'Menambah data surat pada nomor surat '. $request->nomor. ', (catatan : '. $request->catatan_surat. ').';
             }
             $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
             $catatan->save();
@@ -161,6 +166,22 @@ class SuratController extends Controller
         $nav = 'transaksi';
         $menu = 'masuk';
         $user = Auth::user();
+
+        $disposisi = Disposisi::join('disposisi_user', 'disposisi.id', '=', 'disposisi_user.disposisi_id')
+            ->where('disposisi.surat_id', $surat->id)
+            ->where('disposisi_user.user_id', Auth::user()->id)
+            ->where('disposisi_user.kategori_id', 1)
+            ->select('disposisi_user.*')->first();
+
+        // dd($disposisi);
+        $update_read_at = DB::table('disposisi_user')
+            ->where('user_id', Auth::user()->id)
+            ->where('kategori_id', 1)
+            ->where('disposisi_id', $disposisi->disposisi_id)
+            ->update(['read_at' => 1,]);
+            // ->get();
+        // dd($update_read_at);
+
         return view('surat masuk.show', compact('nav', 'menu', 'surat', 'user'));
 
     }
@@ -198,7 +219,7 @@ class SuratController extends Controller
             'judul' => 'required',
             'tanggal' => 'required|date',
             'keperluan' => 'required',
-            'catatan' => 'nullable',
+            'catatan_surat' => 'nullable',
         ]);
         $surat->jenis_id = $request->jenis_id;
         $surat->nosurat = $request->nomor;
@@ -224,10 +245,10 @@ class SuratController extends Controller
             $catatan = new Catatan();
             $catatan->user_id = Auth::user()->id;
             $catatan->surat_id = $surat->id;
-            if($request->catatan == null){
-                $catatan->catatan = 'Mengubah data surat masuk, dengan nomor surat '. $request->nomor;
+            if($request->catatan_surat == null){
+                $catatan->catatan = 'Mengubah data surat pada nomor surat '. $request->nomor;
             }else{
-                $catatan->catatan = 'Mengubah data surat masuk, dengan nomor surat '. $request->nomor. ', (catatan : '. $request->catatan. ').';
+                $catatan->catatan = 'Mengubah data surat pada nomor surat '. $request->nomor. ', (catatan : '. $request->catatan_surat. ').';
             }
             $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         }
@@ -255,7 +276,7 @@ class SuratController extends Controller
         $catatan = new Catatan();
         $catatan->user_id = Auth::user()->id;
         $catatan->surat_id = $surat->id;
-        $catatan->catatan = 'Menghapus data surat masuk nomor '. $surat->nosurat;
+        $catatan->catatan = 'Menghapus data surat pada nomor '. $surat->nosurat;
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
         $catatan->save();
 
@@ -273,6 +294,19 @@ class SuratController extends Controller
         }else{
             return back()->with('error', 'Download gagal');
         }
+    }
+
+    public function getReadAt($surat_id){
+        $getReadAt = Surat::join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+            ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+            ->where('surat.status', '!=', 0)
+            ->where('surat.id', $surat_id)
+            ->where('disposisi_user.kategori_id', 1)
+            ->where('disposisi_user.user_id', Auth::user()->id)
+            ->select('disposisi_user.*')
+            ->distinct()->first();
+        // dd($getReadAt);
+        return $getReadAt;
     }
 
 }

@@ -3,11 +3,13 @@
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
-        @if ($surat->jenis->kategori_id == 1)
-            <a href="{{ route('index.surat.masuk', $surat) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
-        @elseif ($surat->jenis->kategori_id == 2)
-            <a href="{{ route('index.surat.keluar', $surat) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
-        @endif
+        {{-- @foreach ($kategori as $datas) --}}
+            @if ($kategori->kategori_id == 1)
+                <a href="{{ route('show.surat.masuk', $kategori->surat_id) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+            @elseif ($kategori->kategori_id == 2)
+                <a href="{{ route('show.surat.keluar', $kategori->surat_id) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+            @endif
+        {{-- @endforeach --}}
     </div>
     <h1>Disposisi Surat Dari <b>{{ $surat->judul }}</b></h1>
     <div class="section-header-button">
@@ -24,10 +26,10 @@
                     <thead>
                         <tr>
                             <th class="text-center">#</th>
-                            <th>No Surat</th>
-                            <th>Perihal Disposisi</th>
+                            <th>Nomor Surat</th>
+                            <th>Perihal</th>
                             <th>Tanggal</th>
-                            <th>Isi Disposisi</th>
+                            {{-- <th>Isi</th> --}}
                             <th>Pihak Bersangkutan</th>
                             <th>Action</th>
                         </tr>
@@ -43,59 +45,62 @@
                                 <td>{{ $disposisi->surat->nosurat }}</td>
                                 <td>{{ $disposisi->perihal }}</td>
                                 <td>{{ IdDateFormatter::format($disposisi->tanggal, IdDateFormatter::COMPLETE) }}</td>
-                                <td>{{ $disposisi->isi }}</td>
+                                {{-- <td>{{ $disposisi->isi }}</td> --}}
                                 <td>
                                     <table>
-                                        @foreach (DisposisiController::get_dosen($disposisi->id) as $status_dosen)
+                                        @foreach (DisposisiController::getDosen($disposisi->id) as $disposisi_dosen)
                                             <tr>
-                                                <td>{{ $status_dosen->nama }}</td>
-                                                @switch($status_dosen->status)
-                                                    @case(1)
+                                                <td>{{ $disposisi_dosen->nama }}</td>
+                                                @switch($disposisi_dosen->kategori_id)
+                                                    @case(2)
                                                         <td><span class="badge badge-primary">Asal Surat</span></td>
                                                         @break
-                                                    @case(2)
+                                                    @case(1)
                                                         <td><span class="badge badge-secondary">Terkirim</span></td>
-                                                        @break
-                                                    @case(3)
-                                                        <td><span class="badge badge-success">Terbaca</span></td>
-                                                        @break
-                                                    @case(4)
-                                                        <td><span class="badge badge-success">LanjutKan Proses</span></td>
-                                                        @break
-                                                    @case(5)
-                                                        <td><span class="badge badge-success">Balas Surat</span></td>
-                                                        @break
-                                                    @case(6)
-                                                        <td><span class="badge badge-success">Tertanda Tangan</span></td>
                                                         @break
                                                     @default
                                                 @endswitch
+                                                @if ($disposisi_dosen->kategori_id == 1)
+                                                    @if (DisposisiController::getDosenResponse($disposisi->id) != null)
+                                                        <td><span class="badge badge-dark">{{ DisposisiController::getDosenResponse($disposisi->id)->nama }}</span></td>
+                                                    @else
+                                                        <td><span class="badge badge-dark">Belom ada response</span></td>
+                                                    @endif
+                                                @endif
                                             </tr>
                                         @endforeach
-                                        @foreach (DisposisiController::get_mahasiswa($disposisi->id) as $status_mahasiswa)
+                                        @foreach (DisposisiController::getMahasiswa($disposisi->id) as $disposisi_mahasiswa)
                                             <tr>
-                                                <td>{{ $status_mahasiswa->nama }}</td>
-                                                @switch($status_mahasiswa->status)
-                                                    @case(1)
+                                                <td>{{ $disposisi_mahasiswa->nama }}</td>
+                                                @switch($disposisi_mahasiswa->kategori_id)
+                                                    @case(2)
                                                         <td><span class="badge badge-primary">Asal Surat</span></td>
                                                         @break
-                                                    @case(2)
+                                                    @case(1)
                                                         <td><span class="badge badge-secondary">Terkirim</span></td>
                                                         @break
-                                                    @case(3)
-                                                        <td><span class="badge badge-success">Terbaca</span></td>
-                                                        @break
-                                                    @case(4)
-                                                        <td><span class="badge badge-success">LanjutKan Proses</span></td>
-                                                        @break
-                                                    @case(5)
-                                                        <td><span class="badge badge-success">Balas Surat</span></td>
-                                                        @break
-                                                    @case(6)
-                                                        <td><span class="badge badge-success">Tertanda Tangan</span></td>
-                                                        @break
-                                                    @default
                                                 @endswitch
+                                                @if ($disposisi_mahasiswa->kategori_id == 1)
+                                                    @if ( DisposisiController::getMahasiswaResponse($disposisi->id) != null)
+                                                        <td><span class="badge badge-dark">{{ DisposisiController::getMahasiswaResponse($disposisi->id)->nama }}</span></td>
+                                                    @else
+                                                        <td><span class="badge badge-dark">Belom ada response</span></td>
+                                                    @endif
+                                                @endif
+                                            </tr>
+                                        @endforeach
+                                        @foreach (DisposisiController::getUserEksternal($disposisi->id) as $disposisi_usereksternal)
+                                            <tr>
+                                                <td>{{ $disposisi_usereksternal->nama }}</td>
+                                                @switch($disposisi_usereksternal->kategori_id)
+                                                    @case(2)
+                                                        <td><span class="badge badge-primary">Asal Surat</span></td>
+                                                        @break
+                                                    @case(1)
+                                                        <td><span class="badge badge-secondary">Terkirim</span></td>
+                                                        @break
+                                                @endswitch
+                                                {{-- <td><span class="badge badge-dark">Terkirim</span></td> --}}
                                             </tr>
                                         @endforeach
                                     </table>
@@ -104,9 +109,7 @@
                                     <form action="" method="post">
                                         @csrf
                                         @method('DELETE')
-                                        {{-- <a href="{{ route('edit.disposisi', $disposisi) }}" class="btn btn-warning" title="Ubah"><i class="far fa-edit"></i></a> --}}
                                         <a href="{{ route('show.disposisi', $disposisi) }}" class="btn btn-info" title="Lihat detail"><i class="fa fa-eye"></i> Detail</a>
-                                        {{-- <button type="submit" class="btn btn-danger mr-2 show_confirm" data-toggle="tooltip" title="Hapus"><i class="far fa-trash-alt"></i></button> --}}
                                     </form>
                                 </td>
                             </tr>

@@ -17,22 +17,17 @@ class RoleSeeder extends Seeder
         //
         $role =[
             [
-                'nama' => 'Fakultas Teknologi Elekro dan Teknologi Informasi',
+                'nama' => 'Admin',
                 'created_at' => null,
                 'updated_at' => null,
             ],
             [
-                'nama' => 'Jurusan Teknik Informatika',
+                'nama' => 'Pimpinan',
                 'created_at' => null,
                 'updated_at' => null,
             ],
             [
-                'nama' => 'Jurusan Sistem Informasi',
-                'created_at' => null,
-                'updated_at' => null,
-            ],
-            [
-                'nama' => 'Jurusan Teknik Elektro',
+                'nama' => 'Pengelola',
                 'created_at' => null,
                 'updated_at' => null,
             ],

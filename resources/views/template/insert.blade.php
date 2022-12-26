@@ -23,20 +23,20 @@
             <div class="card-body">
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label style="font-size: 16px" class="form-label">Role Data</label>
-                        <select class="form-control @error('role_id') is-invalid @enderror" name="role_id">
-                            <option disabled selected>-- Role Data--</option>
+                        <label style="font-size: 16px" class="form-label">Unit Data</label>
+                        <select class="form-control @error('unit_id') is-invalid @enderror" name="unit_id">
+                            <option disabled selected>-- Unit Data--</option>
                             @if ($user->isAdmin())
-                                @foreach ($role as $role)
-                                    <option value="{{ $role->id }}" {{ (old("role_id") == $role->id ? "selected":"") }}>{{ $role->nama }}</option>
+                                @foreach ($unitKerja as $unitKerja)
+                                    <option value="{{ $unitKerja->id }}" {{ (old("unitKerja_id") == $unitKerja->id ? "selected":"") }}>{{ $unitKerja->nama }}</option>
                                 @endforeach
                             @else
-                                @for ($i = 0; $i < count($getRole); $i++)
-                                    <option value="{{ $getRole[$i][0] }}" {{ (old("role_id") == $getRole[$i][0] ? "selected":"") }}>{{ $getRole[$i][1] }}</option>
+                                @for ($i = 0; $i < count($getUnit); $i++)
+                                    <option value="{{ $getUnit[$i][0] }}" {{ (old("unit_id") == $getUnit[$i][0] ? "selected":"") }}>{{ $getUnit[$i][1] }}</option>
                                 @endfor
                             @endif
                         </select>
-                        @error('role_id')
+                        @error('unit_id')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>

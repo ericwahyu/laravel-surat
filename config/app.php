@@ -232,9 +232,10 @@ return [
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
 
         'IdDateFormatter' => FrosyaLabs\Lang\IdDateFormatter::class,
+        'Carbon' => Illuminate\Support\Carbon::class,
         'DisposisiController' => \App\Http\Controllers\DisposisiController::class,
         'GenerateController' => \App\Http\Controllers\GenerateController::class,
-        'Carbon' => Illuminate\Support\Carbon::class,
+        'SuratController' => \App\Http\Controllers\SuratController::class,
 
     ],
 

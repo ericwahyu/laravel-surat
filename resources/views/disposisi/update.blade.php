@@ -28,7 +28,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label style="font-size: 16px">Tanggal Disposisi</label>
-                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ $disposisi->tanggal }}">
+                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ $disposisi->tanggal }}" readonly>
                         @error('tanggal')
                         <div class="invalid-feedback">
                             {{ $message }}

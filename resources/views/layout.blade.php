@@ -102,10 +102,11 @@
                                     <li class="{{ ($menu == 'template') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.template') }}"><i class="far fa-folder-open"></i> Template Surat</a></li>
                                 </ul>
                             </li>
-                            <li class="dropdown {{ ($nav == 'transaksi') ? 'active' : '' }}">
+                            <li class="dropdown active">
                                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-mail-bulk"></i> <span>Transaksi Surat</span></a>
                                 <ul class="dropdown-menu">
-                                    <li class="{{ ($menu == 'masuk') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.masuk') }}"><i class="far fa-envelope"></i>Surat Masuk</a></li>
+                                    <li class="{{ ($menu == 'buat') ? 'active' : '' }}"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#surat"><i class="far fa-paper-plane"></i>Buat Masuk</a></li>
+                                    <li class="{{ ($menu == 'masuk') ? 'active' : '' }} "><a class="nav-link" href="{{ route('index.surat.masuk') }}" id="read"><i class="far fa-envelope"></i>Surat Masuk</a></li>
                                     <li class="{{ ($menu == 'keluar') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.keluar') }}"><i class="far fa-envelope-open"></i>Surat Keluar</a></li>
                                     <li class="{{ ($menu == 'search') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.search') }}"><i class="fas fa-search"></i>Pencarian Surat</a></li>
                                     <li class="{{ ($menu == 'file') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.file') }}"><i class="fas fa-file"></i>File Surat</a></li>
@@ -114,8 +115,8 @@
                             <li class="dropdown {{ ($nav == 'agenda') ? 'active' : '' }}">
                                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-book"></i> <span>Buku Agenda</span></a>
                                 <ul class="dropdown-menu">
-                                    <li class="{{ ($menu == 'masuk') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.agenda.masuk') }}"><i class="far fa-envelope"></i>Surat Masuk</a></li>
-                                    <li class="{{ ($menu == 'keluar') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.agenda.keluar') }}"><i class="far fa-envelope-open"></i>Surat Keluar</a></li>
+                                    <li class="{{ ($menu == 'masuk_catatan') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.agenda.masuk') }}"><i class="far fa-envelope"></i>Surat Masuk</a></li>
+                                    <li class="{{ ($menu == 'keluar_catatan') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.agenda.keluar') }}"><i class="far fa-envelope-open"></i>Surat Keluar</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -135,6 +136,24 @@
                     </section>
                 </div>
                 @yield('modal')
+                <div class="modal fade" id="surat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Menu Surat</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Silahkan memilih menu buat surat :
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-primary" href="{{ route('create.keluar.instant') }}">Tanpa Template</a>
+                                <a class="btn btn-primary" href="{{ route('index.keluar.template') }}">Menggunakan Template</a>
+                                {{-- <button type="submit" class="btn btn-primary">Menggunakan Template</button> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {{-- <div class="footer-left">
                     Copyright &copy; 2021 <div class="bullet"></div> Design By <a href="">EWA</a>
                 </div>
@@ -181,6 +200,9 @@
         {{-- Summernote --}}
         <script src="{{ asset('assets/modules/summernote/summernote-bs4.js') }}"></script>
         <script>
+            $(document).ready(function(){
+
+            });
             $('#summernote').summernote({
                 height: 500,
                 toolbar: [
@@ -214,15 +236,6 @@
         {{-- Toastr --}}
         @include('sweetalert::alert')
 
-        {{-- Checkbox tabel --}}
-        <script>
-            $(function(){
-                $("#checkAll").click(function(){
-                    $(".checkboxClass").prop('checked',$(this).prop('checked'));
-                });
-            });
-        </script>
-
         {{-- Confirm modal--}}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
         <script type="text/javascript">
@@ -244,13 +257,14 @@
                 });
             });
 
-            // confirm read surat masuk
-            $('.show_read').click(function(event) {
+            // confirm response
+            $('.show_response').click(function(event) {
                 let form =  $(this).closest("form");
                 let name = $(this).data("name");
+                let bla = $('#response').val();
                 event.preventDefault();
                 swal({
-                    title: 'Apakah anda yakin sudah melihat surat, dan memberi tanggapan hanya membaca !! ',
+                    title: 'Apakah anda yakin sudah melihat surat, dan memberi tanggapan '+bla+' !! ',
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -262,38 +276,20 @@
                 });
             });
 
-            // confirm continue surat masuk
-            $('.show_continue').click(function(event) {
-                let form =  $(this).closest("form");
-                let name = $(this).data("name");
-                event.preventDefault();
-                swal({
-                    title: 'Apakah anda yakin sudah melihat surat, dan memberi tanggapan lanjutkan proses lanjutnya !! ',
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                    form.submit();
-                    }
-                });
-            });
-
-            // confirm TTD surat Keluar
-            $('.show_ttd').click(function(event) {
-                let form =  $(this).closest("form");
-                let name = $(this).data("name");
-                event.preventDefault();
-                swal({
-                    title: 'Apakah anda yakin sudah memeriksa surat, dan memberi tanda tangan pada surat !! ',
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                    form.submit();
+            $(document).ready(function(){
+                $.ajax({
+                    type:"GET",
+                    url:"{{ route('getReadAt') }}",
+                    data: {},
+                    dataType: 'JSON',
+                    success:function(response){
+                        if(response){
+                            $('#read').removeClass("beep beep-sidebar");
+                            console.log('sudah baca');
+                        }else{
+                            console.log('belum baca');
+                            $('#read').addClass("beep beep-sidebar");
+                        }
                     }
                 });
             });

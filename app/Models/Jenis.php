@@ -12,10 +12,6 @@ class Jenis extends Model
     protected $primarykey = 'id';
     protected $fillable = [];
 
-    public function kategori(){
-        return $this->belongsTo(Kategori::class);
-    }
-
     public function surat(){
         return $this->hasMany(Surat::class);
     }

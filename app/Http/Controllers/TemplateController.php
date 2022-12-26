@@ -7,7 +7,7 @@ use App\Models\Template;
 use App\Models\Kategori;
 use App\Models\Mahasiswa;
 use App\Models\Dosen;
-use App\Models\Role;
+use App\Models\UnitKerja;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -48,31 +48,33 @@ class TemplateController extends Controller
         //
         $nav = 'umum';
         $menu = 'template';
-        $role = Role::all();
         $user = Auth::user();
-        $unit = $user->isUnitkerja();
-        foreach($unit as $units){
-            if ($units == 'Fakultas Teknik Elektro dan Teknologi Informasi') {
-                $getRole[] = array(1, 'Fakultas Teknik Elektro dan Teknologi Informasi');
+        $unitKerja = UnitKerja::orwhere('nama', 'like', '%Fakultas Teknik Elektro dan Teknologi Informasi%')
+                    ->orwhere('nama', 'like', '%Jurusan Teknik Informatika%')
+                    ->orwhere('nama', 'like', '%Jurusan Sistem Informasi%')
+                    ->orwhere('nama', 'like', '%Jurusan Teknik Elektro%')
+                    ->get();
+        $unit = Auth::user()->isUnitkerja();
+        for($i = 0; $i < count($unit); $i++){
+            if($user->isAdmin()){
+                $getUnit[] = '';
 
-            } elseif($units == 'Jurusan Teknik Informatika'){
-                $getRole[] = array(2, 'Jurusan Teknik Informatika');
+            }elseif($unit[$i][1] === 'Fakultas Teknik Elektro dan Teknologi Informasi'){
+                $getUnit[] = array($unit[$i][0], 'Fakultas Teknik Elektro dan Teknologi Informasi');
 
-            } elseif($units == 'Jurusan Sistem Informasi'){
-                $getRole[] = array(3, 'Jurusan Sistem Informasi');
+            } elseif($unit[$i][1] === 'Jurusan Teknik Informatika'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Informatika');
 
-            } elseif($units == 'Jurusan Teknik Elektro'){
-                $getRole[] = array(4, 'Jurusan Teknik Elektro');
+            } elseif($unit[$i][1] === 'Jurusan Sistem Informasi'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Sistem Informasi');
 
-            }elseif($user->isAdmin()){
-                $getRole[] = '';
+            } elseif($unit[$i][1] === 'Jurusan Teknik Elektro'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Elektro');
 
-            }elseif(!$user->isAdmin() && $user->isPimpinan() || $user->isPengelola()){
-                break;
             }
         }
-        // dd($getRole);
-        return view('template.insert', compact('nav', 'menu', 'role', 'getRole', 'user'));
+        // dd($getUnit);
+        return view('template.insert', compact('nav', 'menu', 'user', 'unitKerja', 'getUnit'));
     }
 
     /**
@@ -86,7 +88,7 @@ class TemplateController extends Controller
         //
         // dd($request);
         $request->validate([
-            'role_id' => 'required',
+            'unit_id' => 'required',
             'nama' => 'required',
             'file' => 'required|mimes:docx,doc',
             'keterangan' => 'nullable',
@@ -96,7 +98,7 @@ class TemplateController extends Controller
 
         // dd($request);
         $template = new Template();
-        $template->role_id = $request->role_id;
+        $template->unit_kerja_id = $request->unit_id;
         $template->nama = $request->nama;
         if($request->hasFile('file')){
             $file = $request->file('file');
@@ -110,9 +112,9 @@ class TemplateController extends Controller
         $template->isi_body = $request->isi_body;
         $template->isi_footer = $request->isi_footer;
         $template->jumlah_ttd = $request->jumlah_ttd;
+        $template->save();
 
         if($template){
-            $template->save();
             return redirect()->route('index.template')->with('success', 'Data berhasil di tambah !!');
         }else{
             return back()->with('warning', 'Data gagal di Tambah !!');
@@ -142,31 +144,35 @@ class TemplateController extends Controller
         //
         $nav = 'umum';
         $menu = 'template';
-        $role = Role::all();
         $user = Auth::user();
-        $unit = $user->isUnitkerja();
+        $unitKerja = UnitKerja::orwhere('nama', 'like', '%Fakultas Teknik Elektro dan Teknologi Informasi%')
+                ->orwhere('nama', 'like', '%Jurusan Teknik Informatika%')
+                ->orwhere('nama', 'like', '%Jurusan Sistem Informasi%')
+                ->orwhere('nama', 'like', '%Jurusan Teknik Elektro%')
+                ->get();
+        $unit = Auth::user()->isUnitkerja();
         foreach($unit as $units){
             if ($units == 'Fakultas Teknik Elektro dan Teknologi Informasi') {
-                $getRole[] = array(1, 'Fakultas Teknik Elektro dan Teknologi Informasi');
+                $getUnit[] = array(1, 'Fakultas Teknik Elektro dan Teknologi Informasi');
 
             } elseif($units == 'Jurusan Teknik Informatika'){
-                $getRole[] = array(2, 'Jurusan Teknik Informatika');
+                $getUnit[] = array(2, 'Jurusan Teknik Informatika');
 
             } elseif($units == 'Jurusan Sistem Informasi'){
-                $getRole[] = array(3, 'Jurusan Sistem Informasi');
+                $getUnit[] = array(3, 'Jurusan Sistem Informasi');
 
             } elseif($units == 'Jurusan Teknik Elektro'){
-                $getRole[] = array(4, 'Jurusan Teknik Elektro');
+                $getUnit[] = array(4, 'Jurusan Teknik Elektro');
 
-            }elseif($user->isAdmin()){
-                $getRole[] = '';
+            }elseif(Auth::user()->isAdmin()){
+                $getUnit[] = '';
 
-            }elseif(!$user->isAdmin() && $user->isPimpinan() || $user->isPengelola()){
+            }elseif(!Auth::user()->isAdmin() && Auth::user()->isPimpinan() || Auth::user()->isPengelola()){
                 break;
             }
         }
 
-        return view('template.update', compact('nav', 'menu', 'template', 'role', 'user', 'getRole'));
+        return view('template.update', compact('nav', 'menu', 'template', 'unitKerja', 'user', 'getUnit'));
     }
 
     /**
@@ -180,6 +186,7 @@ class TemplateController extends Controller
     {
         //
         $request->validate([
+            'unit_id' => 'required',
             'nama' => 'required',
             'file' => 'mimes:docx,doc|unique:template',
             'keterangan' => 'nullable',
@@ -187,7 +194,7 @@ class TemplateController extends Controller
             'jumlah_ttd' => 'required',
         ]);
 
-
+        $template->unit_kerja_id = $request->unit_id;
         $template->nama = $request->nama;
         $template->keterangan = $request->keterangan;
         if($request->hasFile('file')){
@@ -204,9 +211,9 @@ class TemplateController extends Controller
         $template->isi_body = $request->isi_body;
         $template->isi_footer = $request->isi_footer;
         $template->jumlah_ttd = $request->jumlah_ttd;
+        $template->save();
 
         if($template){
-            $template->save();
             return redirect()->route('index.template')->with('success', 'Data berhasil di Update !!');
         }else{
             return back()->with('warning', 'Data gagal di Update !!');

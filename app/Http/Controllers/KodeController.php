@@ -37,34 +37,31 @@ class KodeController extends Controller
         $nav = 'umum';
         $menu = 'kode';
         $user = Auth::user();
-        $role = Role::all();
+        $unitKerja = UnitKerja::orwhere('nama', 'like', '%Fakultas Teknik Elektro dan Teknologi Informasi%')
+                    ->orwhere('nama', 'like', '%Jurusan Teknik Informatika%')
+                    ->orwhere('nama', 'like', '%Jurusan Sistem Informasi%')
+                    ->orwhere('nama', 'like', '%Jurusan Teknik Elektro%')
+                    ->get();
         $unit = $user->isUnitkerja();
-        foreach($unit as $units){
-            if ($units == 'Fakultas Teknik Elektro dan Teknologi Informasi') {
-                $getRole[] = array(1, 'Fakultas Teknik Elektro dan Teknologi Informasi');
+        for($i = 0; $i < count($unit); $i++){
+            if($user->isAdmin()){
+                $getUnit[] = '';
 
-            } elseif($units == 'Jurusan Teknik Informatika'){
-                $getRole[] = array(2, 'Jurusan Teknik Informatika');
+            }elseif($unit[$i][1] === 'Fakultas Teknik Elektro dan Teknologi Informasi'){
+                $getUnit[] = array($unit[$i][0], 'Fakultas Teknik Elektro dan Teknologi Informasi');
 
-            } elseif($units == 'Jurusan Sistem Informasi'){
-                $getRole[] = array(3, 'Jurusan Sistem Informasi');
+            } elseif($unit[$i][1] === 'Jurusan Teknik Informatika'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Informatika');
 
-            } elseif($units == 'Jurusan Teknik Elektro'){
-                $getRole[] = array(4, 'Jurusan Teknik Elektro');
+            } elseif($unit[$i][1] === 'Jurusan Sistem Informasi'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Sistem Informasi');
 
-            }elseif($user->isAdmin()){
-                $getRole[] = '';
+            } elseif($unit[$i][1] === 'Jurusan Teknik Elektro'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Elektro');
 
-            }elseif(!$user->isAdmin() && $user->isPimpinan() || $user->isPengelola()){
-                break;
             }
         }
-
-        return view('kode.insert', compact('nav', 'menu', 'user', 'role', 'getRole'));
-    }
-
-    public function isRoleUnit(){
-
+        return view('kode.insert', compact('nav', 'menu', 'user', 'unitKerja', 'getUnit'));
     }
 
     /**
@@ -78,19 +75,24 @@ class KodeController extends Controller
         //
         // dd($request);
         $request->validate([
-            'role_id' => 'required',
+            'unit_id' => 'required',
             'nama' => 'required|max:100',
             'kode' => 'required',
             'penomoran' => 'required',
         ]);
         $kode = new Kode();
-        $kode->role_id = $request->role_id;
+        $kode->unit_kerja_id = $request->unit_id;
         $kode->nama = $request->nama;
         $kode->kode = $request->kode;
         $kode->penomoran = $request->penomoran;
+        $kode->increment = 1;
         $kode->save();
 
-        return redirect()->route('index.kode')->with('success', 'Berhasil tambah data !!');
+        if($kode){
+            return redirect()->route('index.kode')->with('success', 'Berhasil tambah data !!');
+        }else{
+            return redirect()->route('index.kode')->with('warning', 'Gagal menambah data !!');
+        }
     }
 
     /**
@@ -116,30 +118,32 @@ class KodeController extends Controller
         $nav = 'umum';
         $menu = 'kode';
         $user = Auth::user();
-        $role = Role::all();
+        $unitKerja = UnitKerja::orwhere('nama', 'like', '%Fakultas Teknik Elektro dan Teknologi Informasi%')
+                    ->orwhere('nama', 'like', '%Jurusan Teknik Informatika%')
+                    ->orwhere('nama', 'like', '%Jurusan Sistem Informasi%')
+                    ->orwhere('nama', 'like', '%Jurusan Teknik Elektro%')
+                    ->get();
         $unit = $user->isUnitkerja();
-        foreach($unit as $units){
-            if ($units == 'Fakultas Teknik Elektro dan Teknologi Informasi') {
-                $getRole[] = array(1, 'Fakultas Teknik Elektro dan Teknologi Informasi');
+        for($i = 0; $i < count($unit); $i++){
+            if($user->isAdmin()){
+                $getUnit[] = '';
 
-            } elseif($units == 'Jurusan Teknik Informatika'){
-                $getRole[] = array(2, 'Jurusan Teknik Informatika');
+            }elseif($unit[$i][1] === 'Fakultas Teknik Elektro dan Teknologi Informasi'){
+                $getUnit[] = array($unit[$i][0], 'Fakultas Teknik Elektro dan Teknologi Informasi');
 
-            } elseif($units == 'Jurusan Sistem Informasi'){
-                $getRole[] = array(3, 'Jurusan Sistem Informasi');
+            } elseif($unit[$i][1] === 'Jurusan Teknik Informatika'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Informatika');
 
-            } elseif($units == 'Jurusan Teknik Elektro'){
-                $getRole[] = array(4, 'Jurusan Teknik Elektro');
-                
-            } elseif($user->isAdmin()){
-                $getRole[] = '';
+            } elseif($unit[$i][1] === 'Jurusan Sistem Informasi'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Sistem Informasi');
 
-            }elseif(!$user->isAdmin() && $user->isPimpinan() || $user->isPengelola()){
-                break;
+            } elseif($unit[$i][1] === 'Jurusan Teknik Elektro'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Elektro');
+
             }
         }
 
-        return view('kode.update', compact('nav', 'menu', 'user', 'kode', 'role', 'getRole'));
+        return view('kode.update', compact('nav', 'menu', 'user', 'kode', 'unitKerja', 'getUnit'));
     }
 
     /**
@@ -152,20 +156,27 @@ class KodeController extends Controller
     public function update(Request $request, Kode $kode)
     {
         //
+        // dd($request);
         $request->validate([
-            'role_id' => 'required',
+            'unit_id' => 'required',
             'nama' => 'required|max:100',
             'kode' => 'required|max:100',
             'penomoran' => 'required|max:100',
+            'increment' => 'required',
         ]);
 
-        $kode->role_id = $request->role_id;
+        $kode->unit_kerja_id = $request->unit_id;
         $kode->nama = $request->nama;
         $kode->kode = $request->kode;
         $kode->penomoran = $request->penomoran;
+        $kode->increment = $request->increment;
         $kode->save();
 
-        return redirect()->route('index.kode')->with('success', 'Data berhasil di Update !!');
+        if($kode){
+            return redirect()->route('index.kode')->with('success', 'Berhasil ubah data !!');
+        }else{
+            return redirect()->route('index.kode')->with('warning', 'Gagal mengubah data !!');
+        }
     }
 
     /**

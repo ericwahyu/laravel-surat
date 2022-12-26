@@ -59,7 +59,8 @@
                             </div>
                         @endif
                         <div class="col-sm-2">
-                            <a href="{{ route('download.surat.masuk', $surat) }}" class="btn btn-success" title="Download"><i class="fa fa-download"></i> View File</a>
+                            <a class="btn btn-dark" href="{{ route('download.surat', $surat->id) }}"><i class="fa fa-download"></i> Download file</a>
+                            {{-- <a href="{{ route('download.surat.masuk', $surat) }}" class="btn btn-success" title="Download"><i class="fa fa-download"></i> View File</a> --}}
                         </div>
                         <div class="col-sm-2 offset-md-3">
                             <a href="{{ route('index.disposisi', $surat) }}" class="btn btn-info" title="Lihat Detail Disposisi dan beri tanggapan"><i class="fas fa-file"></i> Lihat Disposisi</a>

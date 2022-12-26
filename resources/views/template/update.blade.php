@@ -19,16 +19,16 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label style="font-size: 16px" class="form-label">Role Data</label>
-                            <select class="form-control @error('role_id') is-invalid @enderror" name="role_id" >
-                                <option disabled selected>-- Role Data--</option>
+                            <label style="font-size: 16px" class="form-label">Unit Data</label>
+                            <select class="form-control @error('unit_id') is-invalid @enderror" name="unit_id" >
+                                <option disabled selected>-- Unit Data--</option>
                                 @if ($user->isAdmin())
-                                    <option selected value="{{ $template->role->id }}">{{ $template->role->nama }}</option>
-                                    @foreach ($role as $role)
-                                        @if($template->role->id === $role->id)
+                                    <option selected value="{{ $template->unitKerja->id }}">{{ $template->unitKerja->nama }}</option>
+                                    @foreach ($unitKerja as $unitKerja)
+                                        @if($template->unitKerja->id === $unitKerja->id)
                                             @continue
                                         @else
-                                            <option value="{{ $role->id }}" {{ (old("role_id") == $role->id ? "selected":"") }}>{{ $role->nama }}</option>
+                                            <option value="{{ $unitKerja->id }}" {{ (old("unit_id") == $unitKerja->id ? "selected":"") }}>{{ $unitKerja->nama }}</option>
                                         @endif
                                     @endforeach
                                 @else
@@ -36,12 +36,12 @@
                                         @if ($getRole[$i][0] == $template->role->id)
                                             <option selected value="{{ $template->role->id }}">{{ $template->role->nama }}</option>
                                         @else
-                                            <option value="{{ $getRole[$i][0] }}" {{ (old("role_id") == $getRole[$i][0] ? "selected":"") }}>{{ $getRole[$i][1] }}</option>
+                                            <option value="{{ $getRole[$i][0] }}" {{ (old("unit_id") == $getRole[$i][0] ? "selected":"") }}>{{ $getRole[$i][1] }}</option>
                                         @endif
                                     @endfor
                                 @endif
                             </select>
-                            @error('role_id')
+                            @error('unit_id')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

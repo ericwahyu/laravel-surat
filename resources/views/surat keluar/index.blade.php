@@ -3,17 +3,17 @@
 @section('section')
 <div class="section-header">
     <h1>Surat Keluar</h1>
-    <div class="section-header-button">
+    {{-- <div class="section-header-button">
         @if ($user->isAdmin() || $user->isPengelola())
             <a href="{{ route('index.keluar.template') }}" class="btn btn-primary" title="Tambah Surat Masuk">Tambah Baru</a>
         @endif
-    </div>
+    </div> --}}
 </div>
 <div class="section-body">
     <div class="row">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('index.surat.masuk') }}" method="get">
+                <form action="{{ route('index.surat.keluar') }}" method="get">
                     <div class="row">
                         <div class="form-group col-md-4">
                             <label style="font-size: 16px">Filter Tahun</label>
@@ -25,15 +25,15 @@
                     </div>
                 </form>
                 <div class="table-responsive">
-                    <table class="table table-striped" id="table-1">
+                    <table class="table " id="table-1">
                         <thead>
                             <tr>
                                 <th class="text-center">#</th>
                                 <th>Jenis</th>
-                                <th>No Surat</th>
-                                <th>Judul Surat</th>
+                                <th>Nomor Surat</th>
+                                <th>Judul</th>
                                 <th>Tanggal Surat</th>
-                                <th>Keperluan Surat</th>
+                                <th>Keperluan</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

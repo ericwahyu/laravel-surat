@@ -12,4 +12,7 @@ class Disposisiuser extends Model
     protected $primarykey = 'id';
     protected $fillable = [];
 
+    public function response(){
+        return $this->belongsTo(Response::class);
+    }
 }

@@ -21,7 +21,7 @@ class CreateGenerateTable extends Migration
             $table->text('content')->nullable();
             $table->text('footer_content')->nullable();
             $table->string('tempat');
-            $table->string('file')->nullable();
+            // $table->string('file')->nullable();
             // $table->string('file_tertandatangan')->nullable();
             $table->timestamps();
 

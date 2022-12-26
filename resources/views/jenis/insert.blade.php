@@ -18,20 +18,26 @@
                         <h4>Data Jenis Surat</h4>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label style="font-size: 16px" class="form-label">Kategori Jenis Surat</label>
                             <select class="form-control @error('kategori_id') is-invalid @enderror" name="kategori_id">
                                 <option disabled selected>-- Kategori Jenis Surat--</option>
-                                @foreach ($kategori as $kategori)
-                                    <option value="{{ $kategori->id }}" {{ (old("kategori_id") == $kategori->id ? "selected":"") }}>{{ $kategori->nama }}</option>
-                                @endforeach
+                                @if ($user->isAdmin())
+                                    @foreach ($role as $role)
+                                        <option value="{{ $role->id }}" {{ (old("role_id") == $role->id ? "selected":"") }}>{{ $role->nama }}</option>
+                                    @endforeach
+                                @else
+                                    @for ($i = 0; $i < count($getRole); $i++)
+                                        <option value="{{ $getRole[$i][0] }}" {{ (old("role_id") == $getRole[$i][0] ? "selected":"") }}>{{ $getRole[$i][1] }}</option>
+                                    @endfor
+                                @endif
                             </select>
                             @error('kategori_id')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label style="font-size: 16px">Nama Jenis Surat</label>
                             <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" placeholder="Nama" value="{{ old('nama') }}">

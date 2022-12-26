@@ -69,7 +69,7 @@ class User extends Authenticatable
 
         if($mahasiswa->isNotEmpty()){
             foreach($mahasiswa as $id_maha){
-                $unit_kerja[] = $id_maha->unit_kerja->nama;
+                $unit_kerja[] = array($id_maha->unit_kerja->id, $id_maha->unit_kerja->nama);
                 // $unit_kerja = array("User");
             }
         }elseif($dosen->isNotEmpty()){
@@ -79,7 +79,7 @@ class User extends Authenticatable
                      $unit_kerja = array("User");
                 }else{
                     foreach($unit_dosen as $unit){
-                        $unit_kerja[] = $unit->unit_kerja->nama;
+                        $unit_kerja[] = array($unit->unit_kerja->id, $unit->unit_kerja->nama);
                     }
                 }
             }
@@ -88,8 +88,39 @@ class User extends Authenticatable
         return $unit_kerja;
     }
 
+    public function isRole(){
+        $mahasiswa = Mahasiswa::where('user_id', $this->id)->get();
+        $dosen = Dosen::where('user_id', $this->id)->get();
+
+        if($mahasiswa->isNotEmpty()){
+            foreach($mahasiswa as $id_maha){
+                $role_mahasiswa = RoleMahasiswa::where('mahasiswa_id', $id_maha->id)->get();
+                if($role_mahasiswa->isEmpty()){
+                    $role = array("User");
+                }else{
+                    foreach($role_mahasiswa as $roles){
+                        $role[] = $roles->role->nama;
+                    }
+                }
+            }
+        }elseif($dosen->isNotEmpty()){
+            foreach($dosen as $id_dos){
+                $role_dosen = RoleDosen::where('dosen_id', $id_dos->id)->get();
+                if($role_dosen->isEmpty()){
+                     $role = array("User");
+                }else{
+                    foreach($role_dosen as $roles){
+                        $role[] = $roles->role->nama;
+                    }
+                }
+            }
+        }
+        // dd($role);
+        return $role;
+    }
+
     public function isAdmin(){
-        $admin = $this->isUnitKerja();
+        $admin = $this->isRole();
         $data = count($admin);
         for($i = 0; $i < $data; $i++){
             if($admin[$i] === 'Admin'){
@@ -101,7 +132,7 @@ class User extends Authenticatable
     }
 
     public function isPimpinan(){
-        $pimpinan = $this->isUnitKerja();
+        $pimpinan = $this->isRole();
         $data = count($pimpinan);
 
         for($i = 0; $i < $data; $i++){
@@ -114,7 +145,7 @@ class User extends Authenticatable
     }
 
     public function isPengelola(){
-        $pengelola = $this->isUnitKerja();
+        $pengelola = $this->isRole();
         $data = count($pengelola);
 
         for($i = 0; $i < $data; $i++){
@@ -127,7 +158,7 @@ class User extends Authenticatable
     }
 
     public function isUser(){
-        $user = $this->isUnitKerja();
+        $user = $this->isRole();
         $data = count($user);
 
         for($i = 0; $i < $data; $i++){
@@ -144,7 +175,7 @@ class User extends Authenticatable
         $data = count($user);
 
         for($i = 0; $i < $data; $i++){
-            if($user[$i] === 'Fakultas Teknik Elektro dan Teknologi Informasi'){
+            if($user[$i][1] === 'Fakultas Teknik Elektro dan Teknologi Informasi'){
                 return true;
                 break;
             }
@@ -157,7 +188,7 @@ class User extends Authenticatable
         $data = count($user);
 
         for($i = 0; $i < $data; $i++){
-            if($user[$i] === 'Jurusan Teknik Informatika'){
+            if($user[$i][1] === 'Jurusan Teknik Informatika'){
                 return true;
                 break;
             }
@@ -170,7 +201,7 @@ class User extends Authenticatable
         $data = count($user);
 
         for($i = 0; $i < $data; $i++){
-            if($user[$i] === 'Jurusan Sistem Informasi'){
+            if($user[$i][1] === 'Jurusan Sistem Informasi'){
                 return true;
                 break;
             }
@@ -183,7 +214,7 @@ class User extends Authenticatable
         $data = count($user);
 
         for($i = 0; $i < $data; $i++){
-            if($user[$i] === 'Jurusan Teknik Elektro'){
+            if($user[$i][1] === 'Jurusan Teknik Elektro'){
                 return true;
                 break;
             }
