@@ -22,15 +22,17 @@
                         <label style="font-size: 16px">Nomor Surat</label>
                         <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" name="nomor_surat" placeholder="0123/PSI/ITATS/2021" value="{{ old('nomor_surat') }}" required>
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group col-md-6">
-                        <label style="font-size: 16px">Tempat Surat</label>
-                        <input type="text" class="form-control @error('tempat_surat') is-invalid @enderror" name="tempat_surat" placeholder="Surabaya" value="{{ old('tempat_surat') }}" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label style="font-size: 16px">Tanggal Surat</label>
-                        <input type="date" class="form-control @error('tanggal_surat') is-invalid @enderror" name="tanggal_surat" value="{{ old('tanggal_surat') }}" required>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label style="font-size: 16px">Tempat Surat</label>
+                                <input type="text" class="form-control @error('tempat_surat') is-invalid @enderror" name="tempat_surat" placeholder="Surabaya" value="{{ old('tempat_surat') }}" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label style="font-size: 16px">Tanggal Surat</label>
+                                <input type="date" class="form-control @error('tanggal_surat') is-invalid @enderror" name="tanggal_surat" value="{{ old('tanggal_surat') }}" id="date" required>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -103,4 +105,12 @@
         </div>
     </form>
 </div>
+@endsection
+@section('script')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#date').val(new Date().toISOString().substring(0, 10));
+        });
+    </script>
 @endsection

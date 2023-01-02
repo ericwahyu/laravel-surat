@@ -13,6 +13,7 @@ use App\Http\Controllers\KeperluanController;
 use App\Http\Controllers\KodeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\MasterController;
 use App\Models\Generate;
 use App\Models\Surat;
 use App\Models\Template;
@@ -46,56 +47,70 @@ Route::group(['middleware' => ['auth']], function(){
 
     Route::get('/dashboard', function(){
         $user = Auth::user();
-        $countUser = User::count();
-        // if($user->isAdmin()){
-        //     $countSuratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-        //                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-        //                         ->where('kategori_id', 1)
-        //                         ->count();
-        //     $countSuratKeluar = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-        //                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-        //                         ->where('kategori_id', 2)
-        //                         ->count();
-        //     $countCatatan = Catatan::count();
-        // }else{
-        //     $countSuratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-        //                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-        //                         ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-        //                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-        //                         ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-        //                         ->where('surat.status', '!=', 0)
-        //                         ->where('kategori_id', 1)
-        //                         ->where('disposisi_user.user_id', Auth::user()->id)
-        //                         ->count();
-        //     $countSuratKeluar = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-        //                         ->join('generate', 'surat.id', '=', 'generate.surat_id')
-        //                         ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-        //                         ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-        //                         ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-        //                         ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-        //                         ->where('surat.status', '!=', 0)
-        //                         ->where('kategori_id', 2)
-        //                         ->where('disposisi_user.user_id', Auth::user()->id)
-        //                         ->count();
-        //     $countCatatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
-        //                     ->join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-        //                     ->join('kategori', 'kategori.id', '=', 'jenis.kategori_id')
-        //                     ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-        //                     ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-        //                     ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-        //                     ->where('surat.status', '!=', 0)
-        //                     ->where('kategori_id', 1)
-        //                     ->orwhere('kategori_id', 2)
-        //                     ->where('disposisi_user.user_id', Auth::user()->id)
-        //                     ->count();
-        // }
+        $countUser = User::get();
+        if($user->isAdmin()){
+            $countSuratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                // ->where('surat.status', '!=', 0)
+                ->where('disposisi_user.kategori_id', 1)
+                ->where('disposisi_user.user_id', Auth::user()->id)
+                ->select('surat.*')
+                ->distinct()->get();
+            $countSuratKeluar = Surat::join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                // ->where('surat.status', '!=', 0)
+                ->where('disposisi_user.kategori_id', 2)
+                ->where('disposisi_user.user_id', Auth::user()->id)
+                ->select('surat.*')
+                ->distinct()->get();
+            $countCatatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
+                ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                // ->where('surat.status', '!=', 0)
+                ->where('disposisi_user.user_id', Auth::user()->id)
+                ->select('catatan.*')
+                ->distinct()->get();
+        }else{
+            $countSuratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                ->where('surat.status', '!=', 0)
+                ->where('disposisi_user.kategori_id', 1)
+                ->where('disposisi_user.user_id', Auth::user()->id)
+                ->select('surat.*')
+                ->distinct()->get();
+            $countSuratKeluar = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                ->join('generate', 'surat.id', '=', 'generate.surat_id')
+                ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                ->where('surat.status', '!=', 0)
+                ->where('disposisi_user.kategori_id', 2)
+                ->where('disposisi_user.user_id', Auth::user()->id)
+                ->select('surat.*')
+                ->distinct()->get();
+            $countCatatan = Catatan::join('surat', 'surat.id', '=', 'catatan.surat_id')
+                ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                // ->where('surat.status', '!=', 0)
+                ->where('disposisi_user.user_id', Auth::user()->id)
+                ->select('catatan.*')
+                ->distinct()->latest('catatan.id')->get();
+        }
         return view('dashboard', array(
+            'user' => 'user',
             'nav' => 'dashboard',
             'menu' => 'dashboard',
-            'user' => $countUser,
-            // 'suratmasuk' => $countSuratMasuk,
-            // 'suratkeluar' => $countSuratKeluar,
-            // 'agenda' => $countCatatan
+            'countUser' => count($countUser),
+            'suratmasuk' => count($countSuratMasuk),
+            'suratkeluar' => count($countSuratKeluar),
+            'agenda' => count($countCatatan)
         ));
     })->name('dashboard');
 
@@ -135,7 +150,8 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('/update/{surat}', [SuratController::class, 'update'])->name('update.surat.masuk')->middleware('checkRole:Admin,Pimpinan,Pengelola');
         Route::get('/show/{surat}', [SuratController::class, 'show'])->name('show.surat.masuk');
         Route::delete('/destroy/{surat}', [SuratController::class, 'destroy'])->name('destroy.surat.masuk')->middleware('checkRole:Admin,Pimpinan,Pengelola');
-        Route::get('/download/{surat}', [SuratController::class, 'download_file'])->name('download.surat.masuk');
+
+        Route::get('/getReadAtMasuk', [SuratController::class, 'getReadAtMasuk'])->name('getReadAtMasuk');
     });
     Route::prefix('/transaksi/surat/keluar')->group(function(){
         Route::get('/', [GenerateController::class, 'index'])->name('index.surat.keluar');
@@ -152,9 +168,10 @@ Route::group(['middleware' => ['auth']], function(){
 
         //generate nomor sarat
         Route::post('/generateNomor', [GenerateController::class, 'generateNomor'])->name('generateNomor');
+        Route::get('/getReadAtKeluar', [GenerateController::class, 'getReadAtKeluar'])->name('getReadAtKeluar');
     });
     Route::get('/getKode', [GenerateController::class, 'getKode'])->name('getKode');
-    Route::get('/readAt', [DisposisiController::class, 'getReadAt'])->name('getReadAt');
+
 
     Route::prefix('/search/')->group(function(){
         Route::get('/', [SearchController::class, 'index'])->name('index.search');
@@ -180,6 +197,7 @@ Route::group(['middleware' => ['auth']], function(){
         Route::delete('/destroy/{disposisi}', [DisposisiController::class, 'destroy'])->name('destroy.disposisi')->middleware('checkRole:Admin,Pimpinan,Pengelola');
 
         Route::post('/setResponse/{disposisi}', [DisposisiController::class, 'setResponse'])->name('setResponse');
+        Route::post('/setResponsePenerima/{disposisi}', [DisposisiController::class, 'setResponsePenerima'])->name('setResponsePenerima');
     });
 
     Route::prefix('/agenda')->group(function(){
@@ -189,5 +207,26 @@ Route::group(['middleware' => ['auth']], function(){
         Route::prefix('/surat/keluar')->group(function(){
             Route::get('/', [CatatanController::class, 'indexsk'])->name('index.agenda.keluar');
         });
+    });
+
+    Route::get('/send-Email', [DisposisiController::class, 'sendMail']);
+
+    Route::prefix('/admin/master')->group(function(){
+        Route::get('/surat', [MasterController::class, 'indexSurat'])->name('index.masterSurat')->middleware('checkRole:Admin');
+        Route::get('/surat/edit/{surat}', [MasterController::class, 'editSurat'])->name('edit.masterSurat')->middleware('checkRole:Admin');
+        Route::post('/surat/update/{surat}', [MasterController::class, 'updateSurat'])->name('update.masterSurat')->middleware('checkRole:Admin');
+
+        Route::get('/response', [MasterController::class, 'indexResponse'])->name('index.masterResponse')->middleware('checkRole:Admin');
+        Route::get('/response/create', [MasterController::class, 'createResponse'])->name('create.masterResponse')->middleware('checkRole:Admin');
+        Route::post('/response/store', [MasterController::class, 'storeResponse'])->name('store.masterResponse')->middleware('checkRole:Admin');
+        Route::get('/response/edit/{response}', [MasterController::class, 'editResponse'])->name('edit.masterResponse')->middleware('checkRole:Admin');
+        Route::post('/response/update/{response}', [MasterController::class, 'updateResponse'])->name('update.masterResponse')->middleware('checkRole:Admin');
+        Route::delete('/response/destroy/{response}', [MasterController::class, 'destroyResponse'])->name('destroy.masterResponse')->middleware('checkRole:Admin');
+
+        Route::get('/role dosen', [MasterController::class, 'indexRoleDosen'])->name('index.masterRoleDosen')->middleware('checkRole:Admin');
+        Route::get('/role dosen/setting/{dosen}', [MasterController::class, 'settingRoleDosen'])->name('setting.masterRoleDosen')->middleware('checkRole:Admin');
+        Route::post('/role dosen/setting/store/{dosen}', [MasterController::class, 'storeRoleDosen'])->name('store.masterRoleDosen')->middleware('checkRole:Admin');
+        Route::post('/role dosen/setting/update/{role_dosen}', [MasterController::class, 'updateRoleDosen'])->name('update.masterRoleDosen')->middleware('checkRole:Admin');
+        Route::delete('/role dosen/setting/destroy/{role_dosen}', [MasterController::class, 'destroyRoleDosen'])->name('destroy.masterRoleDosen')->middleware('checkRole:Admin');
     });
 });

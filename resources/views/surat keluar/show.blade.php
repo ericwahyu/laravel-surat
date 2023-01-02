@@ -46,10 +46,12 @@
                         </tbody>
                     </table>
                     <div class="row">
-                        @if ($user->isAdmin() || $user->isPengelola() || $user->isPimpinan())
+                        @if ($user->isAdmin() || $user->isPengelola())
                             <div class="col-sm-2">
                                 <a href="{{ route('edit.surat.keluar', $surat) }}" class="btn btn-warning" title="Update"><i class="far fa-edit"></i> Update</a>
                             </div>
+                        @endif
+                        @if ($user->isAdmin() || $user->isPengelola() || $user->isPimpinan())
                             <div class="col-sm-2">
                                 <form action="{{ route('destroy.surat.keluar', $surat) }}" method="post">
                                     @csrf
@@ -64,10 +66,6 @@
                         <div class="col-sm-2 offset-md-3">
                             <a href="{{ route('index.disposisi', $surat) }}" class="btn btn-info" title="Lihat Detail Disposisi dan beri tanggapan"><i class="fas fa-file"></i> Lihat Disposisi</a>
                         </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="row">
                     </div>
                 </div>
             </div>

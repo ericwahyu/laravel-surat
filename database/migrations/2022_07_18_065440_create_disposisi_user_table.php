@@ -19,6 +19,7 @@ class CreateDisposisiUserTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('kategori_id');
             $table->unsignedBigInteger('user_eksternal_id')->nullable();
+            $table->string('status');
             $table->unsignedBigInteger('response_id')->nullable();
             $table->unsignedBigInteger('read_at')->nullable();
             $table->timestamps();

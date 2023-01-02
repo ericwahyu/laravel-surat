@@ -1,24 +1,13 @@
 @extends('layout')
-@section('title','Surat Masuk')
+@section('title','Master Data Surat')
 @section('section')
 <div class="section-header">
-    <h1>Surat Masuk</h1>
+    <h1>Master Data Surat</h1>
 </div>
 <div class="section-body">
     <div class="row">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('index.surat.masuk') }}" method="get">
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <label style="font-size: 16px">Filter Tahun</label>
-                            <input type="number" class="form-control @error('tahun') is-invalid @enderror" name="tahun" min="2020" max="3000" value="{{ $request->tahun }}">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <button type="submit" class="btn btn-primary" style="margin-top: 35px">Filter Data</button>
-                        </div>
-                    </div>
-                </form>
                 <div class="table-responsive">
                     <table class="table" id="table-1">
                         <thead>
@@ -29,12 +18,13 @@
                                 <th>Judul</th>
                                 <th>Tanggal Surat</th>
                                 <th>Keperluan</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($surat as $data)
-                                <tr style="background-color: {{ (SuratController::readAtMasuk($data->id)->read_at == null) ? '#BEBBBA' : '#FFFBF9' }}">
+                            @foreach ($data as $data)
+                                <tr>
                                     <td>
                                         <div class="sort-handler ui-sortable-handle text-center">
                                             <i class="fas fa-th"></i>
@@ -45,8 +35,13 @@
                                     <td>{{ $data->judul }}</td>
                                     <td>{{ IdDateFormatter::format($data->tanggal, IdDateFormatter::COMPLETE) }}</td>
                                     <td>{{ $data->keperluan }}</td>
+                                    @if ($data->status == 1)
+                                        <td><span class="badge badge-success">Aktif</span></td>
+                                    @else
+                                        <td><span class="badge badge-danger">Tidak Aktif</span></td>
+                                    @endif
                                     <td>
-                                        <a href="{{ route('show.surat.masuk', $data->id) }}" class="btn btn-info" title="Lihat detail"><i class="fa fa-eye"></i> Detail</a>
+                                        <a href="{{ route('edit.masterSurat', $data->id) }}" class="btn btn-warning" title="Update Data"><i class="far fa-edit"></i> Update</a>
                                     </td>
                                 </tr>
                             @endforeach

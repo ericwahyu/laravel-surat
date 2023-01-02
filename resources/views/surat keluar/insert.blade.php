@@ -62,8 +62,9 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Catatan Surat</label>
-                                <input type="text" class="form-control @error('catatan_surat') is-invalid @enderror" name="catatan_surat" value="{{ old('catatan_surat') }}">
+                                <label style="font-size: 16px">Catatan Surat 'opsional'</label>
+                                {{-- <input type="text" class="form-control @error('catatan_surat') is-invalid @enderror" name="catatan_surat" value="{{ old('catatan_surat') }}"> --}}
+                                <textarea class="form-control @error('catatan_surat') is-invalid @enderror" name="catatan_surat" cols="30" rows="10">{{ old('catatan_surat') }}</textarea>
                                 <small id="passwordHelpBlock" class="form-text text-muted">
                                     Masukkan catatan jika ada perlu !!
                                 </small>
@@ -96,7 +97,7 @@
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label style="font-size: 16px">Tanggal Surat</label>
-                                        <input type="date" class="form-control @error('tanggal_surat') is-invalid @enderror" name="tanggal_surat" value="{{ old('tanggal_surat') }}" required>
+                                        <input type="date" class="form-control @error('tanggal_surat') is-invalid @enderror" name="tanggal_surat" value="{{ old('tanggal_surat') }}" id="date" required>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -174,17 +175,8 @@
                                     </div>
                                 @enderror
                             </div>
-                            {{-- <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Tanggal Disposisi</label>
-                                <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ old('tanggal') }}">
-                                @error('tanggal')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div> --}}
                             <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Catatan Disposisi</label>
+                                <label style="font-size: 16px">Catatan Disposisi 'optional'</label>
                                 <textarea name="catatan_disposisi" class="form-control @error('catatan_disposisi') is-invalid @enderror" cols="30" rows="10">{{ old('catatan_disposisi') }}</textarea>
                                 <small id="passwordHelpBlock" class="form-text text-muted">
                                     Masukkan catatan jika ada perlu !!
@@ -198,13 +190,27 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Isi Disposisi</label>
+                                <label style="font-size: 16px">Isi Disposisi 'optional'</label>
                                 <textarea name="isi" class="form-control @error('isi') is-invalid @enderror" cols="30" rows="10">{{ old('isi') }}</textarea>
                                 @error('isi')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                 @enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label style="font-size: 16px">Target Akhir Surat</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="target_akhir" id="flexRadio1" value="1">
+                                    <label class="form-check-label" for="flexRadio1"> Ya</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="target_akhir" id="flexRadio2" value="0" checked>
+                                    <label class="form-check-label" for="flexRadio2"> Tidak</label>
+                                </div>
+                                <small id="passwordHelpBlock" class="form-text text-muted">
+                                    Target akhir surat adalah tujuan akhir dari surat ini dan akan menerima dalam surat masuk, jika bukan target akhir surat maka penerima akan menerima surat pada surat keluar !!
+                                </small>
                             </div>
                         </div>
                         <div class="form-group">
@@ -215,8 +221,8 @@
                                         <tr>
                                             <th>
                                                 <div class="sort-handler ui-sortable-handle text-center">
-                                                    <input class="form-check-input" type="checkbox" id="checkAll">
-                                                    <label class="form-check-label" for="checkAll"></label>
+                                                    {{-- <input class="form-check-input" type="checkbox" id="checkAll">
+                                                    <label class="form-check-label" for="checkAll"></label> --}}
                                                 </div>
                                             </th>
                                             {{-- <th>Response </th> --}}
@@ -263,8 +269,8 @@
                                         <tr>
                                             <th>
                                                 <div class="sort-handler ui-sortable-handle text-center">
-                                                    <input class="form-check-input" type="checkbox" id="checkAll">
-                                                    <label class="form-check-label" for="checkAll"></label>
+                                                    {{-- <input class="form-check-input" type="checkbox" id="checkAll">
+                                                    <label class="form-check-label" for="checkAll"></label> --}}
                                                 </div>
                                             </th>
                                             <th>Nama </th>
@@ -401,7 +407,7 @@
                         <label style="font-size: 16px">Jumlah Digit</label>
                         <input class="form-control" type="number" name="digit" min="1" id="">
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="sisipan">Apakah surat ini menggunakan format nomor surat sisipan</label>
                             <input class="form-check-input" style="margin-left: 4px" type="checkbox" id="sisipan" name="sisipan" value="true">
@@ -410,7 +416,7 @@
                     <div class="form-group tanggal">
                         <label style="font-size: 16px">Tanggal Surat</label>
                         <input type="date" class="form-control" name="tanggal" id="tanggal">
-                    </div>
+                    </div> --}}
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Generate</button>
@@ -441,17 +447,17 @@
 
         //sisipan
         // $('#form-generate')[0].reset();
-        $('.tanggal').hide();
-        $('#tanggal').attr("required", false);
-        $('#sisipan').click(function(){
-            if (this.checked) {
-                $('.tanggal').show();
-                $('#tanggal').attr("required", true);
-            }else{
-                $('.tanggal').hide();
-                $('#tanggal').attr("required", false);
-            }
-        });
+        // $('.tanggal').hide();
+        // $('#tanggal').attr("required", false);
+        // $('#sisipan').click(function(){
+        //     if (this.checked) {
+        //         $('.tanggal').show();
+        //         $('#tanggal').attr("required", true);
+        //     }else{
+        //         $('.tanggal').hide();
+        //         $('#tanggal').attr("required", false);
+        //     }
+        // });
         //generate nomor
         $('#form-generate').on('submit', function(e){
             e.preventDefault();
@@ -528,6 +534,8 @@
                 $('.eksternal').show();
             }
         });
+
+        $('#date').val(new Date().toISOString().substring(0, 10));
     });
 </script>
 @endsection

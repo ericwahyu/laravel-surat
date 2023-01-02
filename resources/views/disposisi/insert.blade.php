@@ -28,7 +28,7 @@
                         @enderror
                     </div>
                     <div class="form-group col-md-6">
-                        <label style="font-size: 16px">Catatan</label>
+                        <label style="font-size: 16px">Catatan 'opsional'</label>
                         <textarea name="catatan_disposisi" class="form-control @error('catatan_disposisi') is-invalid @enderror" cols="30" rows="10">{{ old('catatan_disposisi') }}</textarea>
                         <small id="passwordHelpBlock" class="form-text text-muted">
                             Masukkan catatan jika ada perlu !!
@@ -39,19 +39,10 @@
                             </div>
                         @enderror
                     </div>
-                    {{-- <div class="form-group col-md-6">
-                        <label style="font-size: 16px">Tanggal Disposisi</label>
-                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ old('tanggal') }}">
-                        @error('tanggal')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div> --}}
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label style="font-size: 16px">Isi Disposisi</label>
+                        <label style="font-size: 16px">Isi Disposisi 'optional'</label>
                         <textarea name="isi" class="form-control @error('isi') is-invalid @enderror" cols="30" rows="10">{{ old('isi') }}</textarea>
                         @error('isi')
                             <div class="invalid-feedback">
@@ -59,7 +50,20 @@
                             </div>
                         @enderror
                     </div>
-
+                    <div class="form-group col-md-6">
+                        <label style="font-size: 16px">Target Akhir Surat</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="target_akhir" id="flexRadio1" value="1">
+                            <label class="form-check-label" for="flexRadio1"> Ya</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="target_akhir" id="flexRadio2" value="0" checked>
+                            <label class="form-check-label" for="flexRadio2"> Tidak</label>
+                        </div>
+                        <small id="passwordHelpBlock" class="form-text text-muted">
+                            Target akhir surat adalah tujuan akhir dari surat ini dan akan menerima dalam surat masuk, jika bukan target akhir surat maka penerima akan menerima surat pada surat keluar !!
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -76,8 +80,8 @@
                                 <tr>
                                     <th>
                                         <div class="sort-handler ui-sortable-handle text-center">
-                                            <input class="form-check-input" type="checkbox" id="checkAll">
-                                            <label class="form-check-label" for="checkAll"></label>
+                                            {{-- <input class="form-check-input" type="checkbox" id="checkAll">
+                                            <label class="form-check-label" for="checkAll"></label> --}}
                                         </div>
                                     </th>
                                     {{-- <th>Response </th> --}}
@@ -112,10 +116,10 @@
                         <label class="custom-control-label" for="luar-fakultas"><b>Diluar</b> Lingkup Fakultas</label>
                     </div>
                     @error('radiobox')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
                 <div class="form-group fakultas">
                     <div class="table-responsive">
@@ -124,8 +128,8 @@
                                 <tr>
                                     <th>
                                         <div class="sort-handler ui-sortable-handle text-center">
-                                            <input class="form-check-input" type="checkbox" id="checkAll">
-                                            <label class="form-check-label" for="checkAll"></label>
+                                            {{-- <input class="form-check-input" type="checkbox" id="checkAll">
+                                            <label class="form-check-label" for="checkAll"></label> --}}
                                         </div>
                                     </th>
                                     <th>Nama </th>
@@ -210,77 +214,6 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="form-group">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-md">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <div class="sort-handler ui-sortable-handle text-center">
-                                            <input class="form-check-input" type="checkbox" id="checkAll">
-                                            <label class="form-check-label" for="checkAll"></label>
-                                        </div>
-                                    </th>
-                                    <th>Nama </th>
-                                    <th>Email</th>
-                                    <th>Unit Kerja</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($user_dosen as $us_dos)
-                                    @if ($us_dos->user_id === Auth::user()->id)
-                                        @continue
-                                    @else
-                                        <tr>
-                                            <td>
-                                                <div class="sort-handler ui-sortable-handle text-center">
-                                                    <input class="form-check-input checkboxClass" type="checkbox" id="inlineCheckbox1" name="disposisi[]" value={{ $us_dos->id }}>
-                                                    <label class="form-check-label" for="inlineCheckbox1"></label>
-                                                </div>
-                                            </td>
-                                            <td>{{ $us_dos->nama }}</td>
-                                            <td>{{ $us_dos->email }}</td>
-                                            <td>
-                                                <table>
-                                                    @foreach (DisposisiController::getUnitKerja($us_dos->id) as $unitDosen)
-                                                        <tr>
-                                                            <td>{{ $unitDosen }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                @endforeach
-                                @foreach ($user_mahasiswa as $us_maha)
-                                    @if ($us_maha->user_id == Auth::user()->id)
-                                        @continue
-                                    @else
-                                        <tr>
-                                            <td>
-                                                <div class="sort-handler ui-sortable-handle text-center">
-                                                    <input class="form-check-input checkboxClass" type="checkbox" id="inlineCheckbox1" name="disposisi[]" value={{ $us_maha->id }}>
-                                                    <label class="form-check-label" for="inlineCheckbox1"></label>
-                                                </div>
-                                            </td>
-                                            <td>{{ $us_maha->nama }}</td>
-                                            <td>{{ $us_maha->email }}</td>
-                                            <td>
-                                                <table>
-                                                    @foreach (DisposisiController::getUnitKerja($us_maha->id) as $unitDosen)
-                                                        <tr>
-                                                            <td>{{ $unitDosen }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div> --}}
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Simpan Data</button>
                 </div>

@@ -18,7 +18,8 @@ class CreateDisposisiTable extends Migration
             $table->unsignedBigInteger('surat_id');
             $table->string('perihal');
             $table->date('tanggal');
-            $table->string('isi');
+            $table->string('isi')->nullable();
+            $table->boolean('target_akhir');
             $table->timestamps();
 
             $table->foreign('surat_id')->references('id')->on('surat')->onDelete('cascade');

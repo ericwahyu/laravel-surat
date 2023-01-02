@@ -52,7 +52,7 @@
                             </div>
                         @endif
                         @if($user->isAdmin() || $user->isPengelola() || $user->isPimpinan())
-                            <div class="col-md-2">
+                            <div class="col-md-2" style="margin-right: 10px">
                                 <form action="{{ route('destroy.disposisi', $disposisi) }}" method="post">
                                     @csrf
                                     @method('DELETE')
@@ -60,28 +60,29 @@
                                 </form>
                             </div>
                         @endif
-                        <div class="col-md-2">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary">Beri Tanggapan</button>
-                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    @if ($user->isAdmin() || $kategori->kategori_id == 1)
-                                        @foreach ($response as $response)
+                        @if ($kategori->status == 2)
+                            <div class="col-md-2">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary">Beri Tanggapan</button>
+                                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        @foreach ($response as $dataResponse)
                                             <div class="col-sm-2">
-                                                <form action="#" method="get">
-                                                    <input type="hidden" name="response" id="response" value="{{ $response->nama }}">
-                                                    {{-- <button type="submit" class="dropdown-item mr-2 show_response" title="{{ $response->nama }}" data-bs-toggle="tooltip"> {{ $response->nama }}</button> --}}
-                                                    <button type="submit" class="btn btn-primary mr-2" title="{{ $response->nama }}" data-bs-toggle="modal" data-bs-target="#response{{ $response->id }}"> {{ $response->nama }}</button>
-                                                </form>
-                                                {{-- <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#response">aaaaaaaaaaa</button> --}}
+                                                <input type="hidden" name="response" id="response" value="{{ $dataResponse->nama }}">
+                                                <button type="submit" class="btn btn-primary mr-2" title="{{ $dataResponse->nama }}" data-bs-toggle="modal" data-bs-target="#response{{ $dataResponse->id }}"> {{ $dataResponse->nama }}</button>
                                             </div>
                                         @endforeach
-                                    @endif
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
+                        @if ($user->isAdmin() || $user->isPengelola())
+                            <div class="col-md-2 offset-md-2">
+                                <a href="#" class="btn btn-dark" title="Ubah Response Penerima" data-bs-toggle="modal" data-bs-target="#ubah-response-penerima"><i class="far fa-edit"></i> Ubah Response Penerima</a>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="col-12 col-md-5">
@@ -89,18 +90,18 @@
                         @foreach (DisposisiController::getDosen($disposisi->id) as $disposisi_dosen)
                             <tr>
                                 <td>{{ $disposisi_dosen->nama }}</td>
-                                @switch($disposisi_dosen->kategori_id)
-                                    @case(2)
+                                @switch($disposisi_dosen->status)
+                                    @case(1)
                                         <td><span class="badge badge-primary">Asal Surat</span></td>
                                         @break
-                                    @case(1)
+                                    @case(2)
                                         <td><span class="badge badge-secondary">Terkirim</span></td>
                                         @break
                                     @default
                                 @endswitch
-                                @if ($disposisi_dosen->kategori_id == 1 || $user->isAdmin())
-                                    @if (DisposisiController::getDosenResponse($disposisi->id) != null)
-                                        <td><span class="badge badge-dark">{{ DisposisiController::getDosenResponse($disposisi->id)->nama }}</span></td>
+                                @if ($disposisi_dosen->status == 2)
+                                    @if (DisposisiController::getDosenResponse($disposisi->id, $disposisi_dosen->user_id) != null)
+                                        <td><span class="badge badge-dark">{{ DisposisiController::getDosenResponse($disposisi->id, $disposisi_dosen->user_id)->nama }}</span></td>
                                     @else
                                         <td><span class="badge badge-dark">Belom ada response</span></td>
                                     @endif
@@ -110,17 +111,17 @@
                         @foreach (DisposisiController::getMahasiswa($disposisi->id) as $disposisi_mahasiswa)
                             <tr>
                                 <td>{{ $disposisi_mahasiswa->nama }}</td>
-                                @switch($disposisi_mahasiswa->kategori_id)
-                                    @case(2)
+                                @switch($disposisi_mahasiswa->status)
+                                    @case(1)
                                         <td><span class="badge badge-primary">Asal Surat</span></td>
                                         @break
-                                    @case(1)
+                                    @case(2)
                                         <td><span class="badge badge-secondary">Terkirim</span></td>
                                         @break
                                 @endswitch
-                                @if ($disposisi_mahasiswa->kategori_id == 1 || $user->isAdmin())
-                                    @if ( DisposisiController::getMahasiswaResponse($disposisi->id) != null)
-                                        <td><span class="badge badge-dark">{{ DisposisiController::getMahasiswaResponse($disposisi->id)->nama }}</span></td>
+                                @if ($disposisi_mahasiswa->status == 2)
+                                    @if ( DisposisiController::getMahasiswaResponse($disposisi->id, $disposisi_mahasiswa->user_id) != null)
+                                        <td><span class="badge badge-dark">{{ DisposisiController::getMahasiswaResponse($disposisi->id, $disposisi_mahasiswa->user_id)->nama }}</span></td>
                                     @else
                                         <td><span class="badge badge-dark">Belom ada response</span></td>
                                     @endif
@@ -130,11 +131,11 @@
                         @foreach (DisposisiController::getUserEksternal($disposisi->id) as $disposisi_usereksternal)
                             <tr>
                                 <td>{{ $disposisi_usereksternal->nama }}</td>
-                                @switch($disposisi_usereksternal->kategori_id)
-                                    @case(2)
+                                @switch($disposisi_usereksternal->status)
+                                    @case(1)
                                         <td><span class="badge badge-primary">Asal Surat</span></td>
                                         @break
-                                    @case(1)
+                                    @case(2)
                                         <td><span class="badge badge-secondary">Terkirim</span></td>
                                         @break
                                 @endswitch
@@ -148,7 +149,7 @@
 </div>
 @endsection
 @section('modal')
-    @foreach ($responseModal as $respon)
+    @foreach ($response as $respon)
         <div class="modal fade" id="response{{ $respon->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -179,4 +180,52 @@
             </div>
         </div>
     @endforeach
+    <div class="modal fade" id="ubah-response-penerima" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ubah Response Surat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('setResponsePenerima', $disposisi->id) }}" method="post">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Penerima </label>
+                            <select class="form-control" name="user_id" id="">
+                                <option disabled selected>--Pilih User Penerima--</option>
+                                @foreach ($getDosen as $getDosen)
+                                    <option value="{{ $getDosen->user_id }}" {{ (old("user_id") == $getDosen->user_id ? "selected":"") }}>{{ $getDosen->nama }}</option>
+                                @endforeach
+                                @foreach ($getMahasiswa as $getMahasiswa)
+                                    <option value="{{ $getMahasiswa->user_id }}" {{ (old("user_id") == $getMahasiswa->user_id ? "selected":"") }}>{{ $getMahasiswa->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Ubah Response </label>
+                            <select class="form-control" name="response_id" id="">
+                                <option disabled selected>--Pilih Response--</option>
+                                @foreach ($response as $getResponse)
+                                    <option value="{{ $getResponse->id }}" {{ (old("response_id") == $getResponse->id ? "selected":"") }} >{{ $getResponse->nama }}</option>
+                                @endforeach
+
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Catatan :</label>
+                            <input type="text" class="form-control" id="recipient-name" name="catatan_response">
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                Masukkan catatan jika ada perlu !!
+                            </small>
+                        </div>
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Kirim Tanggapan</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection

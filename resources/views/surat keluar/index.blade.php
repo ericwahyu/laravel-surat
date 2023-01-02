@@ -39,7 +39,8 @@
                         </thead>
                         <tbody class="ui-sortable">
                             @foreach ($generate as $data)
-                                <tr>
+
+                                <tr style="background-color: {{ (GenerateController::readAtKeluar($data->id)->read_at == null) ? '#BEBBBA' : '#FFFBF9' }}">
                                     <td>
                                         <div class="sort-handler ui-sortable-handle text-center">
                                         <i class="fas fa-th"></i>
@@ -63,5 +64,6 @@
     </div>
 </div>
 @endsection
+
 
 

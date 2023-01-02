@@ -9,6 +9,8 @@ use App\Models\Jenis;
 use App\Models\Catatan;
 use App\Models\Dosen;
 use App\Models\Mahasiswa;
+use App\Models\Files;
+use App\Models\Disposisiuser;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -170,17 +172,17 @@ class SuratController extends Controller
         $disposisi = Disposisi::join('disposisi_user', 'disposisi.id', '=', 'disposisi_user.disposisi_id')
             ->where('disposisi.surat_id', $surat->id)
             ->where('disposisi_user.user_id', Auth::user()->id)
+            ->where('disposisi_user.status', 2)
             ->where('disposisi_user.kategori_id', 1)
             ->select('disposisi_user.*')->first();
 
         // dd($disposisi);
-        $update_read_at = DB::table('disposisi_user')
-            ->where('user_id', Auth::user()->id)
-            ->where('kategori_id', 1)
-            ->where('disposisi_id', $disposisi->disposisi_id)
-            ->update(['read_at' => 1,]);
-            // ->get();
-        // dd($update_read_at);
+        if($disposisi != null){
+            $update_read_at = DB::table('disposisi_user')
+                // ->where('user_id', Auth::user()->id)
+                ->where('disposisi_user.id', $disposisi->id)
+                ->update(['read_at' => 1,]);
+        }
 
         return view('surat masuk.show', compact('nav', 'menu', 'surat', 'user'));
 
@@ -198,8 +200,9 @@ class SuratController extends Controller
         $nav = 'transaksi';
         $menu = 'masuk';
         $user = Auth::user();
-        $jenis = Jenis::where('kategori_id', 1)->get();
-        return view('surat masuk.update', compact('nav', 'menu', 'jenis', 'surat', 'user'));
+        $jenis = Jenis::all();
+        $file = Files::where('surat_id', $surat->id)->get();
+        return view('surat masuk.update', compact('nav', 'menu', 'jenis', 'surat', 'user', 'file'));
     }
 
     /**
@@ -226,18 +229,6 @@ class SuratController extends Controller
         $surat->judul = $request->judul;
         $surat->tanggal = $request->tanggal;
         $surat->keperluan = $request->keperluan;
-        if($request->hasFile('file')){
-            $filelama = public_path('surat/masuk/'.$surat->file);
-            File::delete($filelama);
-            $file = $request->file('file');
-            $file_name = now()->timestamp . '_' . $request->judul.'.'.$file->getClientOriginalExtension();
-            $file->move('surat/masuk',$file_name);
-            $surat->file = $file_name;
-        }
-        //perubahan status hanya dilakukan oleh admin
-        if($request->status != null){
-            $surat->status = $request->status;
-        }
 
         if($surat){
             $surat->save();
@@ -288,25 +279,34 @@ class SuratController extends Controller
 
     }
 
-    public function download_file(Surat $surat){
-        if(file_exists(public_path('surat/masuk/'.$surat->file))){
-            return response()->download('surat/masuk/'.$surat->file);
-        }else{
-            return back()->with('error', 'Download gagal');
-        }
-    }
-
-    public function getReadAt($surat_id){
+    public function readAtMasuk($surat_id){
         $getReadAt = Surat::join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
             ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-            ->where('surat.status', '!=', 0)
+            // ->where('surat.status', '!=', 0)
             ->where('surat.id', $surat_id)
+            // ->where('disposisi_user.status', 2)
             ->where('disposisi_user.kategori_id', 1)
             ->where('disposisi_user.user_id', Auth::user()->id)
             ->select('disposisi_user.*')
             ->distinct()->first();
         // dd($getReadAt);
         return $getReadAt;
+    }
+
+    public function getReadAtMasuk(){
+        $getReadAt = Disposisiuser::where('user_id', Auth::user()->id)
+            ->where('status', 2)
+            ->where('kategori_id', 1)
+            ->get();
+
+        // dd($getReadAt);
+        foreach($getReadAt as $read_at){
+            if($read_at->read_at == null){
+                return 0;
+                break;
+            }
+        }
+        return 1;
     }
 
 }

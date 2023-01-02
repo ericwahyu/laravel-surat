@@ -16,6 +16,8 @@ use App\Models\Role;
 use App\Models\UnitKerja;
 use App\Models\Response;
 use App\Models\Files;
+use App\Models\Disposisi;
+use App\Models\Disposisiuser;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
@@ -156,9 +158,9 @@ class GenerateController extends Controller
             'nomor_surat' => 'required',
             'tempat_surat' => 'required',
             'perihal' => 'required',
-            'isi' => 'required',
+            // 'isi' => 'required',
             'response' => 'required',
-            'radiobox' => 'required',
+            'target_akhir' => 'required',
         ]);
         // dd($request);
 
@@ -276,6 +278,20 @@ class GenerateController extends Controller
     public function show(Surat $surat)
     {
         //
+        $disposisi = Disposisi::join('disposisi_user', 'disposisi.id', '=', 'disposisi_user.disposisi_id')
+            ->where('disposisi.surat_id', $surat->id)
+            ->where('disposisi_user.user_id', Auth::user()->id)
+            ->where('disposisi_user.status', 2)
+            ->select('disposisi_user.*')->first();
+
+        // dd($disposisi);
+        if($disposisi != null){
+            $update_read_at = DB::table('disposisi_user')
+                // ->where('user_id', Auth::user()->id)
+                ->where('disposisi_user.id', $disposisi->id)
+                ->update(['read_at' => 1,]);
+        }
+
         $nav = 'transaksi';
         $menu = 'keluar';
         $user = Auth::user();
@@ -340,11 +356,6 @@ class GenerateController extends Controller
 
         $generate = Generate::find($request->generate_id);
         if($generate->content == null){
-            //perubahan status hanya dilakukan oleh admin
-                if($request->status != null){
-                    $surat->status = $request->status;
-                }
-
             $surat->jenis_id = $request->jenis_id;
             $surat->nosurat = $request->nomor_surat;
 
@@ -362,7 +373,8 @@ class GenerateController extends Controller
 
             //hapus surat lama
             $filelamaSurat = Files::where('surat_id', $surat->id)->first();
-            $hapusfile = public_path('surat/file surat/'.$surat->file);
+            $hapusfile = public_path('surat/file surat/'.$filelamaSurat->file);
+            // dd($hapusfile);
             File::delete($hapusfile);
 
             list($file_name, $pihak) = $this->generateSurat($request);
@@ -370,11 +382,6 @@ class GenerateController extends Controller
             $files = Files::find($filelamaSurat->id);
             $files->file = $file_name;
             $files->save();
-
-            //perubahan status hanya dilakukan oleh admin
-            if($request->status != null){
-                $surat->status = $request->status;
-            }
 
             $surat->jenis_id = $request->jenis_id;
             // $surat->nosurat = $request->nomor;
@@ -447,8 +454,8 @@ class GenerateController extends Controller
         $catatan->surat_id = $surat->id;
         $catatan->catatan = 'Menghapus data surat pada nomor surat '. $surat->nosurat;
         $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
-
         $catatan->save();
+
         if($surat){
             return redirect()->route('index.surat.keluar')->with('success', 'Data berhasil di hapus !!');
         }else{
@@ -470,19 +477,19 @@ class GenerateController extends Controller
         $files = Files::where('surat_id', $surat->id)->get();
         // dd($files);
         $zip      = new \ZipArchive;
-        $fileName = 'Downloads'. $surat->judul. '.zip';
+        $fileName = 'Downloads_'. $surat->judul. '.zip';
 
-        if ($zip->open(public_path($fileName), \ZipArchive::CREATE) === TRUE) {
+        if ($zip->open(public_path('/surat/download/'.$fileName), \ZipArchive::CREATE) === TRUE) {
             foreach ($files as $file){
                 // dd($file);
-               $path =  public_path('surat/file surat/'.$file->file);
+                $path =  public_path('surat/file surat/'.$file->file);
                 $relativeName = basename($path);
                 $zip->addFile($path, $relativeName);
             }
             $zip->close();
         }
 
-        return response()->download(public_path($fileName));
+        return response()->download(public_path('/surat/download/'.$fileName));
     }
 
     public function index_template(){
@@ -682,5 +689,35 @@ class GenerateController extends Controller
             'nomor' => $nomor,
             'kode_id' => $kode->id
         ]);
+    }
+
+    public function readAtKeluar($surat_id){
+        $getReadAt = Surat::join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+            ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+            // ->where('surat.status', '!=', 0)
+            ->where('surat.id', $surat_id)
+            // ->where('disposisi_user.status', 2)
+            ->where('disposisi_user.kategori_id', 2)
+            ->where('disposisi_user.user_id', Auth::user()->id)
+            ->select('disposisi_user.*')
+            ->distinct()->first();
+        // dd($getReadAt);
+        return $getReadAt;
+    }
+
+    public function getReadAtKeluar(){
+        $getReadAt = Disposisiuser::where('user_id', Auth::user()->id)
+            ->where('status', 2)
+            ->where('kategori_id', 2)
+            ->get();
+
+        // dd($getReadAt);
+        foreach($getReadAt as $read_at){
+            if($read_at->read_at == null){
+                return 0;
+                break;
+            }
+        }
+        return 1;
     }
 }

@@ -62,12 +62,12 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Catatan Surat</label>
-                                <input type="text" class="form-control @error('catatan_surat') is-invalid @enderror" name="catatan_surat" value="{{ old('catatan_surat') }}">
+                                <label style="font-size: 16px">File Surat Masuk</label>
+                                <input class="form-control @error('file') is-invalid @enderror" type="file" name="file" value="{{ old('file') }}">
                                 <small id="passwordHelpBlock" class="form-text text-muted">
-                                    Masukkan catatan jika ada perlu !!
+                                    Pastikan file yang di upload dengan format .docx/.doc/.pdf
                                 </small>
-                                @error('catatan_surat')
+                                @error('file')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -85,12 +85,13 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label style="font-size: 16px">File Surat Masuk</label>
-                                <input class="form-control @error('file') is-invalid @enderror" type="file" name="file" value="{{ old('file') }}">
+                                <label style="font-size: 16px">Catatan Surat  'opsional'</label>
+                                {{-- <input type="text" class="form-control @error('catatan_surat') is-invalid @enderror" name="catatan_surat" value="{{ old('catatan_surat') }}"> --}}
+                                <textarea name="catatan_surat" class="form-control @error('catatan_surat') is-invalid @enderror" cols="30" rows="10">{{ old('catatan_surat') }}</textarea>
                                 <small id="passwordHelpBlock" class="form-text text-muted">
-                                    Pastikan file yang di upload dengan format .docx/.doc/.pdf
+                                    Masukkan catatan jika ada perlu !!
                                 </small>
-                                @error('file')
+                                @error('catatan_surat')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -111,7 +112,7 @@
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label style="font-size: 16px">Tanggal Surat</label>
-                                        <input type="date" class="form-control @error('tanggal_surat') is-invalid @enderror" name="tanggal_surat" value="{{ old('tanggal_surat') }}">
+                                        <input type="date" class="form-control @error('tanggal_surat') is-invalid @enderror" name="tanggal_surat" value="{{ Carbon::now() }}" id="date">
                                         @error('tanggal_surat')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -136,17 +137,8 @@
                                     </div>
                                 @enderror
                             </div>
-                            {{-- <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Tanggal Disposisi</label>
-                                <input type="date" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" value="{{ old('tanggal') }}">
-                                @error('tanggal')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div> --}}
                             <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Catatan Disposisi</label>
+                                <label style="font-size: 16px">Catatan Disposisi  'opsional'</label>
                                 <textarea name="catatan_disposisi" class="form-control @error('catatan_disposisi') is-invalid @enderror" cols="30" rows="10">{{ old('catatan_disposisi') }}</textarea>
                                 <small id="passwordHelpBlock" class="form-text text-muted">
                                     Masukkan catatan jika ada perlu !!
@@ -160,13 +152,27 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Isi Disposisi</label>
+                                <label style="font-size: 16px">Isi Disposisi 'opsional'</label>
                                 <textarea name="isi" class="form-control @error('isi') is-invalid @enderror" cols="30" rows="10">{{ old('isi') }}</textarea>
                                 @error('isi')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                 @enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label style="font-size: 16px">Target Akhir Surat</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="target_akhir" id="flexRadio1" value="1">
+                                    <label class="form-check-label" for="flexRadio1"> Ya</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="target_akhir" id="flexRadio2" value="0" checked>
+                                    <label class="form-check-label" for="flexRadio2"> Tidak</label>
+                                </div>
+                                <small id="passwordHelpBlock" class="form-text text-muted">
+                                    Target akhir surat adalah tujuan akhir dari surat ini dan akan menerima dalam surat masuk, jika bukan target akhir surat maka penerima akan menerima surat pada surat keluar !!
+                                </small>
                             </div>
                         </div>
                         <div class="form-group">
@@ -177,8 +183,8 @@
                                         <tr>
                                             <th>
                                                 <div class="sort-handler ui-sortable-handle text-center">
-                                                    <input class="form-check-input" type="checkbox" id="checkAll">
-                                                    <label class="form-check-label" for="checkAll"></label>
+                                                    {{-- <input class="form-check-input" type="checkbox" id="checkAll">
+                                                    <label class="form-check-label" for="checkAll"></label> --}}
                                                 </div>
                                             </th>
                                             {{-- <th>Response </th> --}}
@@ -206,11 +212,11 @@
                             <div class="section-title">Memilih tujuan disposisi</div>
                             <div class="custom-control custom-radio custom-control-inline">
                                 <input type="radio" id="fakultas" name="radiobox" class="custom-control-input @error('radiobox') is-invalid @enderror" value="1">
-                                <label class="custom-control-label" for="fakultas">Lingkup Fakultas</label>
+                                <label class="custom-control-label" for="fakultas">User <b>Internal</b></label>
                             </div>
                                 <div class="custom-control custom-radio custom-control-inline">
                                 <input type="radio" id="luar-fakultas" name="radiobox" class="custom-control-input @error('radiobox') is-invalid @enderror" value="2">
-                                <label class="custom-control-label" for="luar-fakultas"><b>Diluar</b> Lingkup Fakultas</label>
+                                <label class="custom-control-label" for="luar-fakultas">User <b>Eksternal</b></label>
                             </div>
                             @error('radiobox')
                                     <div class="invalid-feedback">
@@ -225,8 +231,8 @@
                                         <tr>
                                             <th>
                                                 <div class="sort-handler ui-sortable-handle text-center">
-                                                    <input class="form-check-input" type="checkbox" id="checkAll">
-                                                    <label class="form-check-label" for="checkAll"></label>
+                                                    {{-- <input class="form-check-input" type="checkbox" id="checkAll">
+                                                    <label class="form-check-label" for="checkAll"></label> --}}
                                                 </div>
                                             </th>
                                             <th>Nama </th>
@@ -351,7 +357,10 @@
                     $('.eksternal').show();
                 }
             });
+
+            $('#date').val(new Date().toISOString().substring(0, 10));
         });
+        // document.getElementById('date').value = new Date().toISOString().substring(0, 10);
     </script>
 @endsection
 

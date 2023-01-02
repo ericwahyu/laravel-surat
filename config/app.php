@@ -231,12 +231,12 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
 
+        'MasterController' => \App\Http\Controllers\MasterController::class,
         'IdDateFormatter' => FrosyaLabs\Lang\IdDateFormatter::class,
         'Carbon' => Illuminate\Support\Carbon::class,
         'DisposisiController' => \App\Http\Controllers\DisposisiController::class,
         'GenerateController' => \App\Http\Controllers\GenerateController::class,
         'SuratController' => \App\Http\Controllers\SuratController::class,
-
     ],
 
 ];

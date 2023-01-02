@@ -92,22 +92,34 @@
                         </div>
                         <ul class="sidebar-menu">
                             <li class="menu-header">Dashboard</li>
-                            <li class="{{ ($menu == 'dashboard') ? 'active' : '' }}"><a class="nav-link" href="{{ route('dashboard') }}"><i class="ion-ios-home"></i> <span> Dashboard</span></a></li>
+                            <li class="{{ ($menu == 'dashboard') ? 'active' : '' }}"><a class="nav-link" href="{{ route('dashboard') }}"><i class="ion-ios-home"></i> <span>Dashboard</span></a></li>
                             <li class="menu-header">Master Surat</li>
+                            @if (Auth::user()->isAdmin())
+                                <li class="dropdown {{ ($nav == 'master') ? 'active' : '' }}">
+                                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fa fa-user"></i> <span>Admin Master</span></a>
+                                    <ul class="dropdown-menu">
+                                        <li class="{{ ($menu == 'surat') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.masterSurat') }}"><i class="far fa-envelope"></i>Master Surat</a></li>
+                                        <li class="{{ ($menu == 'response') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.masterResponse') }}"><i class="far fa-thumbs-up"></i>Master Response</a></li>
+                                        <li class="{{ ($menu == 'roleDosen') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.masterRoleDosen') }}"><i class="fas fa-users"></i>Master Role Dosen</a></li>
+                                    </ul>
+                                </li>
+                            @endif
                             <li class="dropdown {{ ($nav == 'umum') ? 'active' : '' }}">
                                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Umum</span></a>
                                 <ul class="dropdown-menu">
-                                    <li class="{{ ($menu == 'jenis') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.jenis') }}"><i class="far fa-folder-open"></i> Jenis Surat</a></li>
-                                    <li class="{{ ($menu == 'kode') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.kode') }}"><i class="far fa-folder-open"></i> Kode Surat</a></li>
-                                    <li class="{{ ($menu == 'template') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.template') }}"><i class="far fa-folder-open"></i> Template Surat</a></li>
+                                    <li class="{{ ($menu == 'jenis') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.jenis') }}"><i class="far fa-folder-open"></i>Jenis Surat</a></li>
+                                    <li class="{{ ($menu == 'kode') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.kode') }}"><i class="far fa-folder-open"></i>Kode Surat</a></li>
+                                    <li class="{{ ($menu == 'template') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.template') }}"><i class="far fa-folder-open"></i>Template Surat</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown active">
                                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-mail-bulk"></i> <span>Transaksi Surat</span></a>
                                 <ul class="dropdown-menu">
-                                    <li class="{{ ($menu == 'buat') ? 'active' : '' }}"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#surat"><i class="far fa-paper-plane"></i>Buat Masuk</a></li>
-                                    <li class="{{ ($menu == 'masuk') ? 'active' : '' }} "><a class="nav-link" href="{{ route('index.surat.masuk') }}" id="read"><i class="far fa-envelope"></i>Surat Masuk</a></li>
-                                    <li class="{{ ($menu == 'keluar') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.keluar') }}"><i class="far fa-envelope-open"></i>Surat Keluar</a></li>
+                                    @if (Auth::user()->isAdmin() || Auth::user()->isPengelola())
+                                        <li class="{{ ($menu == 'buat') ? 'active' : '' }}"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#surat"><i class="far fa-paper-plane"></i>Buat Surat</a></li>
+                                    @endif
+                                    <li class="{{ ($menu == 'masuk') ? 'active' : '' }} "><a class="nav-link" href="{{ route('index.surat.masuk') }}" id="read_masuk"><i class="far fa-envelope"></i>Surat Masuk</a></li>
+                                    <li class="{{ ($menu == 'keluar') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.surat.keluar') }}" id="read_keluar"><i class="far fa-envelope-open"></i>Surat Keluar</a></li>
                                     <li class="{{ ($menu == 'search') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.search') }}"><i class="fas fa-search"></i>Pencarian Surat</a></li>
                                     <li class="{{ ($menu == 'file') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.file') }}"><i class="fas fa-file"></i>File Surat</a></li>
                                 </ul>
@@ -279,16 +291,32 @@
             $(document).ready(function(){
                 $.ajax({
                     type:"GET",
-                    url:"{{ route('getReadAt') }}",
+                    url:"{{ route('getReadAtKeluar') }}",
                     data: {},
                     dataType: 'JSON',
                     success:function(response){
+                        console.log(response);
                         if(response){
-                            $('#read').removeClass("beep beep-sidebar");
-                            console.log('sudah baca');
+                            $('#read_keluar').removeClass("beep beep-sidebar");
                         }else{
                             console.log('belum baca');
-                            $('#read').addClass("beep beep-sidebar");
+                            $('#read_keluar').addClass("beep beep-sidebar");
+                        }
+                    }
+                });
+
+                $.ajax({
+                    type:"GET",
+                    url:"{{ route('getReadAtMasuk') }}",
+                    data: {},
+                    dataType: 'JSON',
+                    success:function(response){
+                        console.log(response);
+                        if(response){
+                            $('#read_masuk').removeClass("beep beep-sidebar");
+                        }else{
+                            console.log('belum baca');
+                            $('#read_masuk').addClass("beep beep-sidebar");
                         }
                     }
                 });

@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\UnitKerja;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\Auth;
+use \Illuminate\Support\Facades\DB;
 
 class KodeController extends Controller
 {
@@ -22,7 +23,42 @@ class KodeController extends Controller
         $menu = 'kode';
 
         $user = Auth::user();
-        $kode = Kode::all();
+        $unit = $user->isUnitkerja();
+
+        if(Auth::user()->isAdmin()){
+            $kode = Kode::all();
+        }else{
+            for($i = 0; $i < count($unit); $i++){
+                if($user->isAdmin()){
+                    $getUnit[] = '';
+
+                }elseif($unit[$i][1] === 'Fakultas Teknik Elektro dan Teknologi Informasi'){
+                    $getUnit[] = array($unit[$i][0], 'Fakultas Teknik Elektro dan Teknologi Informasi');
+
+                } elseif($unit[$i][1] === 'Jurusan Teknik Informatika'){
+                    $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Informatika');
+
+                } elseif($unit[$i][1] === 'Jurusan Sistem Informasi'){
+                    $getUnit[] = array($unit[$i][0], 'Jurusan Sistem Informasi');
+
+                } elseif($unit[$i][1] === 'Jurusan Teknik Elektro'){
+                    $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Elektro');
+
+                }
+            }
+            // dd(count($getUnit));
+            for ($a=0; $a < count($getUnit); $a++) {
+                $getIdUnit[] = $getUnit[$a][0];
+            }
+            // dd($getIdUnit);
+            $kode = Kode::whereIn('unit_kerja_id', $getIdUnit)->get();
+        }
+
+
+        // dd($kode);
+
+        // $kode = Kode::where
+
         return view('kode.index', compact('nav', 'menu', 'kode', 'user'));
     }
 
