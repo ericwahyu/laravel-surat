@@ -92,15 +92,15 @@
                         </div>
                         <ul class="sidebar-menu">
                             <li class="menu-header">Dashboard</li>
-                            <li class="{{ ($menu == 'dashboard') ? 'active' : '' }}"><a class="nav-link" href="{{ route('dashboard') }}"><i class="ion-ios-home"></i> <span>Dashboard</span></a></li>
+                            <li class="{{ ($menu == 'dashboard') ? 'active' : '' }}"><a class="nav-link" href="{{ route('dashboard') }}"><i class="fas fa-chart-bar"></i> <span>Dashboard</span></a></li>
                             <li class="menu-header">Master Surat</li>
                             @if (Auth::user()->isAdmin())
                                 <li class="dropdown {{ ($nav == 'master') ? 'active' : '' }}">
-                                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fa fa-user"></i> <span>Admin Master</span></a>
+                                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-user"></i> <span>Admin Master</span></a>
                                     <ul class="dropdown-menu">
                                         <li class="{{ ($menu == 'surat') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.masterSurat') }}"><i class="far fa-envelope"></i>Master Surat</a></li>
                                         <li class="{{ ($menu == 'response') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.masterResponse') }}"><i class="far fa-thumbs-up"></i>Master Response</a></li>
-                                        <li class="{{ ($menu == 'roleDosen') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.masterRoleDosen') }}"><i class="fas fa-users"></i>Master Role Dosen</a></li>
+                                        <li class="{{ ($menu == 'roleDosen') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.masterRoleDosen') }}"><i class="fas fa-users"></i>Master Role</a></li>
                                     </ul>
                                 </li>
                             @endif
@@ -189,8 +189,6 @@
 
         <!-- JS Libraies -->
         <script src="{{ asset('assets/modules/prism/prism.js') }}"></script>
-        {{-- <script src="{{ asset('assets/modules/cleave-js/dist/cleave.min.js') }}"></script>
-        <script src="{{ asset('assets/modules/cleave-js/dist/addons/cleave-phone.us.js') }}"></script> --}}
         <script src="{{ asset('assets/modules/jquery-pwstrength/jquery.pwstrength.min.js') }}"></script>
         <script src="{{ asset('assets/modules/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
         <script src="{{ asset('assets/modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}"></script>
@@ -201,10 +199,8 @@
         <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
         <script src="{{ asset('assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
         <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
-        <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
 
         <!-- Page Specific JS File -->
-        {{-- <script src="{{ asset('assets/js/page/forms-advanced-forms.js') }}"></script> --}}
         <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-ion-icons.js') }}"></script>
         <script src="{{ asset('assets/js/page/bootstrap-modal.js') }}"></script>
