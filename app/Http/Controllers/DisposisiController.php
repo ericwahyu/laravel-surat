@@ -306,7 +306,7 @@ class DisposisiController extends Controller
         ]);
 
         $disposisi->perihal = $request->perihal;
-        $disposisi->tanggal = Carbon::now();
+        $disposisi->tanggal = $request->tanggal;
         $disposisi->isi = $request->isi;
         $disposisi->save();
 
@@ -358,75 +358,6 @@ class DisposisiController extends Controller
             return back()->with('warning', 'Data gagal di Hapus !!');
         }
     }
-
-    // public function create_reply(Disposisi $disposisi){
-    //     $status_dosen = DB::table('disposisi_user')
-    //             ->join('users', 'users.id', '=', 'disposisi_user.user_id')
-    //             ->join('dosen', 'dosen.user_id', '=', 'users.id')
-    //             ->where('disposisi_user.disposisi_id', $disposisi->id)
-    //             ->get();
-    //     $status_mahasiswa = DB::table('disposisi_user')
-    //             ->join('users', 'users.id', '=', 'disposisi_user.user_id')
-    //             ->join('mahasiswa', 'mahasiswa.user_id', '=', 'users.id')
-    //             ->where('disposisi_user.disposisi_id', $disposisi->id)
-    //             ->get();
-    //     $surat = Surat::findOrFail($disposisi->surat_id);
-    //     switch($disposisi->surat->jenis->kategori_id){
-    //         case(1):
-    //             $menu = 'masuk';
-    //         break;
-    //         case(2):
-    //             $menu = 'keluar';
-    //         break;
-    //     }
-    //     $nav = 'transaksi';
-    //     $user = Auth::user();
-    //     return view('disposisi.replySM', compact('nav', 'menu', 'surat', 'disposisi', 'user', 'status_dosen', 'status_mahasiswa'));
-    // }
-
-    // public function store_reply(Request $request, Disposisi $disposisi){
-    //     $getStatusDosen = $this->get_dosen($disposisi->id, Auth::user()->id);
-    //     $getStatusMahasiswa = $this->get_mahasiswa($disposisi->id, Auth::user()->id);
-    //     if ($getStatusDosen->isNotEmpty()) {
-    //         foreach($getStatusDosen as $get){
-    //             $get_status = $get->status;
-    //         }
-    //     }elseif($getStatusMahasiswa->isNotEmpty()) {
-    //         foreach($getStatusMahasiswa as $get){
-    //             $get_status = $get->status;
-    //         }
-    //     }
-    //     if (Auth::user()->isAdmin()|| $get_status == 1) {
-    //         $disposisiAdmin = new Disposisiuser();
-    //         $disposisiAdmin->disposisi_id = $disposisi->id;
-    //         $disposisiAdmin->user_id =  Auth::user()->id;
-    //         $disposisiAdmin->status = 5;
-    //         $disposisiAdmin->save();
-    //     } else {
-    //         $update_status = DB::table('disposisi_user')
-    //                         ->where('disposisi_id', $disposisi->id)
-    //                         ->where('user_id', Auth::user()->id)
-    //                         ->update([
-    //                             'status' => 5
-    //                         ]);
-    //     }
-
-    //     $surat = Surat::findOrFail($disposisi->surat_id);
-
-    //     // tambah data catatan
-    //     $catatan = new Catatan();
-    //     $catatan->surat_id = $disposisi->surat_id;
-    //     $catatan->user_id = Auth::user()->id;
-    //     $catatan->catatan = 'Memberi tanggapan balas data pada surat masuk, dengan nomor surat '. $surat->nosurat. ', (catatan balas : '. $request->catatan. ').';
-    //     $catatan->waktu = Carbon::now()->format('Y-m-d H:i:s');
-    //     $catatan->save();
-
-    //     if($catatan){
-    //         return redirect()->route('show.disposisi', $disposisi)->with('success', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
-    //     }else{
-    //         return back()->with('warning', 'Tanggapan surat gagal dikirim !!');
-    //     }
-    // }
 
     public function getDosen($disposisi_id = null, $user_id = null){
         if($disposisi_id != null && $user_id == null){

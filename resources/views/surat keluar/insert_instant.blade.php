@@ -92,8 +92,8 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Catatan Surat  'opsional'</label>
-                                {{-- <input type="text" class="form-control @error('catatan_surat') is-invalid @enderror" name="catatan_surat" value="{{ old('catatan_surat') }}"> --}}
+                                <label style="font-size: 16px">Catatan Surat</label>
+                                <label style="font-size: 12px">(opsional)</label>
                                 <textarea name="catatan_surat" class="form-control @error('catatan_surat') is-invalid @enderror" cols="30" rows="10">{{ old('catatan_surat') }}</textarea>
                                 <small id="passwordHelpBlock" class="form-text text-muted">
                                     Masukkan catatan jika ada perlu !!
@@ -146,7 +146,8 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Catatan Disposisi  'opsional'</label>
+                                <label style="font-size: 16px">Catatan Disposisi</label>
+                                <label style="font-size: 12px">(opsional)</label>
                                 <textarea name="catatan_disposisi" class="form-control @error('catatan_disposisi') is-invalid @enderror" cols="30" rows="10">{{ old('catatan_disposisi') }}</textarea>
                                 <small id="passwordHelpBlock" class="form-text text-muted">
                                     Masukkan catatan jika ada perlu !!
@@ -160,7 +161,8 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Isi Disposisi 'opsional'</label>
+                                <label style="font-size: 16px">Isi Disposisi</label>
+                                <label style="font-size: 12px">(opsional)</label>
                                 <textarea name="isi" class="form-control @error('isi') is-invalid @enderror" cols="30" rows="10">{{ old('isi') }}</textarea>
                                 @error('isi')
                                     <div class="invalid-feedback">

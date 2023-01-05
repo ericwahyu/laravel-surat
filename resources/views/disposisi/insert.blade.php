@@ -28,7 +28,8 @@
                         @enderror
                     </div>
                     <div class="form-group col-md-6">
-                        <label style="font-size: 16px">Catatan 'opsional'</label>
+                        <label style="font-size: 16px">Catatan</label>
+                        <label style="font-size: 12px">(opsional)</label>
                         <textarea name="catatan_disposisi" class="form-control @error('catatan_disposisi') is-invalid @enderror" cols="30" rows="10">{{ old('catatan_disposisi') }}</textarea>
                         <small id="passwordHelpBlock" class="form-text text-muted">
                             Masukkan catatan jika ada perlu !!
@@ -42,7 +43,8 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label style="font-size: 16px">Isi Disposisi 'optional'</label>
+                        <label style="font-size: 16px">Isi Disposisi</label>
+                        <label style="font-size: 12px">(opsional)</label>
                         <textarea name="isi" class="form-control @error('isi') is-invalid @enderror" cols="30" rows="10">{{ old('isi') }}</textarea>
                         @error('isi')
                             <div class="invalid-feedback">
