@@ -14,6 +14,7 @@ use App\Http\Controllers\KodeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\MasterController;
+use App\Http\Controllers\NotifikasiController;
 use App\Models\Generate;
 use App\Models\Surat;
 use App\Models\Template;
@@ -210,6 +211,7 @@ Route::group(['middleware' => ['auth']], function(){
     });
 
     Route::get('/send-Email', [DisposisiController::class, 'sendMail']);
+    Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi');
 
     Route::prefix('/admin/master')->group(function(){
         Route::get('/surat', [MasterController::class, 'indexSurat'])->name('index.masterSurat')->middleware('checkRole:Admin');

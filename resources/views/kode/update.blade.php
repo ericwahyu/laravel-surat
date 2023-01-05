@@ -80,7 +80,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="form-group col-md-4">
-                                        <label style="font-size: 16px">Increment Penomoran Surat</label>
+                                        <label style="font-size: 16px">Penomoran Surat Selanjutnya</label>
                                         <input type="number" class="form-control @error('increment') is-invalid @enderror" name="increment" placeholder="" value="{{ $kode->increment }}" min="1">
                                         @error('increment')
                                             <div class="invalid-feedback">
@@ -89,7 +89,7 @@
                                         @enderror
                                     </div>
                                     <div class="form-group col-md-8">
-                                        <label style="font-size: 16px; margin-top: 40px">Auto Increment</label>
+                                        <label style="font-size: 16px; margin-top: 40px">Nomor Urut Selanjutnya</label>
                                     </div>
                                 </div>
                             </div>

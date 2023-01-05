@@ -285,7 +285,7 @@ class SearchController extends Controller
                             </tr>';
                     }
                 }else{
-                    $disposisi_surat_keluar=
+                    $disposisi_surat_keluar =
                         '<tr>
                             <td align="center" colspan="5">Data tidak ditemukan.</td>
                         </tr>';

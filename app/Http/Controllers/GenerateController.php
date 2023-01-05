@@ -18,6 +18,7 @@ use App\Models\Response;
 use App\Models\Files;
 use App\Models\Disposisi;
 use App\Models\Disposisiuser;
+use App\Models\Notifikasi;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
@@ -194,9 +195,16 @@ class GenerateController extends Controller
 
                 $generate = new Generate();
                 $generate->surat_id = $surat->id;
+                $generate->kode_id = $request->kode_id;
                 $generate->tempat = $request->tempat_surat;
                 $generate->save();
 
+                $kode = Kode::find($request->kode_id);
+                $update_increment = DB::table('kode')
+                    ->where('id', $request->kode_id)
+                    ->update([
+                        'increment' => $kode->increment+1,
+                    ]);
 
             }else{
                 return redirect()->back()->withInput()->with('warning', 'Silahkan upload file berformat .doc/.docx/.pdf');
@@ -262,11 +270,6 @@ class GenerateController extends Controller
 
         return app('App\Http\Controllers\DisposisiController')->store($request, $surat->id);
 
-        // if($catatan){
-        //     return redirect()->route('index.disposisi', $surat)->with('success', 'Surat berhasil di generate !!');
-        // }else{
-        //     return back()->with('warning', 'Generate surat gagal !!');
-        // }
     }
 
     /**
@@ -290,6 +293,15 @@ class GenerateController extends Controller
                 // ->where('user_id', Auth::user()->id)
                 ->where('disposisi_user.id', $disposisi->id)
                 ->update(['read_at' => 1,]);
+        }
+
+        $notifikasi = Notifikasi::where('user_id', Auth::user()->id)->get();
+        foreach($notifikasi as $update_notifikasi){
+            $update = DB::table('notifikasi')
+                ->where('id', $update_notifikasi->id)
+                ->update([
+                    'read_at' => 1
+                ]);
         }
 
         $nav = 'transaksi';
@@ -463,14 +475,14 @@ class GenerateController extends Controller
         }
     }
 
-    public function getGenerate($surat_id){
-        $getGenerate = Generate::join('surat', 'surat.id', '=', 'generate.surat_id')
-                ->where('generate.surat_id', $surat_id)
-                ->select('generate.*')
-                ->get();
-                // dd($getGenerate);
-        return $getGenerate;
-    }
+    // public function getGenerate($surat_id){
+    //     $getGenerate = Generate::join('surat', 'surat.id', '=', 'generate.surat_id')
+    //             ->where('generate.surat_id', $surat_id)
+    //             ->select('generate.*')
+    //             ->get();
+    //             // dd($getGenerate);
+    //     return $getGenerate;
+    // }
 
     public function downloadFile(Surat $surat){
 
@@ -509,7 +521,33 @@ class GenerateController extends Controller
         $user_dosen = Dosen::join('users', 'dosen.user_id', '=', 'users.id' )->get();
         $user_mahasiswa = Mahasiswa::join('users', 'mahasiswa.user_id', '=', 'users.id' )->get();
         $response = Response::all();
-        return view('surat keluar.insert_instant', compact('nav', 'menu', 'jenis', 'user_dosen', 'user_mahasiswa', 'response'));
+        $user = Auth::user();
+
+        $unitKerja = UnitKerja::orwhere('nama', 'like', '%Fakultas Teknik Elektro dan Teknologi Informasi%')
+            ->orwhere('nama', 'like', '%Jurusan Teknik Informatika%')
+            ->orwhere('nama', 'like', '%Jurusan Sistem Informasi%')
+            ->orwhere('nama', 'like', '%Jurusan Teknik Elektro%')
+            ->get();
+        $unit = Auth::user()->isUnitkerja();
+        for($i = 0; $i < count($unit); $i++){
+            if($user->isAdmin()){
+                $getUnit[] = '';
+
+            }elseif($unit[$i][1] === 'Fakultas Teknik Elektro dan Teknologi Informasi'){
+                $getUnit[] = array($unit[$i][0], 'Fakultas Teknik Elektro dan Teknologi Informasi');
+
+            } elseif($unit[$i][1] === 'Jurusan Teknik Informatika'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Informatika');
+
+            } elseif($unit[$i][1] === 'Jurusan Sistem Informasi'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Sistem Informasi');
+
+            } elseif($unit[$i][1] === 'Jurusan Teknik Elektro'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Elektro');
+
+            }
+        }
+        return view('surat keluar.insert_instant', compact('nav', 'menu', 'jenis', 'user_dosen', 'user_mahasiswa', 'response', 'user', 'unitKerja', 'getUnit'));
     }
 
     public function generateSurat($request){
@@ -713,7 +751,7 @@ class GenerateController extends Controller
 
         // dd($getReadAt);
         foreach($getReadAt as $read_at){
-            if($read_at->read_at == null){
+            if($read_at->read_at == 0){
                 return 0;
                 break;
             }

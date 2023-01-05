@@ -32,8 +32,37 @@ class TemplateController extends Controller
         //
         $nav = 'umum';
         $menu = 'template';
-        $template = Template::all();
         $user = Auth::user();
+        $unit = $user->isUnitkerja();
+
+        if(Auth::user()->isAdmin()){
+            $template = Template::all();
+        }else{
+            for($i = 0; $i < count($unit); $i++){
+                if($user->isAdmin()){
+                    $getUnit[] = '';
+
+                }elseif($unit[$i][1] === 'Fakultas Teknik Elektro dan Teknologi Informasi'){
+                    $getUnit[] = array($unit[$i][0], 'Fakultas Teknik Elektro dan Teknologi Informasi');
+
+                } elseif($unit[$i][1] === 'Jurusan Teknik Informatika'){
+                    $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Informatika');
+
+                } elseif($unit[$i][1] === 'Jurusan Sistem Informasi'){
+                    $getUnit[] = array($unit[$i][0], 'Jurusan Sistem Informasi');
+
+                } elseif($unit[$i][1] === 'Jurusan Teknik Elektro'){
+                    $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Elektro');
+
+                }
+            }
+            // dd(count($getUnit));
+            for ($a=0; $a < count($getUnit); $a++) {
+                $getIdUnit[] = $getUnit[$a][0];
+            }
+            // dd($getIdUnit);
+            $template = Template::whereIn('unit_kerja_id', $getIdUnit)->get();
+        }
 
         return view('template.index', compact('nav', 'menu', 'template', 'user'));
     }
@@ -150,25 +179,25 @@ class TemplateController extends Controller
                 ->orwhere('nama', 'like', '%Jurusan Sistem Informasi%')
                 ->orwhere('nama', 'like', '%Jurusan Teknik Elektro%')
                 ->get();
+
         $unit = Auth::user()->isUnitkerja();
-        foreach($unit as $units){
-            if ($units == 'Fakultas Teknik Elektro dan Teknologi Informasi') {
-                $getUnit[] = array(1, 'Fakultas Teknik Elektro dan Teknologi Informasi');
-
-            } elseif($units == 'Jurusan Teknik Informatika'){
-                $getUnit[] = array(2, 'Jurusan Teknik Informatika');
-
-            } elseif($units == 'Jurusan Sistem Informasi'){
-                $getUnit[] = array(3, 'Jurusan Sistem Informasi');
-
-            } elseif($units == 'Jurusan Teknik Elektro'){
-                $getUnit[] = array(4, 'Jurusan Teknik Elektro');
-
-            }elseif(Auth::user()->isAdmin()){
+        // DD($unit);
+        for($i = 0; $i < count($unit); $i++){
+            if($user->isAdmin()){
                 $getUnit[] = '';
 
-            }elseif(!Auth::user()->isAdmin() && Auth::user()->isPimpinan() || Auth::user()->isPengelola()){
-                break;
+            }elseif($unit[$i][1] === 'Fakultas Teknik Elektro dan Teknologi Informasi'){
+                $getUnit[] = array($unit[$i][0], 'Fakultas Teknik Elektro dan Teknologi Informasi');
+
+            } elseif($unit[$i][1] === 'Jurusan Teknik Informatika'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Informatika');
+
+            } elseif($unit[$i][1] === 'Jurusan Sistem Informasi'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Sistem Informasi');
+
+            } elseif($unit[$i][1] === 'Jurusan Teknik Elektro'){
+                $getUnit[] = array($unit[$i][0], 'Jurusan Teknik Elektro');
+
             }
         }
 

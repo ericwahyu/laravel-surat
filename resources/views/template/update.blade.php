@@ -32,11 +32,11 @@
                                         @endif
                                     @endforeach
                                 @else
-                                    @for ($i = 0; $i < count($getRole); $i++)
-                                        @if ($getRole[$i][0] == $template->role->id)
-                                            <option selected value="{{ $template->role->id }}">{{ $template->role->nama }}</option>
+                                    @for ($i = 0; $i < count($getUnit); $i++)
+                                        @if ($getUnit[$i][0] == $template->unitKerja->id)
+                                            <option selected value="{{ $template->unitKerja->id }}">{{ $template->unitKerja->nama }}</option>
                                         @else
-                                            <option value="{{ $getRole[$i][0] }}" {{ (old("unit_id") == $getRole[$i][0] ? "selected":"") }}>{{ $getRole[$i][1] }}</option>
+                                            <option value="{{ $getUnit[$i][0] }}" {{ (old("unit_id") == $getUnit[$i][0] ? "selected":"") }}>{{ $getUnit[$i][1] }}</option>
                                         @endif
                                     @endfor
                                 @endif

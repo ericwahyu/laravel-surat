@@ -11,6 +11,7 @@ use App\Models\Dosen;
 use App\Models\Mahasiswa;
 use App\Models\Files;
 use App\Models\Disposisiuser;
+use App\Models\Notifikasi;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -184,6 +185,15 @@ class SuratController extends Controller
                 ->update(['read_at' => 1,]);
         }
 
+        $notifikasi = Notifikasi::where('user_id', Auth::user()->id)->get();
+        foreach($notifikasi as $update_notifikasi){
+            $update = DB::table('notifikasi')
+                ->where('id', $update_notifikasi->id)
+                ->update([
+                    'read_at' => 1
+                ]);
+        }
+
         return view('surat masuk.show', compact('nav', 'menu', 'surat', 'user'));
 
     }
@@ -301,7 +311,7 @@ class SuratController extends Controller
 
         // dd($getReadAt);
         foreach($getReadAt as $read_at){
-            if($read_at->read_at == null){
+            if($read_at->read_at == 0){
                 return 0;
                 break;
             }

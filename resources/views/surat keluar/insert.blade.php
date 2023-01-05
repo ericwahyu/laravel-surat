@@ -367,65 +367,65 @@
 </div>
 @endsection
 @section('modal')
-<!-- Modal -->
-<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Generate Nomor Surat</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="form-generate">
-                    @csrf
-                    <div class="form-group">
-                        <label style="font-size: 16px" class="form-label">UnitSurat</label>
-                        <select class="form-control" name="unit_id" id="unit" required>
-                            <option disabled selected>-- Role Data--</option>
-                            @if ($user->isAdmin())
-                                @foreach ($unitKerja as $unitKerja)
-                                    <option value="{{ $unitKerja->id }}" {{ (old("unit_id") == $unitKerja->id ? "selected":"") }}>{{ $unitKerja->nama }}</option>
-                                @endforeach
-                            @else
-                                @for ($i = 0; $i < count($getUnit); $i++)
-                                        <option value="{{ $getUnit[$i][0] }}" {{ (old("unit_id") == $getUnit[$i][0] ? "selected":"") }}>{{ $getUnit[$i][1] }}</option>
-                                @endfor
-                            @endif
-                        </select>
-                        @error('unit_id')
-                            <div class="invalid-feedback">
-                                {{ $message }}
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Generate Nomor Surat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-generate">
+                        @csrf
+                        <div class="form-group">
+                            <label style="font-size: 16px" class="form-label">UnitSurat</label>
+                            <select class="form-control" name="unit_id" id="unit" required>
+                                <option disabled selected>-- Role Data--</option>
+                                @if ($user->isAdmin())
+                                    @foreach ($unitKerja as $unitKerja)
+                                        <option value="{{ $unitKerja->id }}" {{ (old("unit_id") == $unitKerja->id ? "selected":"") }}>{{ $unitKerja->nama }}</option>
+                                    @endforeach
+                                @else
+                                    @for ($i = 0; $i < count($getUnit); $i++)
+                                            <option value="{{ $getUnit[$i][0] }}" {{ (old("unit_id") == $getUnit[$i][0] ? "selected":"") }}>{{ $getUnit[$i][1] }}</option>
+                                    @endfor
+                                @endif
+                            </select>
+                            @error('unit_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size: 16px">Kode Surat</label>
+                            <select class="form-control kode" name="kode_id" id="kode" required>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size: 16px">Jumlah Digit</label>
+                            <input class="form-control" type="number" name="digit" min="1" id="">
+                        </div>
+                        {{-- <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label" for="sisipan">Apakah surat ini menggunakan format nomor surat sisipan</label>
+                                <input class="form-check-input" style="margin-left: 4px" type="checkbox" id="sisipan" name="sisipan" value="true">
                             </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size: 16px">Kode Surat</label>
-                        <select class="form-control kode" name="kode_id" id="kode" required>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size: 16px">Jumlah Digit</label>
-                        <input class="form-control" type="number" name="digit" min="1" id="">
-                    </div>
-                    {{-- <div class="form-group">
-                        <div class="form-check form-check-inline">
-                            <label class="form-check-label" for="sisipan">Apakah surat ini menggunakan format nomor surat sisipan</label>
-                            <input class="form-check-input" style="margin-left: 4px" type="checkbox" id="sisipan" name="sisipan" value="true">
-                          </div>
-                    </div>
-                    <div class="form-group tanggal">
-                        <label style="font-size: 16px">Tanggal Surat</label>
-                        <input type="date" class="form-control" name="tanggal" id="tanggal">
-                    </div> --}}
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Generate</button>
-                    </div>
-                </form>
+                        </div>
+                        <div class="form-group tanggal">
+                            <label style="font-size: 16px">Tanggal Surat</label>
+                            <input type="date" class="form-control" name="tanggal" id="tanggal">
+                        </div> --}}
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Generate</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 @section('script')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

@@ -53,13 +53,20 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Nomor Surat</label>
-                                <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" name="nomor_surat" placeholder="0123/PSI/ITATS/2021" value="{{ old('nomor_surat') }}">
-                                @error('nomor_surat')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
+                                <div class="row">
+                                    <div class="form-group col-md-8">
+                                        <label style="font-size: 16px">Nomor Surat</label>
+                                        <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" name="nomor_surat" placeholder="0123/PSI/ITATS/2021" value="{{ old('nomor_surat') }}" id="nomorSurat">
+                                        @error('nomor_surat')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
-                                @enderror
+                                    <div class="form-group col-md-4" style="margin-top: 40px">
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">Generate Nomor</button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label style="font-size: 16px">File Surat Masuk</label>
@@ -122,6 +129,7 @@
                                 </div>
                             </div>
                         </div>
+                        <input type="hidden" name="kode_id" id="kodeId" value="{{ old('kode_id') }}">
                         <div class="modal-footer">
                             <a href="#" class="nav-link btn btn-primary" id="next">Next >></a>
                         </div>
@@ -328,10 +336,120 @@
     </div>
 </div>
 @endsection
+@section('modal')
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Generate Nomor Surat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-generate">
+                        @csrf
+                        <div class="form-group">
+                            <label style="font-size: 16px" class="form-label">UnitSurat</label>
+                            <select class="form-control" name="unit_id" id="unit" required>
+                                <option disabled selected>-- Role Data--</option>
+                                @if ($user->isAdmin())
+                                    @foreach ($unitKerja as $unitKerja)
+                                        <option value="{{ $unitKerja->id }}" {{ (old("unit_id") == $unitKerja->id ? "selected":"") }}>{{ $unitKerja->nama }}</option>
+                                    @endforeach
+                                @else
+                                    @for ($i = 0; $i < count($getUnit); $i++)
+                                            <option value="{{ $getUnit[$i][0] }}" {{ (old("unit_id") == $getUnit[$i][0] ? "selected":"") }}>{{ $getUnit[$i][1] }}</option>
+                                    @endfor
+                                @endif
+                            </select>
+                            @error('unit_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size: 16px">Kode Surat</label>
+                            <select class="form-control kode" name="kode_id" id="kode" required>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size: 16px">Jumlah Digit</label>
+                            <input class="form-control" type="number" name="digit" min="1" id="">
+                        </div>
+                        {{-- <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label" for="sisipan">Apakah surat ini menggunakan format nomor surat sisipan</label>
+                                <input class="form-check-input" style="margin-left: 4px" type="checkbox" id="sisipan" name="sisipan" value="true">
+                            </div>
+                        </div>
+                        <div class="form-group tanggal">
+                            <label style="font-size: 16px">Tanggal Surat</label>
+                            <input type="date" class="form-control" name="tanggal" id="tanggal">
+                        </div> --}}
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Generate</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
 @section('script')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         $(document).ready(function(){
+            $('#form-generate').on('submit', function(e){
+                e.preventDefault();
+                $.ajax({
+                    type : "POST",
+                    url : "{{ route('generateNomor') }}",
+                    data : $('#form-generate').serialize(),
+                    success : function(response){
+                        // console.log('kode' response.kode_id);
+                        $('#modal').modal('hide');
+                        // $('#nomorSurat').reset();
+                        $('#nomorSurat').val(response.nomor);
+                        $('#kodeId').val(response.kode_id);
+                        console.log(response);
+                        $('#form-generate')[0].reset();
+                        $('.tanggal').hide();
+                        $('#tanggal').attr("required", false);
+                    },
+                    error : function(response){
+                        console.log(response);
+                    }
+                });
+            });
+
+            $('#unit').change(function(){
+                let unit_id = $(this).val();
+                if(unit_id){
+                    $.ajax({
+                        type:"GET",
+                        url:"{{ route('getKode') }}",
+                        data: {'id': unit_id},
+                        dataType: 'JSON',
+                        success:function(response){
+                            console.log(response);
+                            if(response){
+                                $("#kode").empty();
+                                $("#kode").append('<option>---Pilih Kode surat---</option>');
+                                $.each(response.kode,function(key, value){
+                                    $("#kode").append('<option value="'+value.id+'">'+value.nama+' -- '+value.kode+'</option>');
+                                });
+                            }else{
+                                $("#kode").empty();
+                            }
+                        }
+                    });
+                }else{
+                    $("#kode").empty();
+                }
+            });
+
             $('#next').click(function(){
                 $('#home-tab3').removeClass("active");
                 $('#home3').removeClass("active");

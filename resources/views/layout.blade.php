@@ -27,7 +27,6 @@
         {{-- Summernote --}}
         <link rel="stylesheet" href="{{ asset('assets/modules/summernote/summernote-bs4.css') }}">
 
-
         <!-- Template CSS -->
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
@@ -55,6 +54,39 @@
                         </ul>
                     </form>
                     <ul class="navbar-nav navbar-right">
+                        <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown" class="nav-link notification-toggle" id="lonceng"><i class="far fa-bell"></i></a>
+                            <div class="dropdown-menu dropdown-list dropdown-menu-right">
+                                <div class="dropdown-header">Notifikasi
+                                    <div class="float-right">
+                                        {{-- <a href="#">Mark All As Read</a> --}}
+                                    </div>
+                                </div>
+                                <div class="dropdown-list-content dropdown-list-icons" id="notifikasi">
+                                    {{-- <a href="#" class="dropdown-item dropdown-item-unread">
+                                        <div class="dropdown-item-icon bg-primary text-white">
+                                            <i class="fas fa-code"></i>
+                                        </div>
+                                        <div class="dropdown-item-desc">
+                                            Template update is available now!
+                                            <div class="time text-primary">2 Min Ago</div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="dropdown-item">
+                                        <div class="dropdown-item-icon bg-info text-white">
+                                            <i class="far fa-user"></i>
+                                        </div>
+                                        <div class="dropdown-item-desc">
+                                            <b>You</b> and <b>Dedik Sugiharto</b> are now friends
+                                            <div class="time">10 Hours Ago</div>
+                                        </div>
+                                    </a> --}}
+
+                                </div>
+                                {{-- <div class="dropdown-footer text-center">
+                                    <a href="#">View All <i class="fas fa-chevron-right"></i></a>
+                                </div> --}}
+                            </div>
+                          </li>
                         <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                             @foreach (Auth::user()->mahasiswa as $user_mahasiswa)
                                 <div class="d-sm-none d-lg-inline-block">{{ $user_mahasiswa->nama }}</div></a>
@@ -63,7 +95,7 @@
                                 <div class="d-sm-none d-lg-inline-block">{{ $user_dosen->nama }}</div></a>
                             @endforeach
                             <div class="dropdown-menu dropdown-menu-right">
-                                <div class="dropdown-title">Logged in 5 min ago</div>
+                                {{-- <div class="dropdown-title">Logged in 5 min ago</div>
                                 <a href="features-profile.html" class="dropdown-item has-icon">
                                     <i class="far fa-user"></i> Profile
                                 </a>
@@ -72,7 +104,7 @@
                                 </a>
                                 <a href="features-settings.html" class="dropdown-item has-icon">
                                     <i class="fas fa-cog"></i> Settings
-                                </a>
+                                </a> --}}
                                 <div class="dropdown-divider"></div>
                                 <form action="{{ route('logout.login') }}" method="post">
                                     @csrf
@@ -208,9 +240,6 @@
         {{-- Summernote --}}
         <script src="{{ asset('assets/modules/summernote/summernote-bs4.js') }}"></script>
         <script>
-            $(document).ready(function(){
-
-            });
             $('#summernote').summernote({
                 height: 500,
                 toolbar: [
@@ -242,7 +271,9 @@
         <script src="{{ asset('assets/js/custom.js') }}"></script>
 
         {{-- Toastr --}}
-        @include('sweetalert::alert')
+        @jquery
+        @toastr_js
+        @toastr_render
 
         {{-- Confirm modal--}}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
@@ -291,11 +322,11 @@
                     data: {},
                     dataType: 'JSON',
                     success:function(response){
-                        console.log(response);
+                        // console.log(response);
                         if(response){
                             $('#read_keluar').removeClass("beep beep-sidebar");
                         }else{
-                            console.log('belum baca');
+                            // console.log('belum baca');
                             $('#read_keluar').addClass("beep beep-sidebar");
                         }
                     }
@@ -307,16 +338,70 @@
                     data: {},
                     dataType: 'JSON',
                     success:function(response){
-                        console.log(response);
+                        // console.log(response);
                         if(response){
                             $('#read_masuk').removeClass("beep beep-sidebar");
                         }else{
-                            console.log('belum baca');
+                            // console.log('belum baca');
                             $('#read_masuk').addClass("beep beep-sidebar");
                         }
                     }
                 });
+
+                $.ajax({
+                    type:"GET",
+                    url:"{{ route('notifikasi') }}",
+                    data: {},
+                    dataType: 'JSON',
+                    success:function(response){
+                        // console.log(response);
+                        $('#notifikasi').html(response.data_notifikasi);
+
+                        if(response.data_readAt == 0){
+                            $('#lonceng').addClass("nav-link-lg beep");
+                        }else{
+                            $('#lonceng').removeClass("nav-link-lg beep");
+                        }
+                    }
+                });
             });
+        </script>
+        <script>
+            @if(Session::has('message'))
+                toastr.options =
+                {
+                    "closeButton" : true,
+                    "progressBar" : true
+                }
+                    toastr.success("{{ session('message') }}");
+            @endif
+
+            @if(Session::has('error'))
+                toastr.options =
+                {
+                    "closeButton" : true,
+                    "progressBar" : true
+                }
+                    toastr.error("{{ session('error') }}");
+            @endif
+
+            @if(Session::has('info'))
+            toastr.options =
+                {
+                    "closeButton" : true,
+                    "progressBar" : true
+                }
+                    toastr.info("{{ session('info') }}");
+            @endif
+
+            @if(Session::has('warning'))
+                toastr.options =
+                {
+                    "closeButton" : true,
+                    "progressBar" : true
+                }
+                    toastr.warning("{{ session('warning') }}");
+            @endif
         </script>
     </body>
 </html>

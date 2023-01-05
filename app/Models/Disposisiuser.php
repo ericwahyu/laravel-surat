@@ -15,4 +15,8 @@ class Disposisiuser extends Model
     public function response(){
         return $this->belongsTo(Response::class);
     }
+
+    public function notifikasi(){
+        return $this->belongsTo(Notifikasi::class);
+    }
 }

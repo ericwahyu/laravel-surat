@@ -59,8 +59,8 @@ class User extends Authenticatable
         return $this->hasMany(Mahasiswa::class);
     }
 
-    public function riwayat(){
-        return $this->hasMany(Riwayat::class);
+    public function notifikasi(){
+        return $this->hasMany(Notifikasi::class);
     }
 
     public function isUnitKerja(){
