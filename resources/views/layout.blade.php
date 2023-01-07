@@ -131,7 +131,7 @@
                                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-user"></i> <span>Admin Master</span></a>
                                     <ul class="dropdown-menu">
                                         <li class="{{ ($menu == 'surat') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.masterSurat') }}"><i class="far fa-envelope"></i>Master Surat</a></li>
-                                        <li class="{{ ($menu == 'response') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.masterResponse') }}"><i class="far fa-thumbs-up"></i>Master Response</a></li>
+                                        <li class="{{ ($menu == 'response') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.masterResponse') }}"><i class="far fa-thumbs-up"></i>Master Respons</a></li>
                                         <li class="{{ ($menu == 'roleDosen') ? 'active' : '' }}"><a class="nav-link" href="{{ route('index.masterRoleDosen') }}"><i class="fas fa-users"></i>Master Role</a></li>
                                     </ul>
                                 </li>
@@ -245,7 +245,7 @@
                 toolbar: [
                     ['font', ['bold', 'italic', 'underline', 'clear']],
                     ['fontname', ['fontname']],
-                    // ['fontsize', ['fontsize']],
+                    ['fontsize', ['fontsize']],
                     ['para', ['paragraph']],
                     ['height', ['height']],
                     // ['table', ['table']]
@@ -258,7 +258,7 @@
                 toolbar: [
                     ['font', ['bold', 'italic', 'underline', 'clear']],
                     ['fontname', ['fontname']],
-                    // ['fontsize', ['fontsize']],
+                    ['fontsize', ['fontsize']],
                     ['para', ['paragraph']],
                     ['height', ['height']],
                 ],
@@ -270,10 +270,10 @@
         <script src="{{ asset('assets/js/scripts.js') }}"></script>
         <script src="{{ asset('assets/js/custom.js') }}"></script>
 
-        {{-- Toastr --}}
+        {{-- Toastr
         @jquery
         @toastr_js
-        @toastr_render
+        @toastr_render --}}
 
         {{-- Confirm modal--}}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>

@@ -1,11 +1,11 @@
 @extends('layout')
-@section('title','Update Response')
+@section('title','Update Respons')
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
         <a href="{{ route('index.masterResponse') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <h1>Update Response</h1>
+    <h1>Update Respons</h1>
 </div>
 
 <div class="section-body">
@@ -15,7 +15,7 @@
                 @csrf
                 <div class="card">
                     <div class="card-header">
-                        <h4>Data Response</h4>
+                        <h4>Data Respons</h4>
                     </div>
                     <div class="card-body">
                         <div class="form-group">

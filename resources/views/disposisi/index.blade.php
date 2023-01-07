@@ -64,7 +64,7 @@
                                                     @if (DisposisiController::getDosenResponse($disposisi->id, $disposisi_dosen->user_id) != null)
                                                         <td><span class="badge badge-dark">{{ DisposisiController::getDosenResponse($disposisi->id, $disposisi_dosen->user_id)->nama }}</span></td>
                                                     @else
-                                                        <td><span class="badge badge-dark">Belom ada response</span></td>
+                                                        <td><span class="badge badge-dark">Belom ada respons</span></td>
                                                     @endif
                                                 @endif
                                             </tr>
@@ -84,7 +84,7 @@
                                                     @if ( DisposisiController::getMahasiswaResponse($disposisi->id) != null)
                                                         <td><span class="badge badge-dark">{{ DisposisiController::getMahasiswaResponse($disposisi->id)->nama }}</span></td>
                                                     @else
-                                                        <td><span class="badge badge-dark">Belom ada response</span></td>
+                                                        <td><span class="badge badge-dark">Belom ada respons</span></td>
                                                     @endif
                                                 @endif
                                             </tr>

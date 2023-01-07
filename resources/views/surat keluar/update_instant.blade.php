@@ -110,30 +110,6 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="row">
-
-                        </div>
-                        {{-- <div class="row">
-                            @if ($user->isAdmin())
-                                <div class="form-group col-md-6">
-                                    <label style="font-size: 16px">Status Surat</label>
-                                    <select class="form-control" name="status">
-                                        @if ($surat->status === 1)
-                                            <option selected value="1">Aktif</option>
-                                            <option value="0">Non Aktif</option>
-                                        @elseif ($surat->status === 0)
-                                            <option selected value="0">Non Aktif</option>
-                                            <option value="1">Aktif</option>
-                                        @endif
-                                    </select>
-                                    @error('jenis_id')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                            @endif
-                        </div> --}}
                         <input type="hidden" name="generate_id" value="{{ $generate->id }}">
                         <div class="modal-footer">
                             <a href="#" class="nav-link btn btn-primary" id="next">Next >></a>

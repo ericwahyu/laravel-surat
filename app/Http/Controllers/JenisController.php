@@ -60,9 +60,9 @@ class JenisController extends Controller
         $jenis->save();
 
         if($jenis){
-            return redirect()->route('index.jenis')->with('success', 'Data berhasil di Tambah !!');
+            return redirect()->route('index.jenis')->with('success', 'Berhasil menambah data !!');
         }else{
-            return redirect()->route('index.jenis')->with('warning', 'Data gagal di Tambah !!');
+            return redirect()->route('index.jenis')->with('error', 'Gagal menambah data !!');
         }
     }
 
@@ -111,9 +111,9 @@ class JenisController extends Controller
         $jenis->save();
 
         if($jenis){
-            return redirect()->route('index.jenis')->with('success', 'Data berhasil di Update !!');
+            return redirect()->route('index.jenis')->with('success', 'Berhasil mengupdate data !!');
         }else{
-            return redirect()->route('index.jenis')->with('warning', 'Data gagal di Update !!');
+            return redirect()->route('index.jenis')->with('error', 'Gagal mengupdate data !!');
         }
     }
 
@@ -128,9 +128,9 @@ class JenisController extends Controller
         //
         if($jenis){
             $jenis->delete();
-            return redirect()->route('index.jenis')->with('success', 'Data berhasil di Hapus !!');
+            return redirect()->route('index.jenis')->with('success', 'Berhasil menghapus data !!');
         }else{
-            return redirect()->route('index.jenis')->with('error', 'Data gagal di Hapus !!');
+            return redirect()->route('index.jenis')->with('error', 'Gagal mengupdate data !!');
         }
     }
 }

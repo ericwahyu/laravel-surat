@@ -54,7 +54,7 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label style="font-size: 16px">Nomor Surat</label>
-                                <input type="text" class="form-control @error('nomor') is-invalid @enderror" name="nomor" placeholder="0123/PSI/ITATS/2021" value="{{ old('nomor') }}">
+                                <input type="text" class="form-control @error('nomor') is-invalid @enderror" name="nomor" placeholder="0123/PSI/ITATS/2021" value="{{ old('nomor') }}" readonly>
                                 @error('nomor')
                                     <div class="invalid-feedback">
                                         {{ $message }}

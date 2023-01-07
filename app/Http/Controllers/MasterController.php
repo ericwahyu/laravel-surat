@@ -48,7 +48,7 @@ class MasterController extends Controller
         $surat->save();
 
 
-        return redirect()->route('index.masterSurat')->with('success', 'Data berhasil di update !!');
+        return redirect()->route('index.masterSurat')->with('success', 'Berhasil mengupdate data !!');
     }
 
     public function indexResponse(){
@@ -75,7 +75,7 @@ class MasterController extends Controller
         $response->nama = $request->nama;
         $response->save();
 
-        return redirect()->route('index.masterResponse')->with('success', 'Data berhasil di tambah !!');
+        return redirect()->route('index.masterResponse')->with('success', 'Berhasil menambah data !!');
     }
 
     public function editResponse(Request $request, Response $response){
@@ -93,12 +93,12 @@ class MasterController extends Controller
         $response->nama = $request->nama;
         $response->save();
 
-        return redirect()->route('index.masterResponse')->with('success', 'Data berhasil di update !!');
+        return redirect()->route('index.masterResponse')->with('success', 'Berhasil mengupdate data !!');
     }
 
     public function destroyResponse(Response $response){
         $response->delete();
-        return redirect()->route('index.masterResponse')->with('success', 'Data berhasil di hapus !!');
+        return redirect()->route('index.masterResponse')->with('success', 'Berhasil menghapus data !!');
     }
 
     public function getRoleDosen($dosen_id){
@@ -139,7 +139,7 @@ class MasterController extends Controller
         $roleDosen->role_id = $request->role_id;
         $roleDosen->save();
 
-        return redirect()->route('index.masterRoleDosen')->with('success', 'Berhasil menambah role !!');
+        return redirect()->route('setting.masterRoleDosen', $dosen->id)->with('success', 'Berhasil menambah data !!');
     }
 
     public function updateRoleDosen(RoleDosen $roleDosen, Request $request)
@@ -147,12 +147,12 @@ class MasterController extends Controller
         $roleDosen->role_id = $request->role_id;
         $roleDosen->save();
 
-        return redirect()->route('setting.masterRoleDosen', $roleDosen->dosen_id)->with('success', 'Berhasil mengubah role !!');
+        return redirect()->route('setting.masterRoleDosen', $roleDosen->dosen_id)->with('success', 'Berhasil mengupdate data !!');
     }
 
     public function destroyRoleDosen(RoleDosen $roleDosen)
     {
         $roleDosen->delete();
-        return redirect()->route('setting.masterRoleDosen', $roleDosen->dosen_id)->with('success', 'Berhasil menghapus role !!');
+        return redirect()->route('setting.masterRoleDosen', $roleDosen->dosen_id)->with('success', 'Berhasil menghapus data !!');
     }
 }

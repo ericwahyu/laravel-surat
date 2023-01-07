@@ -125,9 +125,9 @@ class KodeController extends Controller
         $kode->save();
 
         if($kode){
-            return redirect()->route('index.kode')->with('success', 'Berhasil tambah data !!');
+            return redirect()->route('index.kode')->with('success', 'Berhasil menambah data !!');
         }else{
-            return redirect()->route('index.kode')->with('warning', 'Gagal menambah data !!');
+            return redirect()->route('index.kode')->with('error', 'Gagal menambah data !!');
         }
     }
 
@@ -209,9 +209,9 @@ class KodeController extends Controller
         $kode->save();
 
         if($kode){
-            return redirect()->route('index.kode')->with('success', 'Berhasil ubah data !!');
+            return redirect()->route('index.kode')->with('success', 'Berhasil mengubah data !!');
         }else{
-            return redirect()->route('index.kode')->with('warning', 'Gagal mengubah data !!');
+            return redirect()->route('index.kode')->with('error', 'Gagal mengubah data !!');
         }
     }
 
@@ -226,7 +226,7 @@ class KodeController extends Controller
         //
         if($kode){
             $kode->delete();
-            return redirect()->route('index.kode')->with('success', 'Data berhasil di Hapus !!');
+            return redirect()->route('index.kode')->with('success', 'Berhasil menghapus data !!');
         }
     }
 }

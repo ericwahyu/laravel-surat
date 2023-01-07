@@ -213,12 +213,12 @@ class FileController extends Controller
                     $file->file =  $file_name;
                     $file->save();
 
-                    return redirect()->back()->withInput()->with('success', 'Upload file berhasil');
+                    return redirect()->back()->withInput()->with('success', 'Berhasil mengupload data !!');
                 }else{
-                    return redirect()->back()->withInput()->with('warning', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
+                    return redirect()->back()->withInput()->with('error', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
                 }
         }else{
-            return redirect()->back()->withInput()->with('warning', 'Silahkan upload file berformat .doc/.docx/.pdf');
+            return redirect()->back()->withInput()->with('error', 'Silahkan upload file berformat .doc/.docx/.pdf');
         }
     }
 
@@ -275,12 +275,12 @@ class FileController extends Controller
                     $files->file =  $file_name;
                     $files->save();
 
-                    return redirect()->back()->withInput()->with('success', 'Upload file berhasil di Update !!');
+                    return redirect()->back()->withInput()->with('success', 'Berhasil mengupdate file !!');
                 }else{
-                    return redirect()->back()->withInput()->with('warning', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
+                    return redirect()->back()->withInput()->with('error', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
                 }
         }else{
-            return redirect()->back()->withInput()->with('warning', 'Silahkan upload file berformat .doc/.docx/.pdf');
+            return redirect()->back()->withInput()->with('error', 'Silahkan upload file berformat .doc/.docx/.pdf');
         }
     }
 
@@ -299,9 +299,9 @@ class FileController extends Controller
 
         if($files){
             $files->delete();
-            return redirect()->back()->withInput()->with('success', 'File berhasil di hapus !!');
+            return redirect()->back()->withInput()->with('success', 'Berhasil menghapus file !!');
         }else{
-            return redirect()->back()->withInput()->with('warning', 'File gagal di hapus !!');
+            return redirect()->back()->withInput()->with('warning', 'Gagal menghapus file !!');
         }
     }
 
@@ -310,7 +310,7 @@ class FileController extends Controller
             return response()->download('surat/file surat/'.$files->file);
         } catch (\Throwable $th) {
 
-            return back()->with('warning', 'File tidak ditemukan !!');
+            return back()->with('error', 'File tidak ditemukan !!');
         }
     }
 }

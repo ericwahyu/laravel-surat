@@ -34,7 +34,7 @@
                         </thead>
                         <tbody>
                             @foreach ($surat as $data)
-                                <tr style="background-color: {{ (SuratController::readAtMasuk($data->id)->read_at == 0) ? '#BEBBBA' : '#FFFBF9' }}">
+                                <tr style="background-color: {{ (SuratController::readAtMasuk($data->id)->read_at == 0) ? '#E8E7FF' : '#FFFFFF' }}">
                                     <td>
                                         <div class="sort-handler ui-sortable-handle text-center">
                                             <i class="fas fa-th"></i>

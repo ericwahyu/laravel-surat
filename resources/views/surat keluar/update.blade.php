@@ -74,7 +74,8 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label style="font-size: 16px">Catatan</label>
-                                <input type="text" class="form-control @error('catatan') is-invalid @enderror" name="catatan" value="">
+                                {{-- <input type="text" class="form-control @error('catatan') is-invalid @enderror" name="catatan" value=""> --}}
+                                <textarea name="catatan" class="form-control @error('catatan') is-invalid @enderror" cols="30" rows="10"></textarea>
                                 <small id="passwordHelpBlock" class="form-text text-muted">
                                     Masukkan catatan jika ada perlu !!
                                 </small>
@@ -95,25 +96,6 @@
                                 </div>
                             @enderror
                         </div>
-                        @if ($user->isAdmin())
-                            <div class="form-group col-md-6">
-                                <label style="font-size: 16px">Status Surat</label>
-                                <select class="form-control" name="status">
-                                    @if ($surat->status === 1)
-                                        <option selected value="1">Aktif</option>
-                                        <option value="0">Non Aktif</option>
-                                    @elseif ($surat->status === 0)
-                                        <option selected value="0">Non Aktif</option>
-                                        <option value="1">Aktif</option>
-                                    @endif
-                                </select>
-                                @error('jenis_id')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        @endif
                     </div>
                     <input type="hidden" name="generate_id" value="{{ $generate->id }}">
                     <input type="hidden" name="template_id" value="{{ $generate->template->id }}">
@@ -205,42 +187,49 @@
                 </div>
                 </form>
                 <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
-                    <a href="#" class="btn btn-primary" title="Upload File Baru" data-bs-toggle="modal" data-bs-target="#file{{ $surat->id }}">Upload File</a>
-                    <div class="table-responsive">
-                        <table class="table table-striped" id="table-1">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">#</th>
-                                    <th>File</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="ui-sortable">
-                                @foreach ($file as $data)
-                                    <tr>
-                                        <td>
-                                            <div class="sort-handler ui-sortable-handle text-center">
-                                            <i class="fas fa-th"></i>
-                                            </div>
-                                        </td>
-                                        <td>{{ $data->file }}</td>
-                                        <td>
-                                            <form action="{{ route('destroy.file', $data->id) }}" method="post">
-                                                @csrf
-                                                @method('DELETE')
-                                                <a href="{{ route('download.file', $data->id) }}" class="btn btn-info" title="Lihat file"><i class="fa fa-eye"></i> View</a>
-                                                <a href="#" class="btn btn-warning" title="Update File" data-bs-toggle="modal" data-bs-target="#file_update{{ $data->id }}"><i class="far fa-edit"></i> Update</a>
-                                                <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"></i> Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="form-group col-md-11">
+                            <a href="#" class="btn btn-primary" title="Upload File Baru" data-bs-toggle="modal" data-bs-target="#file{{ $surat->id }}">Upload File</a>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="table-1">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>File</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="ui-sortable">
+                                        @foreach ($file as $data)
+                                            <tr>
+                                                <td>
+                                                    <div class="sort-handler ui-sortable-handle text-center">
+                                                    <i class="fas fa-th"></i>
+                                                    </div>
+                                                </td>
+                                                <td>{{ $data->file }}</td>
+                                                <td>
+                                                    <form action="{{ route('destroy.file', $data->id) }}" method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <a href="{{ route('download.file', $data->id) }}" class="btn btn-info" title="Lihat file"><i class="fa fa-eye"></i> View</a>
+                                                        <a href="#" class="btn btn-warning" title="Update File" data-bs-toggle="modal" data-bs-target="#file_update{{ $data->id }}"><i class="far fa-edit"></i> Update</a>
+                                                        <button type="submit" class="btn btn-danger show_confirm" data-toggle="tooltip" title="Delete"><i class="far fa-trash-alt"></i> Delete</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-1">
+                             <a data-toggle="tooltip" title="Diharapkan tidak menghapus dan merubah file yang pertama !!. Agar tidak menjadi kesalahan saat file terjadi perubahan data surat, karena data surat ini menggunakan template" >
+                            <i class="fas fa-exclamation-circle"></i><b> info</b></a>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <a href="#" class="nav-link btn btn-primary" id="back"><< Back</a>
-                        {{-- <button type="submit" class="btn btn-primary">Simpan Data</button> --}}
                     </div>
                 </div>
             </div>
@@ -307,4 +296,23 @@
             </div>
         </div>
     @endforeach
+@endsection
+@section('script')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#next').click(function(){
+                $('#home-tab3').removeClass("active");
+                $('#home3').removeClass("active");
+                $('#profile-tab3').addClass("active");
+                $('#profile3').addClass("show active");
+            });
+            $('#back').click(function(){
+                $('#profile-tab3').removeClass("active");
+                $('#profile3').removeClass("show active");
+                $('#home-tab3').addClass("active");
+                $('#home3').addClass("show active");
+            });
+        });
+    </script>
 @endsection

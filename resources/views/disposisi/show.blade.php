@@ -63,7 +63,7 @@
                         @if ($kategori->status == 2)
                             <div class="col-md-2">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-primary">Beri Tanggapan</button>
+                                    <button type="button" class="btn btn-primary">Beri Respons</button>
                                     <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
@@ -103,7 +103,7 @@
                                     @if (DisposisiController::getDosenResponse($disposisi->id, $disposisi_dosen->user_id) != null)
                                         <td><span class="badge badge-dark">{{ DisposisiController::getDosenResponse($disposisi->id, $disposisi_dosen->user_id)->nama }}</span></td>
                                     @else
-                                        <td><span class="badge badge-dark">Belom ada response</span></td>
+                                        <td><span class="badge badge-dark">Belom ada respons</span></td>
                                     @endif
                                 @endif
                             </tr>
@@ -123,7 +123,7 @@
                                     @if ( DisposisiController::getMahasiswaResponse($disposisi->id, $disposisi_mahasiswa->user_id) != null)
                                         <td><span class="badge badge-dark">{{ DisposisiController::getMahasiswaResponse($disposisi->id, $disposisi_mahasiswa->user_id)->nama }}</span></td>
                                     @else
-                                        <td><span class="badge badge-dark">Belom ada response</span></td>
+                                        <td><span class="badge badge-dark">Belom ada respons</span></td>
                                     @endif
                                 @endif
                             </tr>
@@ -154,11 +154,11 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tanggapan Surat</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Respons Surat</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Apakah anda yakin sudah melihat surat, dan memberi tanggapan {{ $respon->nama }} !!
+                        Apakah anda yakin sudah melihat surat, dan memberi respons {{ $respon->nama }} !!
                         <form action="{{ route('setResponse', $disposisi->id) }}" method="post">
                             @csrf
                             <div class="mb-3">
@@ -173,7 +173,7 @@
                         </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Kirim Tanggapan</button>
+                        <button type="submit" class="btn btn-primary">Kirim Respons</button>
                     </div>
                     </form>
                 </div>
@@ -184,14 +184,14 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ubah Response Surat</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Ubah Respons Surat</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="{{ route('setResponsePenerima', $disposisi->id) }}" method="post">
                         @csrf
                         <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Penerima </label>
+                            <label for="recipient-name" class="col-form-label">Penerima</label>
                             <select class="form-control" name="user_id" id="">
                                 <option disabled selected>--Pilih User Penerima--</option>
                                 @foreach ($getDosen as $getDosen)
@@ -203,9 +203,9 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Ubah Response </label>
+                            <label for="recipient-name" class="col-form-label">Ubah Respons </label>
                             <select class="form-control" name="response_id" id="">
-                                <option disabled selected>--Pilih Response--</option>
+                                <option disabled selected>--Pilih Respons--</option>
                                 @foreach ($response as $getResponse)
                                     <option value="{{ $getResponse->id }}" {{ (old("response_id") == $getResponse->id ? "selected":"") }} >{{ $getResponse->nama }}</option>
                                 @endforeach
@@ -222,7 +222,7 @@
                     </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Kirim Tanggapan</button>
+                    <button type="submit" class="btn btn-primary">Kirim Respons</button>
                 </div>
                 </form>
             </div>

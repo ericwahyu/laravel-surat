@@ -108,7 +108,9 @@ class SearchController extends Controller
                             ->orwhere('surat.nosurat', 'LIKE','%'.$search.'%')
                             ->orwhereYear('surat.tanggal', $search)
                             ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
+                            ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                             ->orwhere('generate.content', 'LIKE','%'.$search.'%')
+                            ->orwhere('generate.tempat', 'LIKE','%'.$search.'%')
                             ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%');
                         })
                     ->select('surat.*')
@@ -129,6 +131,7 @@ class SearchController extends Controller
                             ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
                             ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                             ->orwhere('generate.content', 'LIKE','%'.$search.'%')
+                            ->orwhere('generate.tempat', 'LIKE','%'.$search.'%')
                             ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%');
                         })
                     ->select('surat.*')
@@ -238,6 +241,7 @@ class SearchController extends Controller
                                 ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
                                 ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.content', 'LIKE','%'.$search.'%')
+                                ->orwhere('generate.tempat', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%')
                                 ->orwhere('disposisi.perihal', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('disposisi.tanggal', $search)
@@ -262,6 +266,7 @@ class SearchController extends Controller
                                 ->orwhere('surat.keperluan', 'LIKE','%'.$search.'%')
                                 ->orwhere('jenis.nama', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.content', 'LIKE','%'.$search.'%')
+                                ->orwhere('generate.tempat', 'LIKE','%'.$search.'%')
                                 ->orwhere('generate.footer_content', 'LIKE','%'.$search.'%')
                                 ->orwhere('disposisi.perihal', 'LIKE','%'.$search.'%')
                                 ->orwhereYear('disposisi.tanggal', $search)

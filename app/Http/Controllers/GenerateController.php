@@ -176,7 +176,7 @@ class GenerateController extends Controller
                         $file_name = now()->timestamp . '_' .$request->judul.'_file1'.'.'.$file->getClientOriginalExtension();
                         $file->move('surat/file surat',$file_name);
                     }else{
-                        return redirect()->back()->withInput()->with('warning', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
+                        return redirect()->back()->withInput()->with('error', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
                     }
                 $surat = new Surat();
                 $surat->jenis_id = $request->jenis_id;
@@ -207,7 +207,7 @@ class GenerateController extends Controller
                     ]);
 
             }else{
-                return redirect()->back()->withInput()->with('warning', 'Silahkan upload file berformat .doc/.docx/.pdf');
+                return redirect()->back()->withInput()->with('error', 'Silahkan upload file berformat .doc/.docx/.pdf');
             }
         }else{
 
@@ -293,16 +293,18 @@ class GenerateController extends Controller
                 // ->where('user_id', Auth::user()->id)
                 ->where('disposisi_user.id', $disposisi->id)
                 ->update(['read_at' => 1,]);
+                
+            $notifikasi = Notifikasi::where('user_id', Auth::user()->id)->get();
+            foreach($notifikasi as $update_notifikasi){
+                $update = DB::table('notifikasi')
+                    ->where('id', $update_notifikasi->id)
+                    ->where('disposisi_user_id', $disposisi->id)
+                    ->update([
+                        'read_at' => 1
+                    ]);
+            }
         }
 
-        $notifikasi = Notifikasi::where('user_id', Auth::user()->id)->get();
-        foreach($notifikasi as $update_notifikasi){
-            $update = DB::table('notifikasi')
-                ->where('id', $update_notifikasi->id)
-                ->update([
-                    'read_at' => 1
-                ]);
-        }
 
         $nav = 'transaksi';
         $menu = 'keluar';
@@ -442,9 +444,9 @@ class GenerateController extends Controller
 
         if($catatan){
             $catatan->save();
-            return redirect()->route('show.surat.keluar', $surat)->with('success', 'Data berhasil di update !!');
+            return redirect()->route('show.surat.keluar', $surat)->with('success', 'Berhasil mengupdate data !!');
         }else{
-            return back()->with('error', 'Data gagal di update !!');
+            return back()->with('error', 'Gagal mengupdate data !!');
         }
 
     }
@@ -469,9 +471,9 @@ class GenerateController extends Controller
         $catatan->save();
 
         if($surat){
-            return redirect()->route('index.surat.keluar')->with('success', 'Data berhasil di hapus !!');
+            return redirect()->route('index.surat.keluar')->with('success', 'Berhasil menghapus data !!');
         }else{
-            return back()->with('warning', 'Data gagal di hapus !!');
+            return back()->with('warning', 'Gagal menghapus data !!');
         }
     }
 
@@ -608,7 +610,7 @@ class GenerateController extends Controller
                 }
 
             } catch (\Throwable $th) {
-                return redirect()->back()->withInput()->with('warning', 'Terjadi kesalahan dalam penulisan isi content atau footer content, Silahkan Ubah !!');
+                return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan dalam penulisan isi content atau footer content, Silahkan Ubah !!');
             }
 
             $fileSurat = now()->timestamp . '_'  .$request->judul.'.docx';
@@ -620,7 +622,7 @@ class GenerateController extends Controller
             return $this->setNomor($request, $fileSurat, $pihak);
 
         }else{
-            return back()->with('warning', 'Berkas tidak ditemukan !!');
+            return back()->with('error', 'Berkas tidak ditemukan !!');
         }
     }
 

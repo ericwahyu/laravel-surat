@@ -2,7 +2,7 @@
 @section('title','Master Response')
 @section('section')
 <div class="section-header">
-    <h1>Master Respponse</h1>
+    <h1>Master Respons</h1>
     <div class="section-header-button">
         <a href="{{ route('create.masterResponse') }}" class="btn btn-primary" title="Tambah Jenis Surat">Tambah Baru</a>
     </div>

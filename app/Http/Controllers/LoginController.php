@@ -28,14 +28,10 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($request->only($login_type, 'password'))) {
-            return redirect()->route('dashboard')->with('success', 'login berhasil !!');
+            return redirect()->route('dashboard')->with('success', 'Berhasil login !!');
         }
 
-        return redirect()->back()
-            ->withInput()
-            ->withErrors([
-                'login' => 'These credentials do not match our records.',
-            ]);
+        return redirect()->back()->with('error', 'Gagal login !!');
     }
 
     public function logout(Request $request){

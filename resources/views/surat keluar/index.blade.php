@@ -40,7 +40,7 @@
                         <tbody class="ui-sortable">
                             @foreach ($generate as $data)
 
-                                <tr style="background-color: {{ (GenerateController::readAtKeluar($data->id)->read_at == 0) ? '#BEBBBA' : '#FFFBF9' }}">
+                                <tr style="background-color: {{ (GenerateController::readAtKeluar($data->id)->read_at == 0) ? '#E8E7FF' : '#FFFFFF' }}">
                                     <td>
                                         <div class="sort-handler ui-sortable-handle text-center">
                                         <i class="fas fa-th"></i>

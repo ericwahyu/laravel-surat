@@ -131,7 +131,7 @@ class TemplateController extends Controller
         $template->nama = $request->nama;
         if($request->hasFile('file')){
             $file = $request->file('file');
-            $file_name = now()->timestamp . '_' .$file->getClientOriginalName();
+            $file_name = now()->timestamp . '_template ' .$request->nama.'.'.$file->getClientOriginalExtension();
             // dd($file_name);
             // $file_name = $file->getClientOriginalName();
             $file->move('surat/template',$file_name);
@@ -144,9 +144,9 @@ class TemplateController extends Controller
         $template->save();
 
         if($template){
-            return redirect()->route('index.template')->with('success', 'Data berhasil di tambah !!');
+            return redirect()->route('index.template')->with('success', 'Berhasil menambah data !!');
         }else{
-            return back()->with('warning', 'Data gagal di Tambah !!');
+            return back()->with('error', 'Gagal menambah data !!');
         }
     }
 
@@ -232,7 +232,7 @@ class TemplateController extends Controller
             File::delete($filelama);
 
             $file = $request->file('file');
-            $file_name = now()->timestamp . '_' .$file->getClientOriginalName();
+            $file_name = now()->timestamp . '_template ' .$request->nama.'.'.$file->getClientOriginalExtension();
             // $file_name = $file->getClientOriginalName();
             $file->move('surat/template',$file_name);
             $template->file = $file_name;
@@ -243,9 +243,9 @@ class TemplateController extends Controller
         $template->save();
 
         if($template){
-            return redirect()->route('index.template')->with('success', 'Data berhasil di Update !!');
+            return redirect()->route('index.template')->with('success', 'Berhasil mengupdate data !!');
         }else{
-            return back()->with('warning', 'Data gagal di Update !!');
+            return back()->with('error', 'Gagal mengupdate data !!');
         }
     }
 
@@ -263,9 +263,9 @@ class TemplateController extends Controller
         if($template){
             File::delete($filelama);
             $template->delete();
-            return redirect()->route('index.template')->with('success', 'Data berhasil di Hapus !!');
+            return redirect()->route('index.template')->with('success', 'Berhasil menghapus data !!');
         }else{
-            return back()->with('warning', 'Data gagal di Hapus !!');
+            return back()->with('error', 'Gagal menghapus data !!');
         }
 
     }

@@ -156,7 +156,7 @@ class DisposisiController extends Controller
                 $notifikasi = new Notifikasi();
                 $notifikasi->disposisi_user_id = $disposisi_user->id;
                 $notifikasi->user_id = $dis_user;
-                $notifikasi->message = 'Anda mendapatkan Surat baru dengan nomor '. $surat->nosurat;
+                $notifikasi->message = 'Anda mendapatkan surat baru dengan nomor '. $surat->nosurat;
                 $notifikasi->read_at = 0 ;
                 $notifikasi->save();
             }
@@ -190,10 +190,10 @@ class DisposisiController extends Controller
         $kategori = Disposisiuser::where('user_id', Auth::user()->id)->first();
         switch($kategori->kategori_id){
             case(1):
-                return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di tambah !!');
+                return redirect()->route('index.surat.masuk')->with('success', 'Berhasil menambah data !!');
                 break;
             case(2):
-                return redirect()->route('index.surat.keluar')->with('success', 'Data berhasil di tambah !!');
+                return redirect()->route('index.surat.keluar')->with('success', 'Berhasil menambah data !!');
                 break;
         }
         return back()->with('warning', 'Data gagal di Tambah !!');
@@ -327,7 +327,7 @@ class DisposisiController extends Controller
         $catatan->save();
 
         if($disposisi){
-            return redirect()->route('index.disposisi', $disposisi->surat)->with('success', 'Data berhasil di ubah !!');
+            return redirect()->route('index.disposisi', $disposisi->surat)->with('success', 'Berhasil mengupdate data !!');
         }else{
             return back()->with('warning', 'Data gagal di Tambah !!');
         }
@@ -353,9 +353,9 @@ class DisposisiController extends Controller
 
         if($disposisi){
             $disposisi->delete();
-            return redirect()->route('index.disposisi', $surat)->with('success', 'Data berhasil di Hapus !!');
+            return redirect()->route('index.disposisi', $surat)->with('success', 'Berhasil menghapus data !!');
         }else{
-            return back()->with('warning', 'Data gagal di Hapus !!');
+            return back()->with('error', 'Gagal menghapus data !!');
         }
     }
 
@@ -501,7 +501,7 @@ class DisposisiController extends Controller
             $notifikasi = new Notifikasi();
             $notifikasi->disposisi_user_id = $disposisi_user_id->id;
             $notifikasi->user_id = $disposisi_user_status->user_id;
-            $notifikasi->message = $get->nama. ' memberikan response Surat pada nomor '. $surat->nosurat;
+            $notifikasi->message = $get->nama. ' memberikan response surat pada nomor '. $surat->nosurat;
             $notifikasi->read_at = 0 ;
             $notifikasi->save();
 
@@ -522,14 +522,17 @@ class DisposisiController extends Controller
         $catatan->save();
 
         if($catatan){
-            return redirect()->route('show.disposisi', $disposisi)->with('succes', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
+            return redirect()->route('show.disposisi', $disposisi)->with('success', 'Berhasil mengirim respons, akan dilakukan proses selanjutnya !!');
         }else{
-            return back()->with('warning', 'Tanggapan surat gagal dikirim !!');
+            return back()->with('error', 'Gagal mengirim response !!');
         }
     }
 
     public function setResponsePenerima(Request $request, Disposisi $disposisi){
-        // dd($request);
+        $request->validate([
+            'user_id' => 'required',
+            'response_id' => 'required',
+        ]);
         $get_dosen = $this->getDosen($disposisi->id, $request->user_id);
         $get_mahasiswa = $this->getMahasiswa($disposisi->id, $request->user_id);
         // dd($get_dosen);
@@ -583,9 +586,9 @@ class DisposisiController extends Controller
         $catatan->save();
 
         if($catatan){
-            return redirect()->route('show.disposisi', $disposisi)->with('succes', 'Tanggapan surat berhasil, akan dilakukan proses selanjutnya !!');
+            return redirect()->route('show.disposisi', $disposisi)->with('success', 'Berhasil mengirim respons, akan dilakukan proses selanjutnya !!');
         }else{
-            return back()->with('warning', 'Tanggapan surat gagal dikirim !!');
+            return back()->with('warning', 'Gagal mengirim response !!');
         }
     }
 

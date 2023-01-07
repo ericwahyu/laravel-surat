@@ -46,10 +46,12 @@
                         </tbody>
                     </table>
                     <div class="row">
-                        @if ($user->isAdmin() || $user->isPengelola() || $user->isPimpinan())
+                        @if ($user->isAdmin() || $user->isPengelola())
                             <div class="col-sm-2">
                                 <a href="{{ route('edit.surat.masuk', $surat) }}" class="btn btn-warning" title="Update"><i class="far fa-edit"></i> Update</a>
                             </div>
+                        @endif
+                        @if ($user->isAdmin() || $user->isPengelola() || $user->isPimpinan())
                             <div class="col-sm-2">
                                 <form action="{{ route('destroy.surat.masuk', $surat) }}" method="post">
                                     @csrf

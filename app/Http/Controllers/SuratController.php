@@ -183,19 +183,20 @@ class SuratController extends Controller
                 // ->where('user_id', Auth::user()->id)
                 ->where('disposisi_user.id', $disposisi->id)
                 ->update(['read_at' => 1,]);
-        }
 
-        $notifikasi = Notifikasi::where('user_id', Auth::user()->id)->get();
-        foreach($notifikasi as $update_notifikasi){
-            $update = DB::table('notifikasi')
-                ->where('id', $update_notifikasi->id)
-                ->update([
-                    'read_at' => 1
-                ]);
+            $notifikasi = Notifikasi::where('user_id', Auth::user()->id)->get();
+            foreach($notifikasi as $update_notifikasi){
+                $update = DB::table('notifikasi')
+                    ->where('id', $update_notifikasi->id)
+                    ->where('disposisi_user_id', $disposisi->id)
+                    ->update([
+                        'read_at' => 1
+                    ]);
+            }
+
         }
 
         return view('surat masuk.show', compact('nav', 'menu', 'surat', 'user'));
-
     }
 
     /**
@@ -256,9 +257,9 @@ class SuratController extends Controller
 
         if($catatan){
             $catatan->save();
-            return redirect()->route('show.surat.masuk', $surat)->with('success', 'Data berhasil di update !!');
+            return redirect()->route('show.surat.masuk', $surat)->with('success', 'Berhasil mengupdate data !!');
         }else{
-            return back()->with('error', 'Data gagal di update !!');
+            return back()->with('error', 'Gagal mengupdate data !!');
         }
     }
 
@@ -282,9 +283,9 @@ class SuratController extends Controller
         $catatan->save();
 
         if($surat){
-            return redirect()->route('index.surat.masuk')->with('success', 'Data berhasil di hapus !!');
+            return redirect()->route('index.surat.masuk')->with('success', 'Berhasil menghapus data !!');
         }else{
-            return back()->with('error', 'Data gagal di hapus !!');
+            return back()->with('error', 'Gagal menghapus data !!');
         }
 
     }

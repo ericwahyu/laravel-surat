@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-        <title>Login &mdash; Stisla</title>
+        <title>Login Laravel Surat Menyurat FTETI ITATS</title>
 
         <!-- General CSS Files -->
         <link rel="stylesheet" href="assets/modules/bootstrap/css/bootstrap.min.css">
@@ -25,8 +25,7 @@
             gtag('config', 'UA-94034622-3');
         </script>
     <!-- /END GA -->
-    </head>
-
+</head>
     <body>
         <div id="app">
             <section class="section">
@@ -86,8 +85,6 @@
         <script src="assets/modules/moment.min.js"></script>
         <script src="assets/js/stisla.js"></script>
 
-        {{-- Toastr --}}
-        @include('sweetalert::alert')
 
         <!-- JS Libraies -->
 

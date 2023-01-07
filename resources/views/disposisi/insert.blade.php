@@ -75,7 +75,7 @@
             </div>
             <div class="card-body">
                 <div class="form-group">
-                    <label style="font-size: 16px">Pilih Response</label>
+                    <label style="font-size: 16px">Pilih Respons</label>
                     <div class="table-responsive">
                         <table class="table table-bordered table-md">
                             <thead>
@@ -87,7 +87,7 @@
                                         </div>
                                     </th>
                                     {{-- <th>Response </th> --}}
-                                    <th>Response </th>
+                                    <th>Respons</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -111,11 +111,11 @@
                     <div class="section-title">Memilih tujuan disposisi</div>
                     <div class="custom-control custom-radio custom-control-inline">
                         <input type="radio" id="fakultas" name="radiobox" class="custom-control-input @error('radiobox') is-invalid @enderror" value="1">
-                        <label class="custom-control-label" for="fakultas">Lingkup Fakultas</label>
+                        <label class="custom-control-label" for="fakultas">User <b>Internal</b></label>
                     </div>
                         <div class="custom-control custom-radio custom-control-inline">
                         <input type="radio" id="luar-fakultas" name="radiobox" class="custom-control-input @error('radiobox') is-invalid @enderror" value="2">
-                        <label class="custom-control-label" for="luar-fakultas"><b>Diluar</b> Lingkup Fakultas</label>
+                        <label class="custom-control-label" for="luar-fakultas">User <b>Eksternal</b></label>
                     </div>
                     @error('radiobox')
                         <div class="invalid-feedback">

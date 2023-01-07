@@ -1,11 +1,11 @@
 @extends('layout')
-@section('title','Tambah Response')
+@section('title','Tambah Respons')
 @section('section')
 <div class="section-header">
     <div class="section-header-back">
         <a href="{{ route('index.masterResponse') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <h1>Tambah Response</h1>
+    <h1>Tambah Respons</h1>
 </div>
 
 <div class="section-body">
@@ -15,11 +15,11 @@
                 @csrf
                 <div class="card">
                     <div class="card-header">
-                        <h4>Data Response</h4>
+                        <h4>Data Respons</h4>
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label style="font-size: 16px">Nama Response</label>
+                            <label style="font-size: 16px">Nama</label>
                             <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" placeholder="Nama" value="{{ old('nama') }}">
                             @error('nama')
                                 <div class="invalid-feedback">

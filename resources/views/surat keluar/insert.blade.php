@@ -84,7 +84,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label style="font-size: 16px">Generate Nomor Surat</label>
-                                        <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" id="nomorSurat" name="nomor_surat" value="{{ old('nomor_surat') }}" required>
+                                        <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" id="nomorSurat" name="nomor_surat" value="{{ old('nomor_surat') }}" required readonly>
                                     </div>
                                     <div class="form-group col-md-6" style="margin-top: 39px">
                                         <!-- Button trigger modal -->
@@ -217,7 +217,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label style="font-size: 16px">Pilih Response</label>
+                            <label style="font-size: 16px">Pilih Respons</label>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-md">
                                     <thead>
@@ -229,7 +229,7 @@
                                                 </div>
                                             </th>
                                             {{-- <th>Response </th> --}}
-                                            <th>Response </th>
+                                            <th>Respons</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -253,11 +253,11 @@
                             <div class="section-title">Memilih tujuan disposisi</div>
                             <div class="custom-control custom-radio custom-control-inline">
                                 <input type="radio" id="fakultas" name="radiobox" class="custom-control-input @error('radiobox') is-invalid @enderror" value="1">
-                                <label class="custom-control-label" for="fakultas">Lingkup Fakultas</label>
+                                <label class="custom-control-label" for="fakultas">User <b>Internal</b></label>
                             </div>
                                 <div class="custom-control custom-radio custom-control-inline">
                                 <input type="radio" id="luar-fakultas" name="radiobox" class="custom-control-input @error('radiobox') is-invalid @enderror" value="2">
-                                <label class="custom-control-label" for="luar-fakultas"><b>Diluar</b> Lingkup Fakultas</label>
+                                <label class="custom-control-label" for="luar-fakultas">User <b>Eksternal</b></label>
                             </div>
                             @error('radiobox')
                                     <div class="invalid-feedback">

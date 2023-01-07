@@ -8,7 +8,7 @@
     <h1>Tambah Template Surat</h1>
     <div class="section-header-button">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Intruksi Template Surat
+            Intruksi Pembuatan Template
         </button>
     </div>
 </div>
@@ -140,11 +140,39 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Langkah-langkah pembuatan template</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
+                    <p>
+                        Membuat file word (.doc / .docx) dengan beberapa variabel sebagai berikut :<br>
+                        ${body}<br>
+                        ${isiBody}<br>
+                        ${/body}<br>
+                        -> variabel diatas adalah untuk body surat yang akan di isi pada body template. <br><br>
+
+                        ${tempat_surat} -> variabel ini terdapat pada area tandatangan yang berfungsi untuk memasukkan tempat surat disaat membuat surat.<br><br>
+
+                        ${tanggal_surat} -> variabel ini terdapat pada area tandatangan yang berfungsi untuk memasukkan tanggal surat disaat pembuatan surat.<br><br>
+
+                        ${jabatan_1} -> variabel ini terdapat pada area tandatangan yang berfungsi untuk memasukkan jabatan disaat pembuatan surat,
+                        angka '1' pada variabel tersebut untuk menunjukkan jumlah tandatangan berjumlah 1, jika tandangan lebih dari 1 maka dapat ditambahkan
+                        (${jabatan_2}, ${jabatan_3}, dst), pada form jumlah tandatangan harus menyesuaikan banyaknya jumlah tanda tangan.<br><br>
+
+                        ${nama_1} -> variabel ini terdapat pada area tandatangan yang berfungsi untuk memasukkan nama yang bersangkutan pada surat tersebut,
+                        angka '1' pada variabel tersebut untuk menunjukkan jumlah tandatangan berjumlah 1, jika tandangan lebih dari 1 maka dapat ditambahkan
+                        (${nama_2}, ${nama_3}, dst), pada form jumlah tandatangan harus menyesuaikan banyaknya jumlah tanda tangan.<br><br>
+
+                        ${nip_1} -> variabel ini terdapat pada area tandatangan yang berfungsi untuk memasukkan nomor NIP yang bersangkutan pada surat tersebut,
+                        angka '1' pada variabel tersebut untuk menunjukkan jumlah tandatangan berjumlah 1, jika tandangan lebih dari 1 maka dapat ditambahkan
+                        (${nip_2}, ${nip_3}, dst), pada form jumlah tandatangan harus menyesuaikan banyaknya jumlah tanda tangan.<br><br>
+
+                        ${footer}<br>
+                        ${isiFooter}<br>
+                        ${/footer}<br>
+                        -> variabel diatas adalah untuk footer surat yang terletak dibawah area tandatangan, dan akan di isi pada body template. <br><br>
+                    </p>
+                    {{-- <div class="row">
                         <div class="col-4">
                           <div class="list-group" id="list-tab" role="tablist">
                             <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab">Langkah 1</a>
@@ -156,34 +184,7 @@
                         <div class="col-8">
                           <div class="tab-content" id="nav-tabContent">
                             <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                <p>
-                                    Membuat file word (.doc / .docx) dengan beberapa variabel sebagai berikut :<br>
-                                    ${body}<br>
-                                    ${isiBody}<br>
-                                    ${/body}<br>
-                                    -> variabel diatas adalah untuk body surat yang akan di isi pada body template. <br><br>
 
-                                    ${tempat_surat} -> variabel ini terdapat pada area tandatangan yang berfungsi untuk memasukkan tempat surat disaat membuat surat.<br><br>
-
-                                    ${tanggal_surat} -> variabel ini terdapat pada area tandatangan yang berfungsi untuk memasukkan tanggal surat disaat pembuatan surat.<br><br>
-
-                                    ${jabatan_1} -> variabel ini terdapat pada area tandatangan yang berfungsi untuk memasukkan jabatan disaat pembuatan surat,
-                                    angka '1' pada variabel tersebut untuk menunjukkan jumlah tandatangan berjumlah 1, jika tandangan lebih dari 1 maka dapat ditambahkan
-                                    (${jabatan_2}, ${jabatan_3}, dst), pada form jumlah tandatangan harus menyesuaikan banyaknya jumlah tanda tangan.<br><br>
-
-                                    ${nama_1} -> variabel ini terdapat pada area tandatangan yang berfungsi untuk memasukkan nama yang bersangkutan pada surat tersebut,
-                                    angka '1' pada variabel tersebut untuk menunjukkan jumlah tandatangan berjumlah 1, jika tandangan lebih dari 1 maka dapat ditambahkan
-                                    (${nama_2}, ${nama_3}, dst), pada form jumlah tandatangan harus menyesuaikan banyaknya jumlah tanda tangan.<br><br>
-
-                                    ${nip_1} -> variabel ini terdapat pada area tandatangan yang berfungsi untuk memasukkan nomor NIP yang bersangkutan pada surat tersebut,
-                                    angka '1' pada variabel tersebut untuk menunjukkan jumlah tandatangan berjumlah 1, jika tandangan lebih dari 1 maka dapat ditambahkan
-                                    (${nip_2}, ${nip_3}, dst), pada form jumlah tandatangan harus menyesuaikan banyaknya jumlah tanda tangan.<br><br>
-
-                                    ${footer}<br>
-                                    ${isiFooter}<br>
-                                    ${/footer}<br>
-                                    -> variabel diatas adalah untuk footer surat yang terletak dibawah area tandatangan, dan akan di isi pada body template. <br><br>
-                                </p>
                             </div>
                             <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
 
@@ -196,7 +197,7 @@
                             </div>
                           </div>
                         </div>
-                      </div>
+                    </div> --}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

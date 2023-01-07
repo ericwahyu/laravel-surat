@@ -56,7 +56,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-8">
                                         <label style="font-size: 16px">Nomor Surat</label>
-                                        <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" name="nomor_surat" placeholder="0123/PSI/ITATS/2021" value="{{ old('nomor_surat') }}" id="nomorSurat">
+                                        <input type="text" class="form-control @error('nomor_surat') is-invalid @enderror" name="nomor_surat" value="{{ old('nomor_surat') }}" id="nomorSurat" readonly>
                                         @error('nomor_surat')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -186,7 +186,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label style="font-size: 16px">Pilih Response</label>
+                            <label style="font-size: 16px">Pilih Respons</label>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-md">
                                     <thead>
@@ -198,7 +198,7 @@
                                                 </div>
                                             </th>
                                             {{-- <th>Response </th> --}}
-                                            <th>Response </th>
+                                            <th>Respons</th>
                                         </tr>
                                     </thead>
                                     <tbody>
