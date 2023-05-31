@@ -28,7 +28,7 @@
                         @enderror
                     </div>
                     <div class="form-group col-md-6">
-                        <label style="font-size: 16px">Catatan</label>
+                        <label style="font-size: 16px">Catatan Disposisi</label>
                         <label style="font-size: 12px">(opsional)</label>
                         <textarea name="catatan_disposisi" class="form-control @error('catatan_disposisi') is-invalid @enderror" cols="30" rows="10">{{ old('catatan_disposisi') }}</textarea>
                         <small id="passwordHelpBlock" class="form-text text-muted">

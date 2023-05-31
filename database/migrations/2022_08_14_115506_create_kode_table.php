@@ -20,6 +20,7 @@ class CreateKodeTable extends Migration
             $table->string('kode');
             $table->string('penomoran');
             $table->integer('increment');
+            $table->integer('digit');
             $table->timestamps();
 
             $table->foreign('unit_kerja_id')->references('id')->on('unit_kerja')->onDelete('cascade');

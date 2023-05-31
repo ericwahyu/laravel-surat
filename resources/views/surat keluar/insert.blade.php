@@ -406,10 +406,10 @@
                             <select class="form-control kode" name="kode_id" id="kode" required>
                             </select>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label style="font-size: 16px">Jumlah Digit</label>
                             <input class="form-control" type="number" name="digit" min="1" id="">
-                        </div>
+                        </div> --}}
                         {{-- <div class="form-group">
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label" for="sisipan">Apakah surat ini menggunakan format nomor surat sisipan</label>

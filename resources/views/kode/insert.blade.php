@@ -68,6 +68,15 @@
                                 </div>
                             @enderror
                         </div>
+                        <div class="form-group">
+                            <label style="font-size: 16px">Jumlah Digit Penomoran Surat</label>
+                            <input type="number" class="form-control @error('digit') is-invalid @enderror" name="digit" placeholder="" value="{{ old('digit') }}">
+                            @error('digit')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                         {{-- <div class="form-group">
                             <div class="row">
                                 <div class="form-group col-md-4">

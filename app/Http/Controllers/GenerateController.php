@@ -173,8 +173,8 @@ class GenerateController extends Controller
                     $extension = $file->getClientOriginalExtension();
                     $check=in_array($extension,$allowedfileExtension);
                     if($check){
-                        $file_name = now()->timestamp . '_' .$request->judul.'_file1'.'.'.$file->getClientOriginalExtension();
-                        $file->move('surat/file surat',$file_name);
+                        $file_name = now()->timestamp . '_' .$request->judul.'.'.$file->getClientOriginalExtension();
+                        $file->move(public_path('surat/file surat'),$file_name);
                     }else{
                         return redirect()->back()->withInput()->with('error', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
                     }
@@ -293,7 +293,7 @@ class GenerateController extends Controller
                 // ->where('user_id', Auth::user()->id)
                 ->where('disposisi_user.id', $disposisi->id)
                 ->update(['read_at' => 1,]);
-                
+
             $notifikasi = Notifikasi::where('user_id', Auth::user()->id)->get();
             foreach($notifikasi as $update_notifikasi){
                 $update = DB::table('notifikasi')
@@ -387,8 +387,8 @@ class GenerateController extends Controller
 
             //hapus surat lama
             $filelamaSurat = Files::where('surat_id', $surat->id)->first();
+            // dd($filelamaSurat);
             $hapusfile = public_path('surat/file surat/'.$filelamaSurat->file);
-            // dd($hapusfile);
             File::delete($hapusfile);
 
             list($file_name, $pihak) = $this->generateSurat($request);
@@ -398,7 +398,7 @@ class GenerateController extends Controller
             $files->save();
 
             $surat->jenis_id = $request->jenis_id;
-            // $surat->nosurat = $request->nomor;
+            $surat->nosurat = $request->nomor_surat;
             $surat->judul = $request->judul;
             $surat->tanggal = $request->tanggal;
             $surat->keperluan = $request->keperluan;
@@ -487,6 +487,12 @@ class GenerateController extends Controller
     // }
 
     public function downloadFile(Surat $surat){
+        //clean folder di download
+        $files = glob(public_path('/surat/download/*'));
+        foreach ($files as $file) {
+            if (is_file($file))
+            unlink($file); // hapus file
+        }
 
         $files = Files::where('surat_id', $surat->id)->get();
         // dd($files);
@@ -559,7 +565,6 @@ class GenerateController extends Controller
         $date = Carbon::parse($request->tanggal_surat)->isoFormat("D MMMM YYYY");
         // cek template
         if (file_exists($docs)) {
-
             //generate surat
             $templateProcessor = new TemplateProcessor($docs);
             $templateProcessor->setValue('tempat_surat', $request->tempat_surat);
@@ -614,12 +619,24 @@ class GenerateController extends Controller
             }
 
             $fileSurat = now()->timestamp . '_'  .$request->judul.'.docx';
-            $templateProcessor->saveAs($fileSurat);
+            $templateProcessor->saveAs(public_path('surat/file surat/').$fileSurat);
 
-            // Pindah file
-            File::move(public_path() . '/' . $fileSurat, public_path('surat/file surat/'.$fileSurat));
+            $suratLama = public_path('surat/file surat/').$fileSurat;
+            if (file_exists($suratLama)) {
+                //generate surat
+                $templateProcessor = new TemplateProcessor($suratLama);
+                $templateProcessor->setValue('nomor_surat', $request->nomor_surat);
 
-            return $this->setNomor($request, $fileSurat, $pihak);
+                $file_name = now()->timestamp . '_'  .$request->judul.'_file1'. '.docx';
+                $templateProcessor->saveAs(public_path('surat/file surat/').$file_name);
+                //hapus surat lama
+                File::delete($suratLama);
+
+                // return $file_name and $pihak;
+                return [$file_name, $pihak];
+            }else{
+                return back()->with('error', 'Berkas tidak ditemukan !!');
+            }
 
         }else{
             return back()->with('error', 'Berkas tidak ditemukan !!');
@@ -720,7 +737,7 @@ class GenerateController extends Controller
         //     // $nomor = sprintf("%03s", 1) .'/'. $kode->kode .'/'. 'ITATS/' . $bulanRomawi[date('n')] .'/'. date('Y');
         // }
 
-        $nomor = str_replace('{nomor_urut}',sprintf("%0".$request->input('digit')."s", $kode->increment),$kode->penomoran);
+        $nomor = str_replace('{nomor_urut}',sprintf("%0".$kode->digit."s", $kode->increment),$kode->penomoran);
         $nomor = str_replace('{kode}',$kode->kode,$nomor);
         $nomor = str_replace('{bulan}',$bulanRomawi[date('n')],$nomor);
         $nomor = str_replace('{tahun}',date('Y'),$nomor);

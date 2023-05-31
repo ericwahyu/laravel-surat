@@ -101,7 +101,7 @@ class MasterController extends Controller
         return redirect()->route('index.masterResponse')->with('success', 'Berhasil menghapus data !!');
     }
 
-    public function getRoleDosen($dosen_id){
+    public static function getRoleDosen($dosen_id){
         $getRoleDosen = RoleDosen::join('role', 'role_dosen.role_id', '=', 'role.id')
             ->where('dosen_id', $dosen_id)
             ->get();

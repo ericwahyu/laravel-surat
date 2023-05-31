@@ -122,6 +122,7 @@ class KodeController extends Controller
         $kode->kode = $request->kode;
         $kode->penomoran = $request->penomoran;
         $kode->increment = 1;
+        $kode->digit = $request->digit;
         $kode->save();
 
         if($kode){
@@ -206,6 +207,7 @@ class KodeController extends Controller
         $kode->kode = $request->kode;
         $kode->penomoran = $request->penomoran;
         $kode->increment = $request->increment;
+        $kode->digit = $request->digit;
         $kode->save();
 
         if($kode){

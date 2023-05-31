@@ -246,10 +246,16 @@ class DisposisiController extends Controller
             ->select('mahasiswa.*')
             ->get();
 
-        $notifikasi = Notifikasi::where('user_id', Auth::user()->id)->get();
+        $notifikasi = Disposisiuser::join('notifikasi', 'disposisi_user.id', '=', 'notifikasi.disposisi_user_id')
+            ->where('notifikasi.user_id', Auth::user()->id)
+            ->where('disposisi_id', $disposisi->id)
+            ->select('notifikasi.*')
+            ->get();
+        // dd($notifikasi);
         foreach($notifikasi as $update_notifikasi){
             $update = DB::table('notifikasi')
                 ->where('id', $update_notifikasi->id)
+                ->where('user_id', Auth::user()->id)
                 ->update([
                     'read_at' => 1
                 ]);
@@ -442,7 +448,7 @@ class DisposisiController extends Controller
         return $getUserEksternal;
     }
 
-    public function getUnitKerja($user_id){
+    public static function getUnitKerja($user_id){
         $mahasiswa = Mahasiswa::where('user_id', $user_id)->get();
         $dosen = Dosen::where('user_id', $user_id)->get();
 
@@ -458,7 +464,6 @@ class DisposisiController extends Controller
                 }
             }
         }
-        // dd($unit_kerja);
         return $unit_kerja;
     }
 

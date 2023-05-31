@@ -33,7 +33,7 @@
                                     <td>{{ $data->nama }}</td>
                                     <td>
                                         <table>
-                                            @foreach (DisposisiController::getUnitKerja($data->user_id) as $unitDosen)
+                                            @foreach (App\Http\Controllers\DisposisiController::getUnitKerja($data->user_id) as $unitDosen)
                                                 <tr>
                                                     <td>{{ $unitDosen }}</td>
                                                 </tr>

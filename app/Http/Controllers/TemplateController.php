@@ -75,6 +75,8 @@ class TemplateController extends Controller
     public function create()
     {
         //
+        // dd(public_path());
+        // dd(base_path());
         $nav = 'umum';
         $menu = 'template';
         $user = Auth::user();
@@ -134,7 +136,7 @@ class TemplateController extends Controller
             $file_name = now()->timestamp . '_template ' .$request->nama.'.'.$file->getClientOriginalExtension();
             // dd($file_name);
             // $file_name = $file->getClientOriginalName();
-            $file->move('surat/template',$file_name);
+            $file->move(public_path('surat/template'),$file_name);
             $template->file = $file_name;
         }
         $template->keterangan = $request->keterangan;
@@ -234,7 +236,7 @@ class TemplateController extends Controller
             $file = $request->file('file');
             $file_name = now()->timestamp . '_template ' .$request->nama.'.'.$file->getClientOriginalExtension();
             // $file_name = $file->getClientOriginalName();
-            $file->move('surat/template',$file_name);
+            $file->move(public_path('surat/template'),$file_name);
             $template->file = $file_name;
         }
         $template->isi_body = $request->isi_body;
@@ -286,7 +288,7 @@ class TemplateController extends Controller
         $docs = public_path('surat/template/').$template->file;
 
         $date = Carbon::parse($request->tanggal_surat)->isoFormat("D MMMM YYYY");
-        // cek template
+
         if (file_exists($docs)) {
             //generate surat
             $templateProcessor = new TemplateProcessor($docs);
@@ -340,19 +342,33 @@ class TemplateController extends Controller
                 return back()->with('warning', 'Terjadi kesalahan dalam penulisan isi body template atau footer template, Silahkan Ubah !!');
             }
 
-                $file_name = now()->timestamp . '_' . 'Testing Template'. '.docx';
-                $templateProcessor->saveAs($file_name);
-
-                // Pindah file
-                File::move(public_path() . '/' . $file_name, public_path('surat/template/').$file_name);
+                $file_name1 = now()->timestamp . '_' . 'Testing Template'. '.docx';
+                $templateProcessor->saveAs(public_path('surat/template/').$file_name1);
 
                 //test success
                 $template->isi_body = $request->isi_body;
                 $template->isi_footer = $request->isi_footer;
                 $template->save();
 
-                return $this->setNomor($request, $file_name);
+                //set value nomor
+                $suratLama = public_path('surat/template/').$file_name1;
+                if (file_exists($suratLama)) {
+                    //generate surat
+                    $templateProcessor = new TemplateProcessor($suratLama);
+                    $templateProcessor->setValue('nomor_surat', $request->nomor_surat);
 
+                    $file_name = 'Testing Template'. '.docx';
+                    $templateProcessor->saveAs(public_path('surat/template/').$file_name);
+    
+                    //hapus surat lama
+                    File::delete($suratLama);
+
+                    $file_path = public_path('surat/template/').$file_name;
+                    return response()->download($file_path);
+                }else{
+                    return back()->with('warning', 'Berkas tidak ditemukan !!');
+                }
+                
             }else{
                 return back()->with('warning', 'Berkas tidak ditemukan !!');
             }
@@ -360,7 +376,8 @@ class TemplateController extends Controller
     }
 
     public function setNomor($request, $suratFile){
-        $suratLama = public_path('surat/template/').$suratFile;
+        // DD($request);
+        $suratLama = base_path('surat/template/').$suratFile;
         if (file_exists($suratLama)) {
             //generate surat
             $templateProcessor = new TemplateProcessor($suratLama);
@@ -369,11 +386,12 @@ class TemplateController extends Controller
             $file_name = 'Testing Template'. '.docx';
             $templateProcessor->saveAs($file_name);
             // Pindah file surat Baru
-            File::move(public_path() . '/' . $file_name, public_path('surat/template/').$file_name);
+            // File::move(public_path() . '/' . $file_name, public_path('surat/template/').$file_name);
+            File::move(base_path('surat/template'),$file_name);
             //hapus surat lama
             File::delete($suratLama);
 
-            $file_path = public_path('surat/template/').$file_name;
+            $file_path = base_path('surat/template/').$file_name;
             return response()->download($file_path);
         }
     }

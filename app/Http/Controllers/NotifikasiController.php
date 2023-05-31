@@ -6,6 +6,7 @@ use App\Models\Notifikasi;
 use App\Models\Disposisi;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\Auth;
+use \Illuminate\Support\Carbon;
 
 class NotifikasiController extends Controller
 {
@@ -36,6 +37,13 @@ class NotifikasiController extends Controller
                 }elseif($notif->read_at == 1){
                     $color = '#FFFFFF';
                 }
+
+                $created = new Carbon($notif->created_at);
+                $now = Carbon::now();
+                $difference = ($created->diff($now)->days < 1)
+                    ? 'HARI INI'
+                    : $created->diffForHumans($now);
+
                 switch($kategori->kategori_id){
                     case(1):
                         // $menu = 'masuk';
@@ -46,6 +54,7 @@ class NotifikasiController extends Controller
                                 </div>
                                 <div class="dropdown-item-desc">
                                     '.$notif->message.'
+                                    <div class="time text-primary">'.$difference.'</div>
                                 </div>
                             </a>';
                     break;
@@ -58,7 +67,7 @@ class NotifikasiController extends Controller
                                 </div>
                                 <div class="dropdown-item-desc">
                                     '.$notif->message.'
-                                    <div class="time text-primary">2 Min Ago</div>
+                                    <div class="time text-primary">'.$difference.'</div>
                                 </div>
                             </a>';
                         break;
@@ -75,6 +84,13 @@ class NotifikasiController extends Controller
                 }elseif($notif->read_at == 1){
                     $color = '#FFFFFF';
                 }
+
+                $created = new Carbon($notif->created_at);
+                $now = Carbon::now();
+                $difference = ($created->diff($now)->days < 1)
+                    ? 'HARI INI'
+                    : $created->diffForHumans($now);
+
                 $notification .= '
                     <a href="'.route('show.disposisi', $disposisi_user->disposisi_id).'" class="dropdown-item" style="background-color: '.$color.'">
                         <div class="dropdown-item-icon bg-info text-white">
@@ -82,7 +98,7 @@ class NotifikasiController extends Controller
                         </div>
                         <div class="dropdown-item-desc">
                             '.$notif->message.'
-                            <div class="time">10 Hours Ago</div>
+                            <div class="time text-primary">'.$difference.'</div>
                         </div>
                     </a>';
             }

@@ -5,6 +5,8 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
         <title>@yield('title')</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('Logo-2_ITATS-gmbr.png') }}">
+        <meta name="google-site-verification" content="mtDAZgvHjB1ZXJc6OooM_FWGw6F0ExHLYrezfayUeho" />
 
         <!-- General CSS Files -->
         {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"> --}}

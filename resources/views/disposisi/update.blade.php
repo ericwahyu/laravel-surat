@@ -48,7 +48,7 @@
                         @enderror
                     </div>
                     <div class="form-group col-md-6">
-                        <label style="font-size: 16px">Catatan</label>
+                        <label style="font-size: 16px">Catatan Disposisi</label>
                         <label style="font-size: 12px">(opsional)</label>
                         <textarea name="catatan" class="form-control @error('catatan') is-invalid @enderror" cols="30" rows="10"></textarea>
                         <small id="passwordHelpBlock" class="form-text text-muted">

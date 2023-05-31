@@ -52,56 +52,54 @@ class FileController extends Controller
     {
         //
         $user = Auth::user();
-        if($request->ajax()){
+        if ($request->ajax()) {
 
             $jenis = $request->get('jenis_id');
             // $keperluan = $request->get('keperluan_id');
             //SEARCH SURAT MASUK
             $surat_masuk = '';
-                if($user->isAdmin()){
-                    $suratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                        // ->where('surat.status', '!=', 0)
-                        ->where('disposisi_user.kategori_id', 1)
-                        ->where('disposisi_user.user_id', Auth::user()->id)
-                        ->where(function($query) use($jenis){
-                            $query->where('jenis.id', $jenis);
-
-                            })
-                        ->select('surat.*')
-                        ->distinct()->latest()->get();
-                }else{
-                    $suratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                        ->where('surat.status', '!=', 0)
-                        ->where('disposisi_user.kategori_id', 1)
-                        ->where('users.id', Auth::user()->id)
-                        ->where(function($query) use($jenis){
-                            $query->where('jenis.id', $jenis);
-
-                            })
-                        ->select('surat.*')
-                        ->distinct()->latest()->get();
-                }
+            if ($user->isAdmin()) {
+                $suratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    // ->where('surat.status', '!=', 0)
+                    ->where('disposisi_user.kategori_id', 1)
+                    ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->where(function ($query) use ($jenis) {
+                        $query->where('jenis.id', $jenis);
+                    })
+                    ->select('surat.*')
+                    ->distinct()->latest()->get();
+            } else {
+                $suratMasuk = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('disposisi_user.kategori_id', 1)
+                    ->where('users.id', Auth::user()->id)
+                    ->where(function ($query) use ($jenis) {
+                        $query->where('jenis.id', $jenis);
+                    })
+                    ->select('surat.*')
+                    ->distinct()->latest()->get();
+            }
 
             $total_row_masuk = $suratMasuk->count();
-            if($total_row_masuk > 0){
-                foreach($suratMasuk as $row){
+            if ($total_row_masuk > 0) {
+                foreach ($suratMasuk as $row) {
                     $surat_masuk .= '
                         <tr>
-                            <td>'.$row->jenis->nama.'</td>
-                            <td>'.$row->nosurat.'</td>
-                            <td>'.$row->judul.'</td>
-                            <td>'.IdDateFormatter::format($row->tanggal, IdDateFormatter::COMPLETE).'</td>
-                            <td>'.$row->keperluan.'</td>
-                            <td><a class="btn btn-primary" href="' .route('download.surat', $row->id). '"><i class="fa fa-download"></i> Download file</a></td>
+                            <td>' . $row->jenis->nama . '</td>
+                            <td>' . $row->nosurat . '</td>
+                            <td>' . $row->judul . '</td>
+                            <td>' . IdDateFormatter::format($row->tanggal, IdDateFormatter::COMPLETE) . '</td>
+                            <td>' . $row->keperluan . '</td>
+                            <td><a class="btn btn-primary" href="' . route('download.surat', $row->id) . '"><i class="fa fa-download"></i> Download file</a></td>
                         </tr>';
                 }
-            }else{
+            } else {
                 $surat_masuk =
                     '<tr>
                         <td align="center" colspan="5">Data tidak ditemukan.</td>
@@ -110,51 +108,51 @@ class FileController extends Controller
 
             //SEARCH SURAT KELUAR
             $surat_keluar = '';
-            if($user->isAdmin()){
+            if ($user->isAdmin()) {
                 $suratKeluar = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                        // ->where('surat.status', '!=', 0)
-                        ->where('disposisi_user.kategori_id', 2)
-                        ->where('disposisi_user.user_id', Auth::user()->id)
-                        ->where(function($query) use($jenis){
-                            $query->where('jenis.id', $jenis);
-                            })
-                        ->select('surat.*')
-                        ->distinct()->latest()->get();
-            }else{
+                    ->join('generate', 'surat.id', '=', 'generate.surat_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    // ->where('surat.status', '!=', 0)
+                    ->where('disposisi_user.kategori_id', 2)
+                    ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->where(function ($query) use ($jenis) {
+                        $query->where('jenis.id', $jenis);
+                    })
+                    ->select('surat.*')
+                    ->distinct()->latest()->get();
+            } else {
                 $suratKeluar = Surat::join('jenis', 'jenis.id', '=', 'surat.jenis_id')
-                        ->join('generate', 'surat.id', '=', 'generate.surat_id')
-                        ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
-                        ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
-                        ->join('users', 'disposisi_user.user_id', '=', 'users.id')
-                        ->where('surat.status', '!=', 0)
-                        ->where('disposisi_user.kategori_id', 2)
-                        ->where('disposisi_user.user_id', Auth::user()->id)
-                        ->where(function($query) use($jenis){
-                            $query->orwhere('jenis.id', $jenis);
-                            })
-                        ->where('users.id', Auth::user()->id)
-                        ->select('surat.*')
-                        ->distinct()->latest()->get();
+                    ->join('generate', 'surat.id', '=', 'generate.surat_id')
+                    ->join('disposisi', 'disposisi.surat_id', '=', 'surat.id')
+                    ->join('disposisi_user', 'disposisi_user.disposisi_id', '=', 'disposisi.id')
+                    ->join('users', 'disposisi_user.user_id', '=', 'users.id')
+                    ->where('surat.status', '!=', 0)
+                    ->where('disposisi_user.kategori_id', 2)
+                    ->where('disposisi_user.user_id', Auth::user()->id)
+                    ->where(function ($query) use ($jenis) {
+                        $query->orwhere('jenis.id', $jenis);
+                    })
+                    ->where('users.id', Auth::user()->id)
+                    ->select('surat.*')
+                    ->distinct()->latest()->get();
             }
 
             $total_row_keluar = $suratKeluar->count();
-            if($total_row_keluar > 0){
-                foreach($suratKeluar as $row){
+            if ($total_row_keluar > 0) {
+                foreach ($suratKeluar as $row) {
                     $surat_keluar .= '
                         <tr>
-                            <td>'.$row->jenis->nama.'</td>
-                            <td>'.$row->nosurat.'</td>
-                            <td>'.$row->judul.'</td>
-                            <td>'.IdDateFormatter::format($row->tanggal, IdDateFormatter::COMPLETE).'</td>
-                            <td>'.$row->keperluan.'</td>
-                            <td><a class="btn btn-primary" href="' .route('download.surat', $row->id). '"><i class="fa fa-download"></i> Download file</a></td>
+                            <td>' . $row->jenis->nama . '</td>
+                            <td>' . $row->nosurat . '</td>
+                            <td>' . $row->judul . '</td>
+                            <td>' . IdDateFormatter::format($row->tanggal, IdDateFormatter::COMPLETE) . '</td>
+                            <td>' . $row->keperluan . '</td>
+                            <td><a class="btn btn-primary" href="' . route('download.surat', $row->id) . '"><i class="fa fa-download"></i> Download file</a></td>
                         </tr>';
                 }
-            }else{
+            } else {
                 $surat_keluar =
                     '<tr>
                         <td align="center" colspan="5">Data tidak ditemukan.</td>
@@ -168,19 +166,19 @@ class FileController extends Controller
                 'data_suratMasuk' => $total_row_masuk,
                 'data_suratKeluar' => $total_row_keluar,
                 // 'id' => $filter,
-               );
+            );
             echo json_encode($data);
         }
     }
-    public function cekFile($surat_id){
+    public function cekFile($surat_id)
+    {
         $tag = '';
         $query = Generate::where('surat_id', $surat_id)->get();
 
-        foreach($query as $row){
-            if($row->file == null){
+        foreach ($query as $row) {
+            if ($row->file == null) {
                 $tag .= '<span class="badge badge-dark">File masih format Awal / Mentahan</span>';
-
-            }else{
+            } else {
                 $tag .= ' <span class="badge badge-light">File sudah format Perbaharuan</span>';
             }
         }
@@ -198,26 +196,26 @@ class FileController extends Controller
         //
         $file_count = Files::where('surat_id', $surat->id)->count();
         // $file
-        if($request->hasFile('file')){
-            $allowedfileExtension = ['pdf','doc', 'docx'];
-                $file = $request->file('file');
-                $filename = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $check=in_array($extension,$allowedfileExtension);
-                if($check){
-                    $file_name = now()->timestamp . '_' .$surat->judul.'_file'.$file_count++.'.'.$file->getClientOriginalExtension();
-                    $file->move('surat/file surat',$file_name);
+        if ($request->hasFile('file')) {
+            $allowedfileExtension = ['pdf', 'doc', 'docx'];
+            $file = $request->file('file');
+            $filename = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $check = in_array($extension, $allowedfileExtension);
+            if ($check) {
+                $file_name = now()->timestamp . '_' . $surat->judul . '_file' . $file_count++ . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('surat/file surat'), $file_name);
 
-                    $file = new Files();
-                    $file->surat_id = $surat->id;
-                    $file->file =  $file_name;
-                    $file->save();
+                $file = new Files();
+                $file->surat_id = $surat->id;
+                $file->file =  $file_name;
+                $file->save();
 
-                    return redirect()->back()->withInput()->with('success', 'Berhasil mengupload data !!');
-                }else{
-                    return redirect()->back()->withInput()->with('error', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
-                }
-        }else{
+                return redirect()->back()->withInput()->with('success', 'Berhasil mengupload data !!');
+            } else {
+                return redirect()->back()->withInput()->with('error', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
+            }
+        } else {
             return redirect()->back()->withInput()->with('error', 'Silahkan upload file berformat .doc/.docx/.pdf');
         }
     }
@@ -257,29 +255,29 @@ class FileController extends Controller
         // dd($files);
         $file_count = Files::where('surat_id', $request->surat_id)->count();
         $surat = Surat::find($request->surat_id);
-        if($request->hasFile('file')){
-            $allowedfileExtension = ['pdf','doc', 'docx'];
-                $file = $request->file('file');
-                $filename = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $check=in_array($extension,$allowedfileExtension);
-                if($check){
+        if ($request->hasFile('file')) {
+            $allowedfileExtension = ['pdf', 'doc', 'docx'];
+            $file = $request->file('file');
+            $filename = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $check = in_array($extension, $allowedfileExtension);
+            if ($check) {
 
-                    $filelama = public_path('surat/file surat/'.$files->file);
-                    File::delete($filelama);
+                $filelama = public_path('surat/file surat/' . $files->file);
+                File::delete($filelama);
 
-                    $file_name = now()->timestamp . '_' .$surat->judul.'_file'.$file_count++.'.'.$file->getClientOriginalExtension();
-                    $file->move('surat/file surat',$file_name);
+                $file_name = now()->timestamp . '_' . $surat->judul . '_file' . $file_count++ . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('surat/file surat'), $file_name);
 
-                    $files->surat_id = $surat->id;
-                    $files->file =  $file_name;
-                    $files->save();
+                $files->surat_id = $surat->id;
+                $files->file =  $file_name;
+                $files->save();
 
-                    return redirect()->back()->withInput()->with('success', 'Berhasil mengupdate file !!');
-                }else{
-                    return redirect()->back()->withInput()->with('error', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
-                }
-        }else{
+                return redirect()->back()->withInput()->with('success', 'Berhasil mengupdate file !!');
+            } else {
+                return redirect()->back()->withInput()->with('error', 'Pastikan file yang diupload berformat .doc/.docx/.pdf');
+            }
+        } else {
             return redirect()->back()->withInput()->with('error', 'Silahkan upload file berformat .doc/.docx/.pdf');
         }
     }
@@ -294,20 +292,21 @@ class FileController extends Controller
     {
         //
         // dd($files);
-        $filelama = public_path('surat/file surat/'.$files->file);
+        $filelama = public_path('surat/file surat/' . $files->file);
         File::delete($filelama);
 
-        if($files){
+        if ($files) {
             $files->delete();
             return redirect()->back()->withInput()->with('success', 'Berhasil menghapus file !!');
-        }else{
+        } else {
             return redirect()->back()->withInput()->with('warning', 'Gagal menghapus file !!');
         }
     }
 
-    public function download(Files $files){
+    public function download(Files $files)
+    {
         try {
-            return response()->download('surat/file surat/'.$files->file);
+            return response()->download(public_path('surat/file surat/' . $files->file));
         } catch (\Throwable $th) {
 
             return back()->with('error', 'File tidak ditemukan !!');
